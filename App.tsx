@@ -1,22 +1,25 @@
-import { StatusBar } from 'expo-status-bar';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-
-import useCachedResources from './hooks/useCachedResources';
-import useColorScheme from './hooks/useColorScheme';
-import Navigation from './navigation';
+import { SafeAreaProvider } from 'react-native-safe-area-context'
+import useCachedResources from './hooks/useCachedResources'
+import Navigation from './navigation'
+import { StatusBar } from './components'
+import { useColorScheme } from 'react-native'
+import { ThemeProvider } from '@shopify/restyle'
+import theme, { darkTheme } from './theme'
 
 export default function App() {
-  const isLoadingComplete = useCachedResources();
-  const colorScheme = useColorScheme();
+  const isLoadingComplete = useCachedResources()
+  const isDarkMode = useColorScheme() === 'dark'
 
   if (!isLoadingComplete) {
-    return null;
+    return null
   } else {
     return (
-      <SafeAreaProvider>
-        <Navigation colorScheme={colorScheme} />
-        <StatusBar />
-      </SafeAreaProvider>
-    );
+      <ThemeProvider theme={isDarkMode ? darkTheme : theme}>
+        <SafeAreaProvider>
+          <Navigation />
+          <StatusBar />
+        </SafeAreaProvider>
+      </ThemeProvider>
+    )
   }
 }
