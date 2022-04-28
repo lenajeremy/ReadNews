@@ -6,9 +6,9 @@
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import * as React from 'react'
-import { NewsScreen } from '../screens'
 
 import { RootStackParamList } from './types'
+import BottomTabNavigator from './BottomTabNavigator'
 
 export default function Navigation() {
   return (
@@ -30,7 +30,7 @@ function RootNavigator() {
     <Stack.Navigator>
       <Stack.Screen
         name="Home"
-        component={NewsScreen}
+        component={BottomTabNavigator}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

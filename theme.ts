@@ -8,9 +8,13 @@ const palette = {
     black: '#191B1F',
     chocolate: '#926C60',
     brown: '#514032',
-    white: '#FFFFFF',
+    white: '#F5F5F5',
     whiteShade: '#F4F6FA',
     transparent: 'transparent',
+
+    blue700: '#2B7EFE',
+    blue400: '#908AFA',
+    blue200: '#DCE7F7',
 }
 
 const theme = createTheme({
@@ -24,6 +28,9 @@ const theme = createTheme({
         chocolate: palette.chocolate,
         transparent: palette.transparent,
         transparentBackground: '#33333310',
+        
+        blue200: palette.blue200,
+        primaryBlue: palette.blue700,
     },
     spacing: {
         xxs: 3,

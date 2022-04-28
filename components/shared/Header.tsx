@@ -13,7 +13,7 @@ export const Header: React.FC = () => {
 
   const styles = StyleSheet.create({
     profileDot: {
-      backgroundColor: 'green',
+      backgroundColor: colors.primaryBlue,
       borderColor: colors.mainBackground,
       borderWidth: 1.5,
       width: 10,
@@ -35,12 +35,12 @@ export const Header: React.FC = () => {
     >
       <Box flexDirection="row" alignItems="center">
         <Logo
-          width={25}
-          height={25}
+          width={30}
+          height={30}
           strokeColor={colors.mainBackground}
           fillColor={colors.mainText}
         />
-        <Text color="mainText" marginLeft="sm" fontSize={18}>
+        <Text color="mainText" marginLeft="sm" fontSize={20}>
           ReadNews
         </Text>
       </Box>
