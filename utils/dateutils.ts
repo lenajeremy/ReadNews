@@ -4,7 +4,7 @@ const getTimeOfDay = () => {
 
     if (timeofDay >= 0 && timeofDay < 12) {
         return 'Good Morning';
-    } else if (timeofDay >= 12 && timeofDay <= 17) {
+    } else if (timeofDay >= 12 && timeofDay <= 16) {
         return 'Good Afternoon';
     } else {
         return 'Good Evening';

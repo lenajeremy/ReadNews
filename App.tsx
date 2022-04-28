@@ -5,6 +5,8 @@ import { StatusBar } from './components'
 import { useColorScheme } from 'react-native'
 import { ThemeProvider } from '@shopify/restyle'
 import theme, { darkTheme } from './theme'
+import { Provider } from 'react-redux'
+import store from './redux/store'
 
 export default function App() {
   const isLoadingComplete = useCachedResources()
@@ -14,12 +16,14 @@ export default function App() {
     return null
   } else {
     return (
-      <ThemeProvider theme={isDarkMode ? darkTheme : theme}>
-        <SafeAreaProvider>
-          <Navigation />
-          <StatusBar />
-        </SafeAreaProvider>
-      </ThemeProvider>
+      <Provider { ...{ store } }>
+        <ThemeProvider theme={isDarkMode ? darkTheme : theme}>
+          <SafeAreaProvider>
+            <Navigation />
+            <StatusBar />
+          </SafeAreaProvider>
+        </ThemeProvider>
+      </Provider>
     )
   }
 }

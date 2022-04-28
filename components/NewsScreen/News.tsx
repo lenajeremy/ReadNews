@@ -1,50 +1,39 @@
+import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { Alert, FlatList, Pressable, Image } from 'react-native'
 import { Box, Text } from '../shared'
 import LoadingNews from './LoadingNews'
-import axios from 'axios'
 import Categories from './Categories'
 import FeaturedNews from './FeaturedNews'
 import { getDateText, getTimeOfDay } from '../../utils/dateutils'
-
-import { useAnimatedStyle, useAnimatedGestureHandler, useSharedValue } from 'react-native-reanimated'
-import { PanGestureHandler, PanGestureHandlerGestureEvent } from 'react-native-gesture-handler'
+import {
+  useAnimatedStyle,
+  useAnimatedGestureHandler,
+  useSharedValue,
+} from 'react-native-reanimated'
+import {
+  PanGestureHandler,
+  PanGestureHandlerGestureEvent,
+} from 'react-native-gesture-handler'
+import { useLazyGetNewsQuery } from '../../api/newsApi'
+import type { NewsType } from '../../types'
+import { useAppSelector } from '../../hooks/reduxhooks'
 
 const News = () => {
-  type NewsType = {
-    title: string
-    url: string
-    img: string
-    metadata: {
-      favicon: string
-      website: string
-    }
-  }
 
-  const [isLoading, setIsLoading] = useState<boolean>(true)
+  const { token } = useAppSelector(store => store.user)
+  const translateX = useSharedValue(0)
 
-  const [news, setNews] = useState<NewsType[]>([])
-
-  const translateX = useSharedValue(0);
-
-  async function getNews() {
-    setIsLoading(true)
-
-    try {
-      const { data } = await axios.get(
-        'https://readnews-backend.herokuapp.com/news/get_news/',
-      )
-      console.log(data)
-      setNews(data.news)
-    } catch (error) {
-      console.log(error)
-    } finally {
-      setIsLoading(false)
-    }
-  }
+  const [
+    getNews,
+    { isLoading = true, error, data: news = [], isSuccess },
+  ] = useLazyGetNewsQuery()
 
   useEffect(() => {
-    getNews()
+    ;(async function () {
+      const res = await getNews()
+      console.log(res)
+    })()
   }, [])
 
   if (isLoading) {
@@ -136,13 +125,16 @@ const News = () => {
 }
 
 const GreetingBanner: React.FC = () => {
+
+  const { firstName } = useAppSelector(store => store.user)
+
   return (
     <Box paddingHorizontal="lg" paddingVertical="sm">
       <Text color="mutedText" marginBottom="xs" fontSize={14}>
         {getDateText()}
       </Text>
       <Text variant="heading3" fontFamily="Inter-SemiBold" color="mainText">
-        {getTimeOfDay()}, {'\n'}Jeremiah
+        {getTimeOfDay()}, {'\n'}{ firstName }
       </Text>
     </Box>
   )

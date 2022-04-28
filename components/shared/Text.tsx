@@ -5,7 +5,8 @@ const Text = createText<Theme>();
 
 Text.defaultProps = {
     fontFamily: 'Inter-Regular',
-    variant: 'body'
+    variant: 'body',
+    color: 'mainText'
 }
 
 export default Text;

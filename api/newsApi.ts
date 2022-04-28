@@ -2,6 +2,8 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { API_URL } from '../constants'
 import { RootState } from '../redux/store'
 
+import { NewsType } from '../types'
+
 
 const newsApi = createApi({
     reducerPath: 'newsApi',
@@ -18,12 +20,13 @@ const newsApi = createApi({
         }
     }),
     endpoints: (builder) => ({
-        getNews: builder.query<void, void>({
-            query: () => '/get_news'
+        getNews: builder.query<NewsType[], void>({
+            query: () => 'news/get_news/',
+            transformResponse: (res: {news: NewsType[] }) => res.news
         })
     })
 })
 
 export default newsApi;
 
-export const { useGetNewsQuery } = newsApi;
+export const { useLazyGetNewsQuery } = newsApi;

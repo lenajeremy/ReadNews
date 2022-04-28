@@ -12,8 +12,10 @@ const store = configureStore({
         'user': userSlice.reducer,
     },
 
-    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat([authApi.middleware, userApi.middleware])
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat([authApi.middleware, userApi.middleware, newsApi.middleware])
 })
+
+export default store;
 
 export type RootState = ReturnType<typeof store.getState>
 

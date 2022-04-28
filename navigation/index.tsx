@@ -9,6 +9,7 @@ import * as React from 'react'
 
 import { RootStackParamList } from './types'
 import BottomTabNavigator from './BottomTabNavigator'
+import AuthStackScreens from './AuthStackNavigator'
 
 export default function Navigation() {
   return (
@@ -27,12 +28,14 @@ const Stack = createNativeStackNavigator<RootStackParamList>()
 function RootNavigator() {
   return (
     // @ts-ignore
-    <Stack.Navigator>
-      <Stack.Screen
-        name="Home"
-        component={BottomTabNavigator}
-        options={{ headerShown: false }}
-      />
+    <Stack.Navigator initialRouteName="Auth">
+
+      {/* @ts-ignore */}
+      <Stack.Group screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="Auth" component={AuthStackScreens} />
+        <Stack.Screen name="Home" component={BottomTabNavigator} />
+      </Stack.Group>
+      
     </Stack.Navigator>
   )
 }
