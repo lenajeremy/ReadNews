@@ -105,7 +105,7 @@ const FeaturedNews: React.FC = () => {
               <Text
                   color={isDarkMode ? 'mainText' : 'mainBackground'}
                 variant="heading3"
-                fontFamily="Inter-SemiBold"
+                fontFamily="Gilroy-Bold"
                 marginTop="sm"
                 fontSize={20}
                 lineHeight={32}

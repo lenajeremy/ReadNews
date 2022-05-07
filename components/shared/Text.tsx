@@ -4,7 +4,7 @@ import { createText } from '@shopify/restyle';
 const Text = createText<Theme>();
 
 Text.defaultProps = {
-    fontFamily: 'Inter-Regular',
+    fontFamily: 'Gilroy',
     variant: 'body',
     color: 'mainText'
 }

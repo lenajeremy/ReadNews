@@ -2,16 +2,18 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { AuthStackParamList } from './types'
 import LoginScreen from '../screens/LoginScreen'
 import RegisterScreen from '../screens/RegisterScreen'
+import OnboardingScreen from '../screens/OnboardingScreen'
 
 const AuthStackNavigator = createNativeStackNavigator<AuthStackParamList>()
 
 const AuthStackScreens = () => {
   return (
     // @ts-ignore
-    <AuthStackNavigator.Navigator initialRouteName="Login">
+    <AuthStackNavigator.Navigator initialRouteName="Onboarding">
       {/* @ts-ignore  */}
       <AuthStackNavigator.Group screenOptions={{ headerShown: false }}>
         {/* @ts-ignore  */}
+        <AuthStackNavigator.Screen name = 'Onboarding' component = {OnboardingScreen} />
         <AuthStackNavigator.Screen name="Login" component={LoginScreen} />
         <AuthStackNavigator.Screen name="Register" component={RegisterScreen} />
       </AuthStackNavigator.Group>

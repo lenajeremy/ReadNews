@@ -15,15 +15,8 @@ export default function useCachedResources() {
         // Load fonts
         await Font.loadAsync({
           ...FontAwesome.font,
-          'Inter-Black': require('../assets/fonts/Inter-Black.ttf'),
-          'Inter-Bold': require('../assets/fonts/Inter-Bold.ttf'),
-          'Inter-ExtraBold': require('../assets/fonts/Inter-ExtraBold.ttf'),
-          'Inter-ExtraLight': require('../assets/fonts/Inter-ExtraLight.ttf'),
-          'Inter-Light': require('../assets/fonts/Inter-Light.ttf'),
-          'Inter-Medium': require('../assets/fonts/Inter-Medium.ttf'),
-          'Inter-Regular': require('../assets/fonts/Inter-Regular.ttf'),
-          'Inter-SemiBold': require('../assets/fonts/Inter-SemiBold.ttf'),
-          'Inter-Thin': require('../assets/fonts/Inter-Thin.ttf'),
+          'Gilroy': require('../assets/fonts/Gilroy.ttf'),
+          'Gilroy-Bold': require('../assets/fonts/Gilroy-Bold.ttf')
         });
       } catch (e) {
         // We might want to provide this error information to an error reporting service

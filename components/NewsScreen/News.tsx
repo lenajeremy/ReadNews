@@ -6,23 +6,24 @@ import LoadingNews from './LoadingNews'
 import Categories from './Categories'
 import FeaturedNews from './FeaturedNews'
 import { getDateText, getTimeOfDay } from '../../utils/dateutils'
-import {
+import Animated, {
   useAnimatedStyle,
   useAnimatedGestureHandler,
   useSharedValue,
+  withSpring,
+  withTiming,
+  useDerivedValue,
+  interpolate,
+  Extrapolate,
 } from 'react-native-reanimated'
-import {
-  PanGestureHandler,
-  PanGestureHandlerGestureEvent,
-} from 'react-native-gesture-handler'
+import { PanGestureHandler } from 'react-native-gesture-handler'
 import { useLazyGetNewsQuery } from '../../api/newsApi'
 import type { NewsType } from '../../types'
 import { useAppSelector } from '../../hooks/reduxhooks'
+import { opacity } from '@shopify/restyle'
 
 const News = () => {
-
-  const { token } = useAppSelector(store => store.user)
-  const translateX = useSharedValue(0)
+  const { token } = useAppSelector((store) => store.user)
 
   const [
     getNews,
@@ -76,65 +77,98 @@ const News = () => {
       refreshing={isLoading}
       data={news}
       keyExtractor={(item, index) => item.url + index.toString()}
-      renderItem={({ item }) => (
-        <Box
-          flexDirection="row"
-          marginVertical="lg"
-          alignItems="center"
-          marginHorizontal="lg"
-        >
-          <Box flex={2.5} marginRight="lg">
-            <Pressable onPress={() => registerInteraction(item.url)}>
-              <Text
-                color="mainText"
-                fontSize={18}
-                lineHeight={26}
-                fontFamily="Inter-SemiBold"
-              >
-                {item.title.length >= 65
-                  ? item.title.slice(0, 62) + '...'
-                  : item.title}
-              </Text>
-            </Pressable>
-            <Box flexDirection="row" paddingVertical="sm">
-              <Image
-                source={{ uri: item.metadata.favicon }}
-                style={{
-                  width: 20,
-                  height: 20,
-                  borderRadius: 10,
-                  marginRight: 10,
-                }}
-              />
-              <Text color="mutedText" fontSize={13}>
-                {item.metadata.website}
-              </Text>
-            </Box>
-          </Box>
-          <Box width={90} height={90} borderRadius={12} overflow="hidden">
-            <Image
-              source={{ uri: item.img }}
-              style={{ height: '100%', width: '100%' }}
-              resizeMode="cover"
-            />
-          </Box>
-        </Box>
-      )}
+      renderItem={({ item }) => <NewsComponent item={item} />}
     />
   )
 }
 
-const GreetingBanner: React.FC = () => {
+const AnimatedBox = Animated.createAnimatedComponent(Box)
 
-  const { firstName } = useAppSelector(store => store.user)
+const NewsComponent = ({ item }) => {
+  const translateX = useSharedValue(0)
+  const translateStyle = useAnimatedStyle(() => ({
+    transform: [{ translateX: translateX.value }],
+    opacity: interpolate(
+      translateX.value,
+      [0, -250],
+      [1, 0],
+      Extrapolate.CLAMP,
+    ),
+  }))
+
+  const handlePanGesture = useAnimatedGestureHandler({
+    onStart: (e) => {
+      console.log(e)
+    },
+    onActive: (e) => {
+      translateX.value = e.translationX
+    },
+    onEnd: (e) => {
+      translateX.value = withSpring(0, { damping: 500 })
+    },
+  })
+
+  return (
+    // @ts-ignore
+    <PanGestureHandler onGestureEvent={handlePanGesture}>
+      <AnimatedBox
+        flexDirection="row"
+        marginVertical="lg"
+        alignItems="center"
+        marginHorizontal="lg"
+        style={translateStyle}
+      >
+        <Box flex={2.5} marginRight="lg">
+          <Pressable onPress={() => registerInteraction(item.url)}>
+            <Text
+              color="mainText"
+              fontSize={18}
+              lineHeight={26}
+              fontFamily="Gilroy-Bold"
+            >
+              {item.title.length >= 65
+                ? item.title.slice(0, 62) + '...'
+                : item.title}
+            </Text>
+          </Pressable>
+          <Box flexDirection="row" paddingVertical="sm">
+            <Image
+              source={{ uri: item.metadata.favicon }}
+              style={{
+                width: 20,
+                height: 20,
+                borderRadius: 10,
+                marginRight: 10,
+              }}
+            />
+            <Text color="mutedText" fontSize={13}>
+              {item.metadata.website}
+            </Text>
+          </Box>
+        </Box>
+        <Box width={90} height={90} borderRadius={12} overflow="hidden">
+          <Image
+            source={{ uri: item.img }}
+            style={{ height: '100%', width: '100%' }}
+            resizeMode="cover"
+          />
+        </Box>
+      </AnimatedBox>
+    </PanGestureHandler>
+  )
+}
+
+const GreetingBanner: React.FC = () => {
+  const { firstName } = useAppSelector((store) => store.user)
 
   return (
     <Box paddingHorizontal="lg" paddingVertical="sm">
       <Text color="mutedText" marginBottom="xs" fontSize={14}>
         {getDateText()}
       </Text>
-      <Text variant="heading3" fontFamily="Inter-SemiBold" color="mainText">
-        {getTimeOfDay()}, {'\n'}{ firstName }
+      <Text variant="heading3" fontFamily="Gilroy-Bold" color="mainText">
+        {getTimeOfDay()}, {'\n'}
+        {firstName}
       </Text>
     </Box>
   )
@@ -156,13 +190,13 @@ const FlatListHeaderComponent = () => (
       <Text
         variant="heading3"
         fontSize={20}
-        fontFamily="Inter-Bold"
+        fontFamily="Gilroy-Bold"
         color="mainText"
       >
         Just For You
       </Text>
       <Pressable onPress={() => Alert.alert('hello', 'someting is happening')}>
-        <Text style={{ color: '#2b7efe' }} fontFamily="Inter-SemiBold">
+        <Text style={{ color: '#2b7efe' }} fontFamily="Gilroy-Bold">
           See More
         </Text>
       </Pressable>

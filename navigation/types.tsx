@@ -26,6 +26,7 @@ export type RootStackScreenProps<
 > = NativeStackScreenProps<RootStackParamList, Screen>
 
 export type AuthStackParamList = {
+  Onboarding: undefined
   Login: undefined
   Register: undefined
 }
