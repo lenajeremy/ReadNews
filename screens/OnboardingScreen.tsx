@@ -33,7 +33,7 @@ import { clamp } from 'react-native-redash'
 const AnimatedBox = Animated.createAnimatedComponent(Box)
 const AnimatedText = Animated.createAnimatedComponent(Text)
 
-const OnboardingScreen = () => {
+const OnboardingScreen = ({ navigation } : { navigation: any }) => {
   const slides = [
     {
       title: 'Read News Online 📰',
@@ -150,6 +150,10 @@ const OnboardingScreen = () => {
     )
   })
 
+  // const indicatorProps = useAnimatedProps(() => {
+    
+  // })
+
   return (
     <SafeAreaView
       style={{ backgroundColor: colors.mainBackground, alignItems: 'center' }}
@@ -223,14 +227,32 @@ const OnboardingScreen = () => {
         alignItems="center"
       >
         <Box style={styles.slideProgressIndicatorContainer}>
-          <Box style={styles.slideProgressDot} backgroundColor="mainText"></Box>
-          <Box style={styles.slideProgressDot} backgroundColor="mainText"></Box>
-          <Box style={styles.slideProgressDot} backgroundColor="mainText"></Box>
+          <AnimatedBox
+            style={styles.slideProgressDot}
+            backgroundColor="mainText"
+          />
+          <AnimatedBox
+            style={styles.slideProgressDot}
+            backgroundColor="mainText"
+          />
+          <AnimatedBox
+            style={styles.slideProgressDot}
+            backgroundColor="mainText"
+          />
         </Box>
 
         <Box style={styles.buttonContainer}>
-          <Button additionalStyles={{ width: DEVICE_WIDTH * 0.8, height: 60, marginTop: 10}}>
-            <Text fontFamily="Blatant" fontSize={24}>Get Started</Text>
+          <Button
+          onPress={() => navigation.navigate('Login')}
+            additionalStyles={{
+              width: DEVICE_WIDTH * 0.8,
+              height: 70,
+              marginTop: 10,
+            }}
+          >
+            <Text fontFamily="Blatant" fontSize={24} style ={{color: 'white'}}>
+              GET STARTED
+            </Text>
           </Button>
         </Box>
       </Box>

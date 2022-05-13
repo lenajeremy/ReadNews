@@ -6,7 +6,7 @@ const palette = {
     gray700: '#7C8383',
     gray800: '#646668',
     black: '#191B1F',
-    chocolate: '#926C60',
+    chocolate: '#7d5a37',
     brown: '#514032',
     white: '#F5F5F5',
     whiteShade: '#F4F6FA',
