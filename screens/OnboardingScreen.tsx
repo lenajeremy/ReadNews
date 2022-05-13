@@ -5,9 +5,6 @@ import {
   StyleSheet,
 } from 'react-native'
 import { Box, Button, Text } from '../components'
-import OnlineArticlesIllustration from '../assets/illustrations/onlinearticles'
-import ShareArticlesIllustration from '../assets/illustrations/sharearticles'
-import SaveArticlesIllustration from '../assets/illustrations/savearticles'
 import React, { useEffect } from 'react'
 import { Ionicons } from '@expo/vector-icons'
 import Animated, {
@@ -15,6 +12,7 @@ import Animated, {
   Extrapolate,
   interpolate,
   runOnUI,
+  SharedValue,
   useAnimatedGestureHandler,
   useAnimatedProps,
   useAnimatedStyle,
@@ -22,7 +20,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated'
-import { backgroundColor, useTheme } from '@shopify/restyle'
+import { useTheme } from '@shopify/restyle'
 import { Theme } from '../theme'
 import { useNavigation } from '@react-navigation/native'
 import {
@@ -34,31 +32,30 @@ import { clamp } from 'react-native-redash'
 
 const AnimatedBox = Animated.createAnimatedComponent(Box)
 const AnimatedText = Animated.createAnimatedComponent(Text)
-const AnimatedTextInput = Animated.createAnimatedComponent(TextInput)
 
 const OnboardingScreen = () => {
   const slides = [
     {
-      title: 'Online Articles',
-      illustration: OnlineArticlesIllustration,
-      description: 'Read articles from the internet',
+      title: 'Read News Online 📰',
+      description:
+        'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Libero velit blanditiis consectetur a soluta deserunt!',
     },
     {
-      title: 'Share Articles',
-      illustration: ShareArticlesIllustration,
-      description: 'Share articles with your friends',
+      title: 'News you love😎',
+      description:
+        'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Libero velit blanditiis consectetur a soluta deserunt!',
     },
     {
-      title: 'Save Articles',
-      illustration: SaveArticlesIllustration,
-      description: 'Save articles to your library',
+      title: 'Save for later📌',
+      description:
+        'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Libero velit blanditiis consectetur a soluta deserunt!',
     },
   ]
 
   const { height: DEVICE_HEIGHT, width: DEVICE_WIDTH } = useWindowDimensions()
 
   const translationX = useSharedValue(DEVICE_WIDTH)
-  const SLIDE_TRESHHOLD = 0.2
+  const SLIDE_TRESHHOLD = 0.15
 
   const handleOnboardingGesture = useAnimatedGestureHandler<
     PanGestureHandlerGestureEvent,
@@ -100,12 +97,16 @@ const OnboardingScreen = () => {
             -DEVICE_WIDTH * (slides.length - 2),
             DEVICE_WIDTH,
           ),
-          { duration: 500, easing: Easing.out(Easing.cubic) },
+          { duration: 800, easing: Easing.out(Easing.cubic) },
         )
       } else {
         translationX.value = withTiming(
           clamp(
-            Math.floor(translationX.value / DEVICE_WIDTH) * DEVICE_WIDTH,
+            getSlideToPosition(
+              'curr',
+              translationX.value,
+              DEVICE_WIDTH,
+            ) as number,
             -DEVICE_WIDTH * (slides.length - 2),
             DEVICE_WIDTH,
           ),
@@ -114,31 +115,39 @@ const OnboardingScreen = () => {
     },
   })
 
+  // Animated.interpolateNode()
+
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ translateX: translationX.value }],
   }))
 
   const { colors } = useTheme<Theme>()
 
-  const moveToNext = () => {
-    'worklet'
-    const value = getSlideToPosition(
-      'next',
+  const opacity1 = useDerivedValue(() => {
+    return interpolate(
       translationX.value,
-      DEVICE_WIDTH,
-    ) as number
-    console.log(value)
-    translationX.value = withTiming(value)
-  }
-
-  const translateText = useDerivedValue(() => {
-    return String(translationX.value)
+      [DEVICE_WIDTH / 2, DEVICE_WIDTH],
+      [0, 1],
+      Extrapolate.CLAMP,
+    )
   })
 
-  const animatedProps = useAnimatedProps(() => {
-    return {
-      value: translateText.value,
-    }
+  const opacity2 = useDerivedValue(() => {
+    return interpolate(
+      translationX.value,
+      [-DEVICE_WIDTH / 2, 0, DEVICE_WIDTH / 2],
+      [0, 1, 0],
+      Extrapolate.CLAMP,
+    )
+  })
+
+  const opacity3 = useDerivedValue(() => {
+    return interpolate(
+      translationX.value,
+      [-DEVICE_WIDTH / 2, -DEVICE_WIDTH],
+      [0, 1],
+      Extrapolate.CLAMP,
+    )
   })
 
   return (
@@ -191,58 +200,88 @@ const OnboardingScreen = () => {
         </AnimatedBox>
       </PanGestureHandler>
 
-      <AnimatedBox
-        style={styles.slideTextContainer}
+      <AnimatedOnboardingText
+        text={slides[0].title}
+        description={slides[0].description}
+        animationValue={opacity1}
+      />
+      <AnimatedOnboardingText
+        text={slides[1].title}
+        description={slides[1].description}
+        animationValue={opacity2}
+      />
+      <AnimatedOnboardingText
+        text={slides[2].title}
+        description={slides[2].description}
+        animationValue={opacity3}
+      />
+
+      <Box
+        style={styles.buttonAndIndicatorContainer}
+        width={DEVICE_WIDTH * 0.9}
         px="lg"
         alignItems="center"
-        width="90%"
       >
-        <AnimatedText
-          variant="heading1"
-          fontFamily="Blatant-Bold"
-          letterSpacing={0.5}
-          textAlign="center"
-          marginBottom="sm"
-          // style={opacityStyle}
-        >
-          Weirdly Original {translateText.value}
-        </AnimatedText>
-
-        <AnimatedTextInput
-          value={translateText.value}
-          animatedProps={animatedProps}
-          editable = {false}
-          style={{ fontSize: 30, color: 'white' }}
-        />
-
-        <Text textAlign="center" opacity={0.7} lineHeight={30}>
-          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Debitis
-          expedita possimus iste sed porro consectetur?
-        </Text>
-
         <Box style={styles.slideProgressIndicatorContainer}>
           <Box style={styles.slideProgressDot} backgroundColor="mainText"></Box>
           <Box style={styles.slideProgressDot} backgroundColor="mainText"></Box>
           <Box style={styles.slideProgressDot} backgroundColor="mainText"></Box>
         </Box>
 
-        <Box style={styles.prevAndNextButtonContainer}>
-          <Button onPress={() => runOnUI(moveToNext)()}>
-            <Text fontFamily="Blatant">Previous</Text>
-          </Button>
-          <Button>
-            <Text fontFamily="Blatant">Next</Text>
+        <Box style={styles.buttonContainer}>
+          <Button additionalStyles={{ width: DEVICE_WIDTH * 0.8, height: 60, marginTop: 10}}>
+            <Text fontFamily="Blatant" fontSize={24}>Get Started</Text>
           </Button>
         </Box>
-      </AnimatedBox>
+      </Box>
     </SafeAreaView>
+  )
+}
+
+interface AnimatedOnboardingTextProps {
+  animationValue: SharedValue<number>
+  text: string
+  description: string
+}
+
+const AnimatedOnboardingText = ({
+  text,
+  description,
+  animationValue,
+}: AnimatedOnboardingTextProps) => {
+  const opacityStyle = useAnimatedStyle(() => ({
+    opacity: animationValue.value,
+  }))
+
+  return (
+    <AnimatedBox
+      backgroundColor={'mainBackground'}
+      style={[styles.slideTextContainer, opacityStyle]}
+      px="lg"
+      alignItems="center"
+      width="90%"
+    >
+      <AnimatedText
+        variant="heading1"
+        fontFamily="Blatant-Bold"
+        letterSpacing={0.5}
+        textAlign="center"
+        marginBottom="sm"
+      >
+        {text}
+      </AnimatedText>
+
+      <AnimatedText textAlign="center" opacity={0.6} lineHeight={30}>
+        {description}
+      </AnimatedText>
+    </AnimatedBox>
   )
 }
 
 const styles = StyleSheet.create({
   slideTextContainer: {
     position: 'absolute',
-    top: '58%',
+    top: '57%',
   },
   slideProgressIndicatorContainer: {
     width: 70,
@@ -259,12 +298,15 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     opacity: 0.3,
   },
-  prevAndNextButtonContainer: {
-    flexDirection: 'row',
+  buttonContainer: {
     alignItems: 'center',
     justifyContent: 'space-between',
     width: '100%',
     marginTop: 50,
+  },
+  buttonAndIndicatorContainer: {
+    position: 'absolute',
+    bottom: '17%',
   },
 })
 
