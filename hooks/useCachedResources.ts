@@ -16,7 +16,9 @@ export default function useCachedResources() {
         await Font.loadAsync({
           ...FontAwesome.font,
           'Gilroy': require('../assets/fonts/Gilroy.ttf'),
-          'Gilroy-Bold': require('../assets/fonts/Gilroy-Bold.ttf')
+          'Gilroy-Bold': require('../assets/fonts/Gilroy-Bold.ttf'),
+          'Blatant-Bold': require('../assets/fonts/Blatant-Bold.otf'),
+          'Blatant': require('../assets/fonts/Blatant.otf'),
         });
       } catch (e) {
         // We might want to provide this error information to an error reporting service

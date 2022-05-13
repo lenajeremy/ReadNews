@@ -52,7 +52,7 @@ const theme = createTheme({
             lineHeight: 36
         },
         body: {
-            fontSize: 16,
+            fontSize: 18,
             lineHeight: 24
         }
     },
@@ -65,6 +65,7 @@ export const darkTheme = {
         ...theme.colors,
         mainBackground: palette.black,
         mainText: palette.gray200,
+        // mutedText: palette.gray200,
         transparentBackground: '#ffffff10',
     }
 }
