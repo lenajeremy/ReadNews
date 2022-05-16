@@ -11,6 +11,7 @@ import Animated, {
   Easing,
   Extrapolate,
   interpolate,
+  interpolateColor,
   runOnUI,
   SharedValue,
   useAnimatedGestureHandler,
@@ -28,7 +29,7 @@ import {
   PanGestureHandlerGestureEvent,
   TextInput,
 } from 'react-native-gesture-handler'
-import { clamp } from 'react-native-redash'
+import { clamp, opacity } from 'react-native-redash'
 
 const AnimatedBox = Animated.createAnimatedComponent(Box)
 const AnimatedText = Animated.createAnimatedComponent(Text)
@@ -150,9 +151,24 @@ const OnboardingScreen = ({ navigation } : { navigation: any }) => {
     )
   })
 
-  // const indicatorProps = useAnimatedProps(() => {
-    
-  // })
+
+  const dot1Styles = useAnimatedStyle(() => ({
+    backgroundColor: interpolateColor(opacity1.value, [0, 1], [colors.mainText, colors.chocolate]),
+    opacity: interpolate(opacity1.value, [0, 1], [0.5, 1]),
+    transform: [{scale: interpolate(opacity1.value, [0, 1], [1, 1.5])}]
+  }))
+  
+  const dot2Styles = useAnimatedStyle(() => ({
+    backgroundColor: interpolateColor(opacity2.value, [0, 1], [colors.mainText, colors.chocolate]),
+    opacity: interpolate(opacity2.value, [0, 1], [0.5, 1]),
+    transform: [{scale: interpolate(opacity2.value, [0, 1], [1, 1.5])}]
+  }))
+
+  const dot3Styles = useAnimatedStyle(() => ({
+    backgroundColor: interpolateColor(opacity3.value, [0, 1], [colors.mainText, colors.chocolate]),
+    opacity: interpolate(opacity3.value, [0, 1], [0.5, 1]),
+    transform: [{scale: interpolate(opacity3.value, [0, 1], [1, 1.5])}]
+  }))
 
   return (
     <SafeAreaView
@@ -228,16 +244,13 @@ const OnboardingScreen = ({ navigation } : { navigation: any }) => {
       >
         <Box style={styles.slideProgressIndicatorContainer}>
           <AnimatedBox
-            style={styles.slideProgressDot}
-            backgroundColor="mainText"
+            style={[styles.slideProgressDot, dot1Styles]}
           />
           <AnimatedBox
-            style={styles.slideProgressDot}
-            backgroundColor="mainText"
+            style={[styles.slideProgressDot, dot2Styles]}
           />
           <AnimatedBox
-            style={styles.slideProgressDot}
-            backgroundColor="mainText"
+            style={[styles.slideProgressDot, dot3Styles]}
           />
         </Box>
 
@@ -318,7 +331,6 @@ const styles = StyleSheet.create({
     width: 6,
     height: 6,
     borderRadius: 5,
-    opacity: 0.3,
   },
   buttonContainer: {
     alignItems: 'center',
