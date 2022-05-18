@@ -1,11 +1,10 @@
-# Social App Concept-React Native🔥 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com) [![Twitter Follow](https://img.shields.io/twitter/follow/iamgrandbusta?style=social)](https://twitter.com/iamgrandbusta)
+# Read News
 
-A simple social app concept with react native.
-Improving day by day.
+An app that helps people read news. Gives them a personalized reading experience
 
 Star⭐ the repo if you like what you see😉.
 
-[![Twitter Follow](https://img.shields.io/twitter/follow/iamgrandbusta?style=social)](https://twitter.com/iamgrandbusta)
+[![Twitter Follow](https://img.shields.io/twitter/follow/jeremiahlena13?style=social)](https://twitter.com/jeremiahlena13)
 
 
 ## 📸 ScreenShots
