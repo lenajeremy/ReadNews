@@ -4,7 +4,7 @@ import Svg, { Path } from 'react-native-svg'
 const PasswordIllustration = () => {
   return (
     // @ts-ignore
-    <Svg width="1910" height="510" preserveAspectRatio = 'xMinYMin slice'>
+    <Svg width="1910" height="510" viewBox='500 400' preserveAspectRatio = 'xMinYMin slice'>
       {/*  @ts-ignore */}
       <Path
         fill="#ffd14d"
