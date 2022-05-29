@@ -1,19 +1,29 @@
 import { Pressable, StyleSheet, ViewStyle } from 'react-native'
 import Box from './Box'
 
+
+type ButtonVariants = 'outlined' | 'contained' | 'text' | 'disabled'
+
+
 interface ButtonProps {
   children: JSX.Element
-  variant?: 'outline' | 'contained' | 'disabled'
   additionalStyles?: ViewStyle
   onPress?: () => void
+  loading?: boolean
+  variant: ButtonVariants
 }
 
-const Button = ({ children, additionalStyles, onPress }: ButtonProps) => {
+const Button = ({
+  children,
+  additionalStyles,
+  onPress,
+  loading,
+}: ButtonProps) => {
   return (
-    <Pressable onPress={onPress}>
+    <Pressable onPress={loading ? () => {} : onPress}>
       <Box
         style={[styles.buttonContainer, additionalStyles]}
-        backgroundColor="chocolate"
+        backgroundColor={loading ? 'grayBackground' : 'chocolate'}
       >
         {children}
       </Box>
@@ -26,7 +36,7 @@ export default Button
 const styles = StyleSheet.create({
   buttonContainer: {
     minWidth: 120,
-    height: 50,
+    height: 60,
     borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',

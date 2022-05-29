@@ -2,24 +2,26 @@ import React, { useState } from 'react'
 import {
   ActivityIndicator,
   Button,
-  TextInput,
   StyleSheet,
   SafeAreaView,
   ScrollView,
 } from 'react-native'
-import { Box, Text } from '../components'
+import { Box, Text, TextInput } from '../components'
 import { useRegisterMutation } from '../api/authApi'
 import { useTheme } from '@shopify/restyle'
 import { Theme } from '../theme'
 
-export default function LoginScreen({ navigation } : { navigation : any}) {
+export default function LoginScreen({ navigation }: { navigation: any }) {
   const [registerFormValues, setRegisterFormValues] = useState({
     email: '',
     password: '',
-    fullName: ''
+    fullName: '',
   })
 
-  const [register, { isLoading, data, isSuccess, error }] = useRegisterMutation()
+  const [
+    register,
+    { isLoading, data, isSuccess, error },
+  ] = useRegisterMutation()
 
   const { colors, spacing } = useTheme<Theme>()
 
@@ -33,23 +35,31 @@ export default function LoginScreen({ navigation } : { navigation : any}) {
     }
   }
 
-
   return (
-    <SafeAreaView style = {{flex: 1, backgroundColor: colors.mainBackground}}>
-      <ScrollView style = {{marginHorizontal: spacing.md, marginTop: 200}}>
-
-          <Text color = 'mainText' textAlign='center' variant='heading1'>Register</Text>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.mainBackground }}>
+      <ScrollView
+        style={{ marginHorizontal: spacing.md, paddingTop: spacing.xl * 4 }}
+      >
+        <Text color="mainText" variant="heading1" mb = {'xl'}>
+          Register
+        </Text>
         <TextInput
-          style={styles.input}
+        placeholder='Enter your email'
+          additionalStyles={{
+            borderBottomLeftRadius: 0,
+            borderBottomRightRadius: 0,
+          }}
           value={registerFormValues.email}
-          keyboardType="email-address"
+          type="email"
           onChangeText={(email) =>
             setRegisterFormValues({ ...registerFormValues, email })
           }
         />
 
         <TextInput
-          style={styles.input}
+        placeholder='Enter your full name'
+          additionalStyles={{ marginVertical: spacing.xxs, borderRadius: 0 }}
+          type="text"
           value={registerFormValues.fullName}
           onChangeText={(fullName) =>
             setRegisterFormValues({ ...registerFormValues, fullName })
@@ -57,9 +67,10 @@ export default function LoginScreen({ navigation } : { navigation : any}) {
         />
 
         <TextInput
-          style={styles.input}
+        placeholder='Enter your password'
+          additionalStyles={{ borderTopLeftRadius: 0, borderTopRightRadius: 0 }}
           value={registerFormValues.password}
-          keyboardType="visible-password"
+          type="password"
           onChangeText={(password) =>
             setRegisterFormValues({ ...registerFormValues, password })
           }

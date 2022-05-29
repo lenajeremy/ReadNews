@@ -2,7 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import authApi from "../api/authApi";
 import newsApi from "../api/newsApi";
 import userApi from "../api/userApi";
-import userSlice from "./slices/userSlics";
+import userSlice from "./slices/userSlice";
 
 const store = configureStore({
     reducer: {

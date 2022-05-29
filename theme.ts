@@ -28,7 +28,7 @@ const theme = createTheme({
         chocolate: palette.chocolate,
         transparent: palette.transparent,
         transparentBackground: '#33333310',
-        
+
         blue200: palette.blue200,
         primaryBlue: palette.blue700,
     },
@@ -43,6 +43,7 @@ const theme = createTheme({
     textVariants: {
         heading1: {
             fontSize: 40,
+            fontFamily: 'Blatant-Bold'
         },
         heading2: {
             fontSize: 32,
@@ -53,7 +54,7 @@ const theme = createTheme({
         },
         body: {
             fontSize: 18,
-            lineHeight: 24
+            lineHeight: 24,
         }
     },
     breakpoints: {}

@@ -1,1 +1,1 @@
-export const API_URL = 'https://readnews-backend.herokuapp.com'
+export const API_URL = 'https://8af5-102-89-3-199.eu.ngrok.io'

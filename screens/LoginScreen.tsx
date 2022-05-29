@@ -1,20 +1,19 @@
 import React, { useEffect, useState } from 'react'
 import {
   ActivityIndicator,
-  Button,
-  TextInput,
+  TextInput as RNTextInput,
   StyleSheet,
   SafeAreaView,
   ScrollView,
+  Pressable,
 } from 'react-native'
-import { Box, Text } from '../components'
+import { Box, Text, TextInput, Button, ErrorBoundary } from '../components'
 import { useLoginMutation } from '../api/authApi'
-import { updateDetails } from '../redux/slices/userSlics'
+import { updateDetails } from '../redux/slices/userSlice'
 import { useAppDispatch } from '../hooks/reduxhooks'
 import { useTheme } from '@shopify/restyle'
 import { Theme } from '../theme'
 import { NavigationProp, useNavigation } from '@react-navigation/native'
-import PasswordIllustration from '../assets/illustrations/passwordillustration'
 
 export default function LoginScreen() {
   const [loginFormValues, setLoginFormValues] = useState({
@@ -22,13 +21,18 @@ export default function LoginScreen() {
     password: 'areyoukiddingme',
   })
 
-  const navigation = useNavigation<NavigationProp<ReactNavigation.AuthParamList>>();
+  const navigation = useNavigation<
+    NavigationProp<ReactNavigation.RootParamList>
+  >()
+  const authNavigation = useNavigation<
+    NavigationProp<ReactNavigation.AuthParamList>
+  >()
 
   const [login, { isLoading, data, isSuccess, error }] = useLoginMutation()
   const dispatch = useAppDispatch()
 
   const handleLogin = async () => {
-    const res = await login(loginFormValues)
+    await login(loginFormValues)
   }
 
   useEffect(() => {
@@ -50,42 +54,73 @@ export default function LoginScreen() {
 
   return (
     <SafeAreaView style={{ backgroundColor: colors.mainBackground, flex: 1 }}>
-      <ScrollView style={{ marginHorizontal: spacing.md, marginTop: 200 }}>
-        <Text variant="heading1" color="mainText" textAlign="center">
+      <ScrollView
+        style={{ marginHorizontal: spacing.md, paddingTop: spacing.xl * 4 }}
+        showsVerticalScrollIndicator={false}
+      >
+        
+        <Text color="mainText" variant="heading1" mb = {'xl'}>
           Login
         </Text>
+
         <TextInput
-          style={styles.input}
+          additionalStyles={{
+            marginBottom: spacing.xxs,
+            borderBottomRightRadius: 0,
+            borderBottomLeftRadius: 0,
+          }}
           value={loginFormValues.email}
-          keyboardType="email-address"
+          type="email"
+          placeholder="Enter your email"
           onChangeText={(email) =>
             setLoginFormValues({ ...loginFormValues, email })
           }
         />
 
         <TextInput
-          style={styles.input}
+          additionalStyles={{
+            borderTopRightRadius: 0,
+            borderTopLeftRadius: 0,
+          }}
           value={loginFormValues.password}
-          keyboardType="visible-password"
+          type="password"
+          placeholder="Enter your password"
           onChangeText={(password) =>
             setLoginFormValues({ ...loginFormValues, password })
           }
         />
 
-        <Button title="Login" onPress={handleLogin} />
-        <Button
-          title="Go to Register"
-          onPress={() => navigation.navigate('Register')}
-        />
-        <PasswordIllustration />
+        <Pressable
+          onPress={() => authNavigation.navigate('Register')}
+          style={{ justifyContent: 'center', marginTop: spacing.lg, marginBottom: spacing.sm }}
+        >
+          <Text color = 'mainText' fontSize={16}>Don't have an account? Register</Text>
+        </Pressable>
 
-        {isLoading && <ActivityIndicator />}
+        <Button
+          additionalStyles={{ marginTop: spacing.sm, borderRadius: 8 }}
+          variant="contained"
+          onPress={handleLogin}
+          loading={isLoading}
+        >
+          {isLoading ? (
+            <ActivityIndicator />
+          ) : (
+            <Text
+              fontSize={24}
+              fontFamily="Blatant"
+              letterSpacing={2}
+              textTransform="uppercase"
+            >
+              Login
+            </Text>
+          )}
+        </Button>
+
         {isSuccess && (
           <Text selectable>{JSON.stringify(data?.data, null, 3)}</Text>
         )}
-        {error && (
-          <Text selectable>{JSON.stringify(error?.data, null, 3)}</Text>
-        )}
+        {error && <Text selectable>{JSON.stringify(error, null, 3)}</Text>}
       </ScrollView>
     </SafeAreaView>
   )

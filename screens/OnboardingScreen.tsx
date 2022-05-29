@@ -298,7 +298,6 @@ const AnimatedOnboardingText = ({
     >
       <AnimatedText
         variant="heading1"
-        fontFamily="Blatant-Bold"
         letterSpacing={0.5}
         textAlign="center"
         marginBottom="sm"
