@@ -51,7 +51,11 @@ export default function LoginScreen() {
 
       dispatch(updateDetails(user))
 
-      navigation.navigate('Home')
+      if (!data?.data.hasSetInterests) {
+        authNavigation.navigate('SetInterest')
+      } else {
+        navigation.navigate('Home')
+      }
     }
   }, [isSuccess])
 

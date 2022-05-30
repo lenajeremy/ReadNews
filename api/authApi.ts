@@ -5,7 +5,7 @@ const authApi = createApi({
     reducerPath: 'authApi',
     baseQuery: fetchBaseQuery({ baseUrl: API_URL + '/auth' }),
     endpoints: (builder) => ({
-        login: builder.mutation<{ data: { email?: string, token?: string, first_name?: string, last_name?: string } }, { email: string, password: string }>({
+        login: builder.mutation<{ data: { email?: string, token?: string, first_name?: string, last_name?: string, hasSetInterests: boolean } }, { email: string, password: string }>({
             query: (body) => ({
                 url: '/login/',
                 method: 'POST',

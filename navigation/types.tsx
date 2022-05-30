@@ -31,6 +31,7 @@ export type AuthStackParamList = {
   Onboarding: undefined
   Login: undefined
   Register: undefined
+  SetInterest: undefined
 }
 
 export type AuthStackScreenProps<
