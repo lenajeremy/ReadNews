@@ -1,9 +1,7 @@
 import { Pressable, StyleSheet, ViewStyle } from 'react-native'
 import Box from './Box'
 
-
 type ButtonVariants = 'outlined' | 'contained' | 'text' | 'disabled'
-
 
 interface ButtonProps {
   children: JSX.Element
@@ -18,12 +16,15 @@ const Button = ({
   additionalStyles,
   onPress,
   loading,
+  variant = 'contained',
 }: ButtonProps) => {
   return (
-    <Pressable onPress={loading ? () => {} : onPress}>
+    <Pressable onPress={loading || variant === 'disabled' ? () => {} : onPress}>
       <Box
         style={[styles.buttonContainer, additionalStyles]}
-        backgroundColor={loading ? 'grayBackground' : 'chocolate'}
+        backgroundColor={
+          loading || variant === 'disabled' ? 'grayBackground' : 'chocolate'
+        }
       >
         {children}
       </Box>

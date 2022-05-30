@@ -1,19 +1,26 @@
-import { useState } from 'react'
-import { TextInput as RNTextInput, StyleSheet, ViewStyle } from 'react-native'
+import { useEffect, useState } from 'react'
+import {
+  TextInput as RNTextInput,
+  StyleSheet,
+  ViewStyle,
+  Pressable,
+} from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import Box from './Box'
 import { useTheme } from '@shopify/restyle'
 import { Theme } from '../../theme'
+import { interpolateColor, useDerivedValue, withTiming } from 'react-native-reanimated'
 
 type InputTypes = 'email' | 'password' | 'text'
 
 interface TextInputProps {
   value: string
-  onChangeText: (text: string) => void
+  onChangeText: (text: string, valid?: boolean) => void
   icon?: JSX.Element
   type: InputTypes
   additionalStyles?: ViewStyle
   placeholder: string
+  validate?: (value: string) => boolean
 }
 
 const getKeyboardType = (type: InputTypes) => {
@@ -36,11 +43,29 @@ const TextInput = ({
   onChangeText,
   icon,
   type,
+  validate,
   additionalStyles,
   placeholder,
 }: TextInputProps) => {
   const [secureText, setSecureText] = useState(true)
   const { colors } = useTheme<Theme>()
+
+  // validation state is either of 0, 1 or NaN to represent invalid, valid and null respectively
+  const [validationState, setValidationState] = useState<number>(NaN)
+
+  const getValidateLineColor = () => {
+    if (validationState === 0) return colors.error
+    if (validationState === 1) return colors.success
+
+    return colors.transparent
+  }
+
+  const _onChangeText = (text: string) => {
+    const isValid = validate?.call(null, text)
+    setValidationState(Number(isValid))
+
+    onChangeText(text, isValid)
+  }
 
   return (
     <Box
@@ -56,13 +81,35 @@ const TextInput = ({
         />
       </Box>
       <RNTextInput
-      placeholder={placeholder}
-
+        placeholder={placeholder}
         style={[styles.input, { color: colors.mainText }]}
         value={value}
         secureTextEntry={type === 'password' && secureText}
         keyboardType={getKeyboardType(type)}
-        onChangeText={onChangeText}
+        onChangeText={_onChangeText}
+      />
+
+      {type === 'password' ? (
+        <Pressable
+          style={{ height: '100%', justifyContent: 'center', padding: 16 }}
+          onPress={() => setSecureText(!secureText)}
+        >
+          {/* @ts-ignore */}
+          <Ionicons
+            name={!secureText ? 'eye-off' : 'eye'}
+            color={colors.mutedText}
+            size={20}
+          />
+        </Pressable>
+      ) : null}
+
+      {/* Validator View */}
+      <Box
+        height={'100%'}
+        width={3}
+        position="absolute"
+        right={0}
+        style = {{backgroundColor: getValidateLineColor()}}
       />
     </Box>
   )
@@ -85,7 +132,8 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontFamily: 'Blatant',
     height: '100%',
-    width: '100%',
+    // width: '100%',
+    flex: 1,
   },
 })
 

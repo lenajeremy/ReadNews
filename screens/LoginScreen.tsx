@@ -6,19 +6,21 @@ import {
   SafeAreaView,
   ScrollView,
   Pressable,
+  DevSettings,
 } from 'react-native'
-import { Box, Text, TextInput, Button, ErrorBoundary } from '../components'
+import { Box, Text, TextInput, Button, Toast } from '../components'
 import { useLoginMutation } from '../api/authApi'
 import { updateDetails } from '../redux/slices/userSlice'
 import { useAppDispatch } from '../hooks/reduxhooks'
 import { useTheme } from '@shopify/restyle'
 import { Theme } from '../theme'
 import { NavigationProp, useNavigation } from '@react-navigation/native'
+import { EMAIL_VALIDATION_REGEX } from '../constants'
 
 export default function LoginScreen() {
   const [loginFormValues, setLoginFormValues] = useState({
-    email: 'jeremiahlena13@gmail.com',
-    password: 'areyoukiddingme',
+    email: { value: 'jeremiahlena13@gmail.com', valid: false },
+    password: { value: 'areyouthere', valid: false },
   })
 
   const navigation = useNavigation<
@@ -32,7 +34,10 @@ export default function LoginScreen() {
   const dispatch = useAppDispatch()
 
   const handleLogin = async () => {
-    await login(loginFormValues)
+    await login({
+      email: loginFormValues.email.value,
+      password: loginFormValues.password.value,
+    })
   }
 
   useEffect(() => {
@@ -58,8 +63,7 @@ export default function LoginScreen() {
         style={{ marginHorizontal: spacing.md, paddingTop: spacing.xl * 4 }}
         showsVerticalScrollIndicator={false}
       >
-        
-        <Text color="mainText" variant="heading1" mb = {'xl'}>
+        <Text color="mainText" variant="heading1" mb={'lg'}>
           Login
         </Text>
 
@@ -69,12 +73,16 @@ export default function LoginScreen() {
             borderBottomRightRadius: 0,
             borderBottomLeftRadius: 0,
           }}
-          value={loginFormValues.email}
+          value={loginFormValues.email.value}
           type="email"
           placeholder="Enter your email"
-          onChangeText={(email) =>
-            setLoginFormValues({ ...loginFormValues, email })
+          onChangeText={(email, valid) =>
+            setLoginFormValues({
+              ...loginFormValues,
+              email: { value: email, valid: !!valid },
+            })
           }
+          validate={(string) => EMAIL_VALIDATION_REGEX.test(string)}
         />
 
         <TextInput
@@ -82,24 +90,38 @@ export default function LoginScreen() {
             borderTopRightRadius: 0,
             borderTopLeftRadius: 0,
           }}
-          value={loginFormValues.password}
+          value={loginFormValues.password.value}
           type="password"
           placeholder="Enter your password"
-          onChangeText={(password) =>
-            setLoginFormValues({ ...loginFormValues, password })
+          onChangeText={(password, valid) =>
+            setLoginFormValues({
+              ...loginFormValues,
+              password: { value: password, valid: !!valid },
+            })
           }
+          validate={(string) => string.length >= 8}
         />
 
         <Pressable
           onPress={() => authNavigation.navigate('Register')}
-          style={{ justifyContent: 'center', marginTop: spacing.lg, marginBottom: spacing.sm }}
+          style={{
+            justifyContent: 'center',
+            marginTop: spacing.lg,
+            marginBottom: spacing.sm,
+          }}
         >
-          <Text color = 'mainText' fontSize={16}>Don't have an account? Register</Text>
+          <Text color="mainText" fontSize={16}>
+            Don't have an account? Register
+          </Text>
         </Pressable>
 
         <Button
           additionalStyles={{ marginTop: spacing.sm, borderRadius: 8 }}
-          variant="contained"
+          variant={
+            loginFormValues.email.valid && loginFormValues.password.valid
+              ? 'contained'
+              : 'disabled'
+          }
           onPress={handleLogin}
           loading={isLoading}
         >
@@ -120,7 +142,12 @@ export default function LoginScreen() {
         {isSuccess && (
           <Text selectable>{JSON.stringify(data?.data, null, 3)}</Text>
         )}
-        {error && <Text selectable>{JSON.stringify(error, null, 3)}</Text>}
+        {error && (
+          <>
+            <Toast type="error" message="Incorrect login credentials" />
+            <Text selectable>{JSON.stringify(error, null, 3)}</Text>
+          </>
+        )}
       </ScrollView>
     </SafeAreaView>
   )

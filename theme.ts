@@ -31,6 +31,8 @@ const theme = createTheme({
 
         blue200: palette.blue200,
         primaryBlue: palette.blue700,
+        error: '#FF0000',
+        success: '#00FF00',
     },
     spacing: {
         xxs: 3,
