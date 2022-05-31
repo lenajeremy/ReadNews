@@ -49,6 +49,8 @@ const theme = createTheme({
         },
         heading2: {
             fontSize: 32,
+            fontFamily: 'Blatant',
+            lineHeight: 32
         },
         heading3: {
             fontSize: 26,

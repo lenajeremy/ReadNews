@@ -19,8 +19,8 @@ import { EMAIL_VALIDATION_REGEX } from '../constants'
 
 export default function LoginScreen() {
   const [loginFormValues, setLoginFormValues] = useState({
-    email: { value: 'jeremiahlena13@gmail.com', valid: false },
-    password: { value: 'areyouthere', valid: false },
+    email: { value: 'jeremiah@fusionintel.io', valid: false },
+    password: { value: 'areyoukiddingme', valid: false },
   })
 
   const navigation = useNavigation<
@@ -156,15 +156,3 @@ export default function LoginScreen() {
     </SafeAreaView>
   )
 }
-
-const styles = StyleSheet.create({
-  input: {
-    height: 60,
-    width: '100%',
-    backgroundColor: 'gray',
-    marginVertical: 20,
-    color: 'white',
-    padding: 20,
-    borderRadius: 8,
-  },
-})

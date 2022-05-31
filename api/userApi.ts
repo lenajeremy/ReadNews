@@ -2,11 +2,17 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { API_URL } from '../constants'
 import { RootState } from '../redux/store';
 
+
+interface InterestType {
+    name: string,
+    id: number,
+}
+
 const userApi = createApi({
     reducerPath: 'userApi',
     baseQuery: fetchBaseQuery({
         baseUrl: API_URL, prepareHeaders: (headers, api) => {
-            
+
             const token = (api.getState() as RootState).user.token
 
             if (token) {
@@ -17,12 +23,14 @@ const userApi = createApi({
         }
     }),
     endpoints: (builder) => ({
-        // login: builder.mutation<void, { email: string, password: string}>({
-        //     query: (body) => ({
-        //         url: '/login/',
-        //     })
-        // })
+        getAllInterests: builder.query<{ data: InterestType[] }, void>({
+            query: () => 'interests/all',
+            transformResponse: (res: any) => res.data
+        })
     })
 })
+
+
+export const { useGetAllInterestsQuery } = userApi;
 
 export default userApi;
