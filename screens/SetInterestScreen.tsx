@@ -1,13 +1,17 @@
 import {
   ActivityIndicator,
+  Alert,
+  Pressable,
   SafeAreaView,
   ScrollView,
+  StyleSheet,
   useWindowDimensions,
 } from 'react-native'
 import { useTheme } from '@shopify/restyle'
-import { useGetAllInterestsQuery } from '../api/userApi'
+import { useGetAllInterestsQuery, InterestType } from '../api/userApi'
 import { Theme } from '../theme'
 import { Box, Text } from '../components'
+import { useState } from 'react'
 
 const SetInterest = () => {
   const { height: DEVICE_HEIGHT } = useWindowDimensions()
@@ -41,10 +45,12 @@ const SetInterest = () => {
         contentContainerStyle={{
           alignItems: 'center',
           justifyContent: 'center',
+          padding: spacing.md,
         }}
         showsVerticalScrollIndicator={false}
       >
-        {isSuccess && <Text>{JSON.stringify(interests, null, 3)}</Text>}
+        {isSuccess && <AllInterests {...{ interests }} />}
+
         {isLoading && <ActivityIndicator color={'pink'} />}
       </ScrollView>
 
@@ -52,5 +58,44 @@ const SetInterest = () => {
     </SafeAreaView>
   )
 }
+
+const AllInterests = ({ interests }: { interests: InterestType[] }) => {
+  const [selectedInterests, setSelectedInterests] = useState<InterestType[]>([])
+
+  const addInterest = (interest: InterestType) => {
+    console.log(interest)
+  }
+
+  return (
+    <Box flexDirection="row" flexWrap="wrap">
+      {interests.map((interest) => (
+        <InterestBox key={interest.id} interest={interest} />
+      ))}
+    </Box>
+  )
+}
+
+const InterestBox = ({ interest }: { interest: InterestType }) => {
+  const [selected, setSelected] = useState(false)
+
+  const toggleSelected = () => {
+    Alert.alert(interest.name)
+  }
+
+  return (
+    <Box
+      pointerEvents="box-none"
+      margin="lg"
+      backgroundColor="chocolate"
+      padding="md"
+    >
+      <Pressable onPress={toggleSelected}>
+        <Text>{interest.name}</Text>
+      </Pressable>
+    </Box>
+  )
+}
+
+const styles = StyleSheet.create({})
 
 export default SetInterest

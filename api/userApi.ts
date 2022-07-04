@@ -3,7 +3,7 @@ import { API_URL } from '../constants'
 import { RootState } from '../redux/store';
 
 
-interface InterestType {
+export interface InterestType {
     name: string,
     id: number,
 }
@@ -23,7 +23,7 @@ const userApi = createApi({
         }
     }),
     endpoints: (builder) => ({
-        getAllInterests: builder.query<{ data: InterestType[] }, void>({
+        getAllInterests: builder.query<InterestType[] , void>({
             query: () => 'interests/all',
             transformResponse: (res: any) => res.data
         })
