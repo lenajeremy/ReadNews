@@ -62,34 +62,58 @@ const SetInterest = () => {
 const AllInterests = ({ interests }: { interests: InterestType[] }) => {
   const [selectedInterests, setSelectedInterests] = useState<InterestType[]>([])
 
-  const addInterest = (interest: InterestType) => {
-    console.log(interest)
+  const handleToggleInterest = (
+    prevSelectedState: boolean,
+    interest: InterestType,
+  ) => {
+    if (prevSelectedState) {
+      // the interest is already selected, remove it from the selected interests
+
+      setSelectedInterests(
+        selectedInterests.filter((item) => item.id !== interest.id),
+      )
+    } else {
+      // the interest is not selected, add it to the selected interest
+
+      setSelectedInterests([...selectedInterests, interest])
+    }
   }
 
   return (
     <Box flexDirection="row" flexWrap="wrap">
       {interests.map((interest) => (
-        <InterestBox key={interest.id} interest={interest} />
+        <InterestBox
+          key={interest.id}
+          interest={interest}
+          selected={
+            selectedInterests.findIndex(
+              (_interest) => _interest.name === interest.name,
+            ) !== -1
+          }
+          onToggleSelect={handleToggleInterest}
+        />
       ))}
     </Box>
   )
 }
 
-const InterestBox = ({ interest }: { interest: InterestType }) => {
-  const [selected, setSelected] = useState(false)
-
-  const toggleSelected = () => {
-    Alert.alert(interest.name)
-  }
-
+const InterestBox = ({
+  interest,
+  selected,
+  onToggleSelect,
+}: {
+  interest: InterestType
+  selected: boolean
+  onToggleSelect: (prevSelectedState: boolean, interest: InterestType) => void
+}) => {
   return (
     <Box
       pointerEvents="box-none"
       margin="lg"
-      backgroundColor="chocolate"
+      backgroundColor={selected ? 'chocolate' : 'success'}
       padding="md"
     >
-      <Pressable onPress={toggleSelected}>
+      <Pressable onPress={() => onToggleSelect(selected, interest)}>
         <Text>{interest.name}</Text>
       </Pressable>
     </Box>
