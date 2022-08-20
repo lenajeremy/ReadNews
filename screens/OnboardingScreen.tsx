@@ -12,10 +12,8 @@ import Animated, {
   Extrapolate,
   interpolate,
   interpolateColor,
-  runOnUI,
   SharedValue,
   useAnimatedGestureHandler,
-  useAnimatedProps,
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
@@ -23,11 +21,9 @@ import Animated, {
 } from 'react-native-reanimated'
 import { useTheme } from '@shopify/restyle'
 import { Theme } from '../theme'
-import { useNavigation } from '@react-navigation/native'
 import {
   PanGestureHandler,
   PanGestureHandlerGestureEvent,
-  TextInput,
 } from 'react-native-gesture-handler'
 import { clamp, opacity } from 'react-native-redash'
 
@@ -39,17 +35,17 @@ const OnboardingScreen = ({ navigation } : { navigation: any }) => {
     {
       title: 'Read News Online 📰',
       description:
-        'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Libero velit blanditiis consectetur a soluta deserunt!',
+        'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Libero velit blanditiis consectetur',
     },
     {
       title: 'News you love😎',
       description:
-        'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Libero velit blanditiis consectetur a soluta deserunt!',
+        'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Libero velit blanditiis consectetur',
     },
     {
       title: 'Save for later📌',
       description:
-        'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Libero velit blanditiis consectetur a soluta deserunt!',
+        'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Libero velit blanditiis consectetur',
     },
   ]
 
@@ -256,13 +252,12 @@ const OnboardingScreen = ({ navigation } : { navigation: any }) => {
 
         <Box style={styles.buttonContainer}>
           <Button
-          onPress={() => navigation.navigate('Login')}
+            onPress={() => navigation.navigate('Login')}
             additionalStyles={{
               width: DEVICE_WIDTH * 0.8,
               height: 70,
               marginTop: 10,
-            }}
-          >
+            }} variant={'text'}          >
             <Text fontFamily="Blatant" fontSize={24} style ={{color: 'white'}}>
               GET STARTED
             </Text>

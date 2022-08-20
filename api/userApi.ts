@@ -23,14 +23,23 @@ const userApi = createApi({
         }
     }),
     endpoints: (builder) => ({
-        getAllInterests: builder.query<InterestType[] , void>({
+        getAllInterests: builder.query<InterestType[], void>({
             query: () => 'interests/all',
             transformResponse: (res: any) => res.data
+        }),
+        addOrRemoveInterests: builder.mutation<{ data: number[], success: boolean, message: string }, { operation: 'add' | 'remove', interests: number[] }>({
+            query: (arg) => ({
+                url: `user/interests/${arg.operation}/`,
+                method: 'POST',
+                body: {
+                    interests: arg.interests
+                }
+            }),
         })
     })
 })
 
 
-export const { useGetAllInterestsQuery } = userApi;
+export const { useGetAllInterestsQuery, useAddOrRemoveInterestsMutation } = userApi;
 
 export default userApi;

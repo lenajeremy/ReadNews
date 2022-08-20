@@ -22,7 +22,7 @@ const newsApi = createApi({
     endpoints: (builder) => ({
         getNews: builder.query<NewsType[], void>({
             query: () => 'news/get_news/',
-            transformResponse: (res: {news: NewsType[] }) => res.news
+            transformResponse: (res: NewsType[]) => res
         })
     })
 })

@@ -5,23 +5,53 @@ import {
   SafeAreaView,
   ScrollView,
   StyleSheet,
-  useWindowDimensions,
 } from 'react-native'
 import { useTheme } from '@shopify/restyle'
-import { useGetAllInterestsQuery, InterestType } from '../api/userApi'
+import {
+  useGetAllInterestsQuery,
+  InterestType,
+  useAddOrRemoveInterestsMutation,
+} from '../api/userApi'
 import { Theme } from '../theme'
-import { Box, Text } from '../components'
-import { useState } from 'react'
+import { Box, Button, Text } from '../components'
+import React, { useEffect, useState } from 'react'
+import { NavigationProp, useNavigation } from '@react-navigation/native'
 
-const SetInterest = () => {
-  const { height: DEVICE_HEIGHT } = useWindowDimensions()
-  const { colors, spacing } = useTheme<Theme>()
+const SetInterest = (navigation: NavigationProp<ReactNavigation.AuthParamList, 'SetInterest'>) => {
+
+  const { colors } = useTheme<Theme>()
+  const homeNavigation = useNavigation<NavigationProp<ReactNavigation.RootParamList, 'Home'>>()
+
   const {
     data: interests,
     isLoading,
     isError,
     isSuccess,
   } = useGetAllInterestsQuery()
+
+  const [
+    addOrRemoveInterest,
+    { isLoading: isAddingInterest },
+  ] = useAddOrRemoveInterestsMutation()
+
+  const [selectedInterests, setSelectedInterests] = useState<InterestType[]>([])
+
+  const onSubmit = async () => {
+
+    const res = await addOrRemoveInterest({
+      operation: 'add',
+      interests: selectedInterests.map((interest) => interest.id),
+    }).unwrap()
+
+    console.log(res);
+
+    if (res.success) {
+      Alert.alert('Success', res.message)
+      homeNavigation.navigate('Home')
+    } else {
+      Alert.alert('Failure', res.message)
+    }
+  }
 
   return (
     <SafeAreaView style={{ backgroundColor: colors.mainBackground, flex: 1 }}>
@@ -31,7 +61,7 @@ const SetInterest = () => {
         </Text>
         <Text
           color="mutedText"
-          style={{ width: '85%', marginTop: 2, fontSize: 16 }}
+          style={{ width: '95%', marginTop: 4, fontSize: 16 }}
         >
           Select the topics you're interested to help us know the kind of news
           to recommend to you
@@ -39,36 +69,67 @@ const SetInterest = () => {
       </Box>
 
       <ScrollView
-        style={{
-          marginHorizontal: spacing.md,
-        }}
         contentContainerStyle={{
           alignItems: 'center',
           justifyContent: 'center',
-          padding: spacing.md,
+          paddingBottom: 60,
         }}
         showsVerticalScrollIndicator={false}
       >
-        {isSuccess && <AllInterests {...{ interests }} />}
+        {isSuccess && (
+          <AllInterests
+            {...{ interests, selectedInterests, setSelectedInterests }}
+          />
+        )}
 
         {isLoading && <ActivityIndicator color={'pink'} />}
       </ScrollView>
 
-      <Box padding="xl" backgroundColor="chocolate" height={100}></Box>
+      <Box
+        paddingHorizontal="xl"
+        marginBottom="lg"
+        position="absolute"
+        bottom={0}
+        paddingBottom={'md'}
+        width="100%"
+      >
+        <Button
+          variant={selectedInterests.length > 3 ? 'contained' : 'disabled'}
+          additionalStyles={{ flex: 1 }}
+          onPress={onSubmit}
+        >
+          {isAddingInterest ? (
+            <ActivityIndicator />
+          ) : (
+            <Text fontSize={16} style={{ color: 'white' }}>
+              {selectedInterests.length === 0
+                ? 'Select at least four items'
+                : selectedInterests.length < 4
+                ? `${4 - selectedInterests.length} items remaining`
+                : 'Select more or Continue'}
+            </Text>
+          )}
+        </Button>
+      </Box>
     </SafeAreaView>
   )
 }
 
-const AllInterests = ({ interests }: { interests: InterestType[] }) => {
-  const [selectedInterests, setSelectedInterests] = useState<InterestType[]>([])
-
+const AllInterests = ({
+  interests,
+  setSelectedInterests,
+  selectedInterests,
+}: {
+  setSelectedInterests: React.Dispatch<React.SetStateAction<InterestType[]>>
+  selectedInterests: InterestType[]
+  interests: InterestType[]
+}) => {
   const handleToggleInterest = (
     prevSelectedState: boolean,
     interest: InterestType,
   ) => {
     if (prevSelectedState) {
       // the interest is already selected, remove it from the selected interests
-
       setSelectedInterests(
         selectedInterests.filter((item) => item.id !== interest.id),
       )
@@ -80,7 +141,14 @@ const AllInterests = ({ interests }: { interests: InterestType[] }) => {
   }
 
   return (
-    <Box flexDirection="row" flexWrap="wrap">
+    <Box
+      flexDirection="row"
+      flexWrap="wrap"
+      paddingHorizontal="md"
+      paddingVertical="lg"
+      alignItems="center"
+      justifyContent="center"
+    >
       {interests.map((interest) => (
         <InterestBox
           key={interest.id}
@@ -106,20 +174,38 @@ const InterestBox = ({
   selected: boolean
   onToggleSelect: (prevSelectedState: boolean, interest: InterestType) => void
 }) => {
+  const { spacing } = useTheme<Theme>()
+
   return (
     <Box
       pointerEvents="box-none"
-      margin="lg"
-      backgroundColor={selected ? 'chocolate' : 'success'}
-      padding="md"
+      backgroundColor={selected ? 'chocolate' : 'lightGrayBackground'}
+      style={styles.interestBox}
     >
-      <Pressable onPress={() => onToggleSelect(selected, interest)}>
-        <Text>{interest.name}</Text>
+      <Pressable
+        onPress={() => onToggleSelect(selected, interest)}
+        style={{
+          paddingVertical: spacing.sm * 1.2,
+          paddingHorizontal: spacing.lg,
+        }}
+      >
+        <Text
+          color={selected ? 'lightGrayBackground' : 'mainBackground'}
+          variant="body"
+        >
+          {interest.name}
+        </Text>
       </Pressable>
     </Box>
   )
 }
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  interestBox: {
+    borderRadius: 20,
+    marginHorizontal: 8,
+    marginVertical: 8,
+  },
+})
 
 export default SetInterest

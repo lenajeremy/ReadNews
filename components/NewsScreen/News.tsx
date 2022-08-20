@@ -97,20 +97,20 @@ const NewsComponent = ({ item }) => {
   }))
 
   const handlePanGesture = useAnimatedGestureHandler({
-    onStart: (e) => {
-      console.log(e)
-    },
-    onActive: (e) => {
-      translateX.value = e.translationX
-    },
-    onEnd: (e) => {
-      translateX.value = withSpring(0, { damping: 500 })
-    },
+    // onStart: (e) => {
+    //   console.log(e)
+    // },
+    // onActive: (e) => {
+    //   translateX.value = e.translationX
+    // },
+    // onEnd: (e) => {
+    //   translateX.value = withSpring(0, { damping: 500 })
+    // },
   })
 
   return (
     // @ts-ignore
-    <PanGestureHandler onGestureEvent={handlePanGesture}>
+    // <PanGestureHandler onGestureEvent={handlePanGesture}>
       <AnimatedBox
         flexDirection="row"
         marginVertical="lg"
@@ -154,7 +154,7 @@ const NewsComponent = ({ item }) => {
           />
         </Box>
       </AnimatedBox>
-    </PanGestureHandler>
+    // </PanGestureHandler>
   )
 }
 

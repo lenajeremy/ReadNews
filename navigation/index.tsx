@@ -32,8 +32,8 @@ function RootNavigator() {
 
       {/* @ts-ignore */}
       <Stack.Group screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="Auth" component={AuthStackScreens} />
         <Stack.Screen name="Home" component={BottomTabNavigator} />
+        <Stack.Screen name="Auth" component={AuthStackScreens} />
       </Stack.Group>
       
     </Stack.Navigator>

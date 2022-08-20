@@ -124,7 +124,7 @@ export default function LoginScreen() {
           variant={
             loginFormValues.email.valid && loginFormValues.password.valid
               ? 'contained'
-              : 'disabled'
+              : 'contained'
           }
           onPress={handleLogin}
           loading={isLoading}
