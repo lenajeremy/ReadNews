@@ -77,14 +77,22 @@ const News = () => {
       refreshing={isLoading}
       data={news}
       keyExtractor={(item, index) => item.url + index.toString()}
-      renderItem={({ item }) => <NewsComponent item={item} />}
+      renderItem={({ item }) => (
+        <NewsComponent item={item} registerInteraction={registerInteraction} />
+      )}
     />
   )
 }
 
 const AnimatedBox = Animated.createAnimatedComponent(Box)
 
-const NewsComponent = ({ item }) => {
+const NewsComponent = ({
+  item,
+  registerInteraction,
+}: {
+  item: NewsType
+  registerInteraction: (newurl: string) => void
+}) => {
   const translateX = useSharedValue(0)
   const translateStyle = useAnimatedStyle(() => ({
     transform: [{ translateX: translateX.value }],
@@ -111,49 +119,49 @@ const NewsComponent = ({ item }) => {
   return (
     // @ts-ignore
     // <PanGestureHandler onGestureEvent={handlePanGesture}>
-      <AnimatedBox
-        flexDirection="row"
-        marginVertical="lg"
-        alignItems="center"
-        marginHorizontal="lg"
-        style={translateStyle}
-      >
-        <Box flex={2.5} marginRight="lg">
-          <Pressable onPress={() => registerInteraction(item.url)}>
-            <Text
-              color="mainText"
-              fontSize={18}
-              lineHeight={26}
-              fontFamily="Gilroy-Bold"
-            >
-              {item.title.length >= 65
-                ? item.title.slice(0, 62) + '...'
-                : item.title}
-            </Text>
-          </Pressable>
-          <Box flexDirection="row" paddingVertical="sm">
-            <Image
-              source={{ uri: item.metadata.favicon }}
-              style={{
-                width: 20,
-                height: 20,
-                borderRadius: 10,
-                marginRight: 10,
-              }}
-            />
-            <Text color="mutedText" fontSize={13}>
-              {item.metadata.website}
-            </Text>
-          </Box>
-        </Box>
-        <Box width={90} height={90} borderRadius={12} overflow="hidden">
+    <AnimatedBox
+      flexDirection="row"
+      marginVertical="lg"
+      alignItems="center"
+      marginHorizontal="lg"
+      style={translateStyle}
+    >
+      <Box flex={2.5} marginRight="lg">
+        <Pressable onPress={() => registerInteraction(item.url)}>
+          <Text
+            color="mainText"
+            fontSize={18}
+            lineHeight={26}
+            fontFamily="Gilroy-Bold"
+          >
+            {item.title.length >= 65
+              ? item.title.slice(0, 62) + '...'
+              : item.title}
+          </Text>
+        </Pressable>
+        <Box flexDirection="row" paddingVertical="sm">
           <Image
-            source={{ uri: item.img }}
-            style={{ height: '100%', width: '100%' }}
-            resizeMode="cover"
+            source={{ uri: item.metadata.favicon }}
+            style={{
+              width: 20,
+              height: 20,
+              borderRadius: 10,
+              marginRight: 10,
+            }}
           />
+          <Text color="mutedText" fontSize={13}>
+            {item.metadata.website}
+          </Text>
         </Box>
-      </AnimatedBox>
+      </Box>
+      <Box width={90} height={90} borderRadius={12} overflow="hidden">
+        <Image
+          source={{ uri: item.img }}
+          style={{ height: '100%', width: '100%' }}
+          resizeMode="cover"
+        />
+      </Box>
+    </AnimatedBox>
     // </PanGestureHandler>
   )
 }
