@@ -19,8 +19,8 @@ import { EMAIL_VALIDATION_REGEX } from '../constants'
 
 export default function LoginScreen() {
   const [loginFormValues, setLoginFormValues] = useState({
-    email: { value: 'jeremiah@fusionintel.io', valid: false },
-    password: { value: 'areyoukiddingme', valid: false },
+    email: { value: 'admin@site.com', valid: true },
+    password: { value: 'admin', valid: true },
   })
 
   const navigation = useNavigation<

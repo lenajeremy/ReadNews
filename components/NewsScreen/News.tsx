@@ -10,29 +10,26 @@ import Animated, {
   useAnimatedStyle,
   useAnimatedGestureHandler,
   useSharedValue,
-  withSpring,
-  withTiming,
   useDerivedValue,
   interpolate,
   Extrapolate,
 } from 'react-native-reanimated'
-import { PanGestureHandler } from 'react-native-gesture-handler'
 import { useLazyGetNewsQuery } from '../../api/newsApi'
 import type { NewsType } from '../../types'
 import { useAppSelector } from '../../hooks/reduxhooks'
-import { opacity } from '@shopify/restyle'
 
 const News = () => {
   const { token } = useAppSelector((store) => store.user)
 
   const [
     getNews,
-    { isLoading = true, error, data: news = [], isSuccess },
+    { isLoading = true, error, data: news = { news: [] }, isSuccess },
   ] = useLazyGetNewsQuery()
 
   useEffect(() => {
     ;(async function () {
-      const res = await getNews()
+      const res = await getNews().unwrap()
+
       console.log(res)
     })()
   }, [])
@@ -75,10 +72,11 @@ const News = () => {
       )}
       onRefresh={getNews}
       refreshing={isLoading}
-      data={news}
+      data={news.news}
       keyExtractor={(item, index) => item.url + index.toString()}
       renderItem={({ item }) => (
-        <NewsComponent item={item} registerInteraction={registerInteraction} />
+        <Text>{JSON.stringify(item, null, 3)}</Text>
+        // <NewsComponent item={item} registerInteraction={registerInteraction} />
       )}
     />
   )
