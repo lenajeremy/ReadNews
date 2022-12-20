@@ -8,7 +8,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { NewsScreen } from '../screens'
 import { useTheme } from '@shopify/restyle'
 import { Theme } from '../theme'
-import { Text } from '../components'
+
 
 export type RootTabParamList = {
   NewsScreen: undefined
@@ -53,7 +53,7 @@ export default function BottomTabNavigator() {
                   name="home"
                   size={24}
                   color = {color}
-                />
+                /> 
               ) : (
                 // @ts-ignore
                 <Feather

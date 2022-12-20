@@ -20,12 +20,27 @@ const newsApi = createApi({
         }
     }),
     endpoints: (builder) => ({
-        getNews: builder.query<{ news: NewsType[] }, void>({
-            query: () => 'news/get_news/'
+        getNews: builder.query<{ news: NewsType[] }, { page_number: number }>({
+            query: (args) => ({
+                url: '/news/get_news',
+                body: {
+                    news_per_page: 10,
+                    page_number: args.page_number
+                }
+            })
+        }),
+        registerInteraction: builder.mutation<void, string>({
+            query: (url) => ({
+                url: 'news/indicate_interaction/',
+                body: {
+                    news_url: url,
+                },
+                method: "POST"
+            })
         })
     })
 })
 
 export default newsApi;
 
-export const { useLazyGetNewsQuery } = newsApi;
+export const { useLazyGetNewsQuery, useGetNewsQuery, useRegisterInteractionMutation } = newsApi;

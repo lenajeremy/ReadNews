@@ -4,7 +4,7 @@
  *
  */
 import { NavigationContainer } from '@react-navigation/native'
-import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import { createStackNavigator } from '@react-navigation/stack'
 import * as React from 'react'
 
 import { RootStackParamList } from './types'
@@ -23,7 +23,7 @@ export default function Navigation() {
  * A root stack navigator is often used for displaying modals on top of all other content.
  * https://reactnavigation.org/docs/modal
  */
-const Stack = createNativeStackNavigator<RootStackParamList>()
+const Stack = createStackNavigator<RootStackParamList>()
 
 function RootNavigator() {
   return (

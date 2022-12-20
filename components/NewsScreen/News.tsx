@@ -1,4 +1,3 @@
-import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { Alert, FlatList, Pressable, Image } from 'react-native'
 import { Box, Text } from '../shared'
@@ -6,33 +5,29 @@ import LoadingNews from './LoadingNews'
 import Categories from './Categories'
 import FeaturedNews from './FeaturedNews'
 import { getDateText, getTimeOfDay } from '../../utils/dateutils'
-import Animated, {
-  useAnimatedStyle,
-  useAnimatedGestureHandler,
-  useSharedValue,
-  useDerivedValue,
-  interpolate,
-  Extrapolate,
-} from 'react-native-reanimated'
-import { useLazyGetNewsQuery } from '../../api/newsApi'
+import {
+  useLazyGetNewsQuery,
+  useRegisterInteractionMutation,
+} from '../../api/newsApi'
 import type { NewsType } from '../../types'
 import { useAppSelector } from '../../hooks/reduxhooks'
 
 const News = () => {
   const { token } = useAppSelector((store) => store.user)
+  const [pageNumber, setPageNumber] = React.useState<number>(1)
 
   const [
     getNews,
     { isLoading = true, error, data: news = { news: [] }, isSuccess },
   ] = useLazyGetNewsQuery()
 
+  const [registerInteraction] = useRegisterInteractionMutation()
+
   useEffect(() => {
     ;(async function () {
-      const res = await getNews().unwrap()
-
-      console.log(res)
+      const res = await getNews({ page_number: pageNumber }).unwrap()
     })()
-  }, [])
+  }, [pageNumber])
 
   if (isLoading) {
     return (
@@ -45,20 +40,20 @@ const News = () => {
     )
   }
 
-  const registerInteraction = async (url: string) => {
-    const { data } = await axios.post(
-      'https://iroyin.herokuapp.com/indicate_news_interaction/',
-      {
-        news_url: url,
-      },
-    )
-    console.log(data)
-    if (data.success) {
-      Alert.alert('Success', 'Interaction successfully recorded')
-    } else {
-      Alert.alert('Error', 'Interaction was not successfully recorded')
-    }
-  }
+  // const registerInteraction = async (url: string) => {
+  //   const { data } = await axios.post(
+  //     'https://iroyin.herokuapp.com/indicate_news_interaction/',
+  //     {
+  //       news_url: url,
+  //     },
+  //   )
+  //   console.log(data)
+  //   if (data.success) {
+  //     Alert.alert('Success', 'Interaction successfully recorded')
+  //   } else {
+  //     Alert.alert('Error', 'Interaction was not successfully recorded')
+  //   }
+  // }
 
   return (
     <FlatList
@@ -70,19 +65,16 @@ const News = () => {
           backgroundColor="transparentBackground"
         ></Box>
       )}
-      onRefresh={getNews}
+      onRefresh={() => getNews}
       refreshing={isLoading}
       data={news.news}
       keyExtractor={(item, index) => item.url + index.toString()}
       renderItem={({ item }) => (
-        <Text>{JSON.stringify(item, null, 3)}</Text>
-        // <NewsComponent item={item} registerInteraction={registerInteraction} />
+        <NewsComponent item={item} registerInteraction={registerInteraction} />
       )}
     />
   )
 }
-
-const AnimatedBox = Animated.createAnimatedComponent(Box)
 
 const NewsComponent = ({
   item,
@@ -91,38 +83,12 @@ const NewsComponent = ({
   item: NewsType
   registerInteraction: (newurl: string) => void
 }) => {
-  const translateX = useSharedValue(0)
-  const translateStyle = useAnimatedStyle(() => ({
-    transform: [{ translateX: translateX.value }],
-    opacity: interpolate(
-      translateX.value,
-      [0, -250],
-      [1, 0],
-      Extrapolate.CLAMP,
-    ),
-  }))
-
-  const handlePanGesture = useAnimatedGestureHandler({
-    // onStart: (e) => {
-    //   console.log(e)
-    // },
-    // onActive: (e) => {
-    //   translateX.value = e.translationX
-    // },
-    // onEnd: (e) => {
-    //   translateX.value = withSpring(0, { damping: 500 })
-    // },
-  })
-
   return (
-    // @ts-ignore
-    // <PanGestureHandler onGestureEvent={handlePanGesture}>
-    <AnimatedBox
+    <Box
       flexDirection="row"
       marginVertical="lg"
       alignItems="center"
       marginHorizontal="lg"
-      style={translateStyle}
     >
       <Box flex={2.5} marginRight="lg">
         <Pressable onPress={() => registerInteraction(item.url)}>
@@ -159,8 +125,7 @@ const NewsComponent = ({
           resizeMode="cover"
         />
       </Box>
-    </AnimatedBox>
-    // </PanGestureHandler>
+    </Box>
   )
 }
 

@@ -15,12 +15,13 @@ import { useAppDispatch } from '../hooks/reduxhooks'
 import { useTheme } from '@shopify/restyle'
 import { Theme } from '../theme'
 import { NavigationProp, useNavigation } from '@react-navigation/native'
+import { StackScreenProps } from '@react-navigation/stack'
 import { EMAIL_VALIDATION_REGEX } from '../constants'
 
-export default function LoginScreen() {
+export default function LoginScreen(props: StackScreenProps<ReactNavigation.AuthParamList>) {
   const [loginFormValues, setLoginFormValues] = useState({
-    email: { value: 'admin@site.com', valid: true },
-    password: { value: 'admin', valid: true },
+    email: { value: 'jeremiahlena13@gmail.com', valid: true },
+    password: { value: 'areyoukiddingme', valid: true },
   })
 
   const navigation = useNavigation<
@@ -50,6 +51,8 @@ export default function LoginScreen() {
       }
 
       dispatch(updateDetails(user))
+
+      props.navigation.popToTop()
 
       if (!data?.data.hasSetInterests) {
         authNavigation.navigate('SetInterest')

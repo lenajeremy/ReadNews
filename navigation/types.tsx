@@ -8,7 +8,7 @@ import {
   CompositeScreenProps,
   NavigatorScreenParams,
 } from '@react-navigation/native'
-import { NativeStackScreenProps } from '@react-navigation/native-stack'
+import { StackScreenProps } from '@react-navigation/stack'
 
 
 declare global {
@@ -25,7 +25,7 @@ export type RootStackParamList = {
 
 export type RootStackScreenProps<
   Screen extends keyof RootStackParamList
-> = NativeStackScreenProps<RootStackParamList, Screen>
+> = StackScreenProps<RootStackParamList, Screen>
 
 export type AuthStackParamList = {
   Onboarding: undefined
@@ -36,7 +36,7 @@ export type AuthStackParamList = {
 
 export type AuthStackScreenProps<
   Screen extends keyof AuthStackParamList
-> = NativeStackScreenProps<AuthStackParamList, Screen>
+> = StackScreenProps<AuthStackParamList, Screen>
 
 export type RootTabParamList = {
   NewsScreen: undefined
@@ -46,5 +46,5 @@ export type RootTabScreenProps<
   Screen extends keyof RootTabParamList
 > = CompositeScreenProps<
   BottomTabScreenProps<RootTabParamList, Screen>,
-  NativeStackScreenProps<RootStackParamList>
+  StackScreenProps<RootStackParamList>
 >
