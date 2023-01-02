@@ -13,21 +13,45 @@ import type { NewsType } from '../../types'
 import { useAppSelector } from '../../hooks/reduxhooks'
 
 const News = () => {
-  const { token } = useAppSelector((store) => store.user)
+  const [allNews, setAllNews] = React.useState<NewsType[]>([])
+  // const { token } = useAppSelector((store) => store.user)
   const [pageNumber, setPageNumber] = React.useState<number>(1)
+  const user = useAppSelector((store) => store.user)
 
   const [
-    getNews,
-    { isLoading = true, error, data: news = { news: [] }, isSuccess },
+    getNewsFromAPI,
+    {
+      isLoading = true,
+      isFetching,
+      error,
+      data: news = { news: [] },
+      isSuccess,
+    },
   ] = useLazyGetNewsQuery()
 
   const [registerInteraction] = useRegisterInteractionMutation()
 
-  useEffect(() => {
-    ;(async function () {
-      const res = await getNews({ page_number: pageNumber }).unwrap()
-    })()
-  }, [pageNumber])
+  const fetchNews = React.useCallback(
+    async function () {
+      try {
+        const res = await getNewsFromAPI({
+          page_number: pageNumber,
+          token: user.token,
+        }).unwrap()
+        console.log(res)
+
+        setAllNews([...allNews, ...res.news])
+        // setPageNumber(res.)
+      } catch (error) {
+        console.error(error)
+      }
+    },
+    [pageNumber],
+  )
+
+  React.useEffect(() => {
+    fetchNews()
+  }, [])
 
   if (isLoading) {
     return (
@@ -40,39 +64,30 @@ const News = () => {
     )
   }
 
-  // const registerInteraction = async (url: string) => {
-  //   const { data } = await axios.post(
-  //     'https://iroyin.herokuapp.com/indicate_news_interaction/',
-  //     {
-  //       news_url: url,
-  //     },
-  //   )
-  //   console.log(data)
-  //   if (data.success) {
-  //     Alert.alert('Success', 'Interaction successfully recorded')
-  //   } else {
-  //     Alert.alert('Error', 'Interaction was not successfully recorded')
-  //   }
-  // }
-
   return (
-    <FlatList
-      ListHeaderComponent={FlatListHeaderComponent}
-      ItemSeparatorComponent={() => (
-        <Box
-          height={3}
-          width={'100%'}
-          backgroundColor="transparentBackground"
-        ></Box>
-      )}
-      onRefresh={() => getNews}
-      refreshing={isLoading}
-      data={news.news}
-      keyExtractor={(item, index) => item.url + index.toString()}
-      renderItem={({ item }) => (
-        <NewsComponent item={item} registerInteraction={registerInteraction} />
-      )}
-    />
+    <>
+      <FlatList
+        ListHeaderComponent={FlatListHeaderComponent}
+        ItemSeparatorComponent={() => (
+          <Box
+            height={3}
+            width={'100%'}
+            backgroundColor="transparentBackground"
+          ></Box>
+        )}
+        onRefresh={() => fetchNews()}
+        refreshing={isLoading}
+        data={news.news}
+        keyExtractor={(item, index) => item.url + index.toString()}
+        renderItem={({ item }) => (
+          <NewsComponent
+            item={item}
+            registerInteraction={registerInteraction}
+          />
+        )}
+      />
+      <Text>{JSON.stringify(user, null, 4)}</Text>
+    </>
   )
 }
 

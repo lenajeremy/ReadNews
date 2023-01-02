@@ -20,10 +20,10 @@ const newsApi = createApi({
         }
     }),
     endpoints: (builder) => ({
-        getNews: builder.query<{ news: NewsType[] }, { page_number: number }>({
+        getNews: builder.query<{ news: NewsType[] }, { page_number: number, token: string }>({
             query: (args) => ({
                 url: '/news/get_news',
-                body: {
+                params: {
                     news_per_page: 10,
                     page_number: args.page_number
                 }
