@@ -4,7 +4,7 @@ import {
   StyleSheet,
   ScrollView,
   Image,
-  useColorScheme
+  useColorScheme,
 } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 import { Box, Text } from '../shared'
@@ -48,13 +48,14 @@ const FeaturedNews: React.FC = () => {
   const { width: DEVICE_WIDTH } = useWindowDimensions()
   const isDarkMode = useColorScheme() === 'dark'
 
-  
   const styles = StyleSheet.create({
     featuredNewsContainer: {
       width: DEVICE_WIDTH * 0.8,
-      height: 220,
+      height: 240,
       marginRight: 16,
       justifyContent: 'space-between',
+      overflow: 'hidden',
+      borderRadius: 16
     },
   })
 
@@ -69,7 +70,7 @@ const FeaturedNews: React.FC = () => {
           >
             <Image
               source={{ uri: news.imageURL }}
-              style={{ ...StyleSheet.absoluteFillObject, borderRadius: 8 }}
+              style={{ ...StyleSheet.absoluteFillObject }}
             />
 
             <LinearGradient
@@ -103,7 +104,7 @@ const FeaturedNews: React.FC = () => {
                 style={{ width: 30, height: 30, borderRadius: 15 }}
               />
               <Text
-                  color={isDarkMode ? 'mainText' : 'mainBackground'}
+                color={isDarkMode ? 'mainText' : 'mainBackground'}
                 variant="heading3"
                 fontFamily="Gilroy-Bold"
                 marginTop="sm"

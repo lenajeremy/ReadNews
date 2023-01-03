@@ -5,6 +5,7 @@ import {
   SafeAreaView,
   ScrollView,
   StyleSheet,
+  useColorScheme,
 } from 'react-native'
 import { useTheme } from '@shopify/restyle'
 import {
@@ -17,10 +18,13 @@ import { Box, Button, Text } from '../components'
 import React, { useEffect, useState } from 'react'
 import { NavigationProp, useNavigation } from '@react-navigation/native'
 
-const SetInterest = (navigation: NavigationProp<ReactNavigation.AuthParamList, 'SetInterest'>) => {
-
+const SetInterest = (
+  navigation: NavigationProp<ReactNavigation.AuthParamList, 'SetInterest'>,
+) => {
   const { colors } = useTheme<Theme>()
-  const homeNavigation = useNavigation<NavigationProp<ReactNavigation.RootParamList, 'Home'>>()
+  const homeNavigation = useNavigation<
+    NavigationProp<ReactNavigation.RootParamList, 'Home'>
+  >()
 
   const {
     data: interests,
@@ -37,13 +41,12 @@ const SetInterest = (navigation: NavigationProp<ReactNavigation.AuthParamList, '
   const [selectedInterests, setSelectedInterests] = useState<InterestType[]>([])
 
   const onSubmit = async () => {
-
     const res = await addOrRemoveInterest({
       operation: 'add',
       interests: selectedInterests.map((interest) => interest.id),
     }).unwrap()
 
-    console.log(res);
+    console.log(res)
 
     if (res.success) {
       Alert.alert('Success', res.message)
@@ -174,12 +177,15 @@ const InterestBox = ({
   selected: boolean
   onToggleSelect: (prevSelectedState: boolean, interest: InterestType) => void
 }) => {
+  const isDarkMode = useColorScheme() === 'dark'
   const { spacing } = useTheme<Theme>()
 
   return (
     <Box
       pointerEvents="box-none"
       backgroundColor={selected ? 'chocolate' : 'lightGrayBackground'}
+      borderColor={selected ? 'chocolate' : 'mainText'}
+      borderWidth={1}
       style={styles.interestBox}
     >
       <Pressable
@@ -190,7 +196,13 @@ const InterestBox = ({
         }}
       >
         <Text
-          color={selected ? 'lightGrayBackground' : 'mainBackground'}
+          color={
+            selected
+              ? 'lightGrayBackground'
+              : isDarkMode
+              ? 'mainBackground'
+              : 'mainText'
+          }
           variant="body"
         >
           {interest.name}

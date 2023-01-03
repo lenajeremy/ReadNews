@@ -35,17 +35,17 @@ const OnboardingScreen = ({ navigation } : { navigation: any }) => {
     {
       title: 'Read News Online 📰',
       description:
-        'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Libero velit blanditiis consectetur',
+        'Come on, get the latest news and updates everyday and add insights, your trusted knowledge with us',
     },
     {
       title: 'News you love😎',
       description:
-        'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Libero velit blanditiis consectetur',
+        'Come on, get the latest news and updates everyday and add insights, your trusted knowledge with us',
     },
     {
       title: 'Save for later📌',
       description:
-        'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Libero velit blanditiis consectetur',
+        'Come on, get the latest news and updates everyday and add insights, your trusted knowledge with us',
     },
   ]
 
@@ -300,7 +300,7 @@ const AnimatedOnboardingText = ({
         {text}
       </AnimatedText>
 
-      <AnimatedText textAlign="center" opacity={0.6} lineHeight={30}>
+      <AnimatedText textAlign="center" opacity={0.7} lineHeight={36} fontSize = {18}>
         {description}
       </AnimatedText>
     </AnimatedBox>
@@ -319,7 +319,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-around',
-    marginTop: 24,
+    marginBottom: -12,
   },
   slideProgressDot: {
     width: 6,

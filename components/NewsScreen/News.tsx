@@ -33,6 +33,7 @@ const News = () => {
 
   const fetchNews = React.useCallback(
     async function () {
+      Alert.alert('Your Token', user.token)
       try {
         const res = await getNewsFromAPI({
           page_number: pageNumber,

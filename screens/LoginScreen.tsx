@@ -20,8 +20,8 @@ import { EMAIL_VALIDATION_REGEX } from '../constants'
 
 export default function LoginScreen(props: StackScreenProps<ReactNavigation.AuthParamList>) {
   const [loginFormValues, setLoginFormValues] = useState({
-    email: { value: 'jeremiahlena13@gmail.com', valid: true },
-    password: { value: 'areyoukiddingme', valid: true },
+    email: { value: 'jeremiah@fusionintel.io', valid: true },
+    password: { value: 'somethinginteresting', valid: true },
   })
 
   const navigation = useNavigation<
