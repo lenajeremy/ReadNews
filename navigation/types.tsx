@@ -10,7 +10,6 @@ import {
 } from '@react-navigation/native'
 import { StackScreenProps } from '@react-navigation/stack'
 
-
 declare global {
   namespace ReactNavigation {
     interface RootParamList extends RootStackParamList {}
@@ -40,6 +39,8 @@ export type AuthStackScreenProps<
 
 export type RootTabParamList = {
   NewsScreen: undefined
+  ExploreScreen: undefined
+  ProfileScreen: undefined
 }
 
 export type RootTabScreenProps<

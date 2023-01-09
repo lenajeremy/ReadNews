@@ -35,7 +35,8 @@ const userApi = createApi({
                     interests: arg.interests
                 }
             }),
-        })
+        }),
+        // viewUserInterests: builder.query<>
     })
 })
 

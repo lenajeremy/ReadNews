@@ -7,6 +7,7 @@ import {
   ScrollView,
   Pressable,
   DevSettings,
+  useColorScheme,
 } from 'react-native'
 import { Box, Text, TextInput, Button, Toast } from '../components'
 import { useLoginMutation } from '../api/authApi'
@@ -33,6 +34,7 @@ export default function LoginScreen(props: StackScreenProps<ReactNavigation.Auth
 
   const [login, { isLoading, data, isSuccess, error }] = useLoginMutation()
   const dispatch = useAppDispatch()
+  const isDarkMode = useColorScheme() === 'dark';
 
   const handleLogin = async () => {
     await login({
@@ -140,6 +142,7 @@ export default function LoginScreen(props: StackScreenProps<ReactNavigation.Auth
               fontFamily="Blatant"
               letterSpacing={2}
               textTransform="uppercase"
+              color = {isDarkMode ? 'mainText' : 'mainBackground'}
             >
               Login
             </Text>

@@ -61,7 +61,7 @@ const FeaturedNews: React.FC = () => {
 
   return (
     <Box paddingLeft="lg" marginVertical="md" marginTop="sm">
-      <ScrollView showsHorizontalScrollIndicator={false} horizontal>
+      <ScrollView showsHorizontalScrollIndicator={false} horizontal snapToAlignment='center'>
         {featuredNews.map((news) => (
           <Box
             key={news.title}
@@ -82,15 +82,15 @@ const FeaturedNews: React.FC = () => {
               }}
             />
 
-            <Box flexDirection="row">
+            <Box flexDirection="row" marginTop='sm'>
               {news.tags.map((tag, index) => (
                 <Box
                   key={index}
                   backgroundColor="lightGrayBackground"
                   padding="xxs"
                   paddingHorizontal="sm"
-                  borderRadius={10}
-                  marginHorizontal="xxs"
+                  borderRadius={20}
+                  marginRight="sm"
                 >
                   <Text color="grayBackground" fontSize={12}>
                     {tag}

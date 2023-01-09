@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Alert, FlatList, Pressable, Image } from 'react-native'
+import { Alert, FlatList, Pressable, Image, ScrollView } from 'react-native'
 import { Box, Text } from '../shared'
 import LoadingNews from './LoadingNews'
 import Categories from './Categories'
@@ -11,38 +11,32 @@ import {
 } from '../../api/newsApi'
 import type { NewsType } from '../../types'
 import { useAppSelector } from '../../hooks/reduxhooks'
+import { NavigationProp, useNavigation } from '@react-navigation/native'
+import { RootStackParamList, RootTabParamList } from '../../navigation/types'
+import { isLoading } from 'expo-font'
 
 const News = () => {
   const [allNews, setAllNews] = React.useState<NewsType[]>([])
-  // const { token } = useAppSelector((store) => store.user)
   const [pageNumber, setPageNumber] = React.useState<number>(1)
   const user = useAppSelector((store) => store.user)
 
   const [
     getNewsFromAPI,
-    {
-      isLoading = true,
-      isFetching,
-      error,
-      data: news = { news: [] },
-      isSuccess,
-    },
+    { isLoading, isFetching, error, data: news = { news: [] }, isSuccess },
   ] = useLazyGetNewsQuery()
 
   const [registerInteraction] = useRegisterInteractionMutation()
 
   const fetchNews = React.useCallback(
-    async function () {
-      Alert.alert('Your Token', user.token)
+    async function (_pageNumber?: number) {
+      console.log('calling api')
       try {
         const res = await getNewsFromAPI({
-          page_number: pageNumber,
-          token: user.token,
+          page_number: _pageNumber ? _pageNumber : pageNumber,
         }).unwrap()
-        console.log(res)
 
         setAllNews([...allNews, ...res.news])
-        // setPageNumber(res.)
+        setPageNumber(res.nextPage)
       } catch (error) {
         console.error(error)
       }
@@ -66,29 +60,25 @@ const News = () => {
   }
 
   return (
-    <>
-      <FlatList
-        ListHeaderComponent={FlatListHeaderComponent}
-        ItemSeparatorComponent={() => (
-          <Box
-            height={3}
-            width={'100%'}
-            backgroundColor="transparentBackground"
-          ></Box>
-        )}
-        onRefresh={() => fetchNews()}
-        refreshing={isLoading}
-        data={news.news}
-        keyExtractor={(item, index) => item.url + index.toString()}
-        renderItem={({ item }) => (
-          <NewsComponent
-            item={item}
-            registerInteraction={registerInteraction}
-          />
-        )}
-      />
-      <Text>{JSON.stringify(user, null, 4)}</Text>
-    </>
+    <FlatList
+      ListHeaderComponent={FlatListHeaderComponent}
+      ItemSeparatorComponent={() => (
+        <Box
+          height={3}
+          width={'100%'}
+          backgroundColor="transparentBackground"
+        ></Box>
+      )}
+      onRefresh={() => fetchNews(1)}
+      refreshing={isFetching}
+      data={news.news}
+      keyExtractor={(item, index) => item.url + index.toString()}
+      onEndReachedThreshold={0.9}
+      onEndReached={() => fetchNews()}
+      renderItem={({ item }) => (
+        <NewsComponent item={item} registerInteraction={registerInteraction} />
+      )}
+    />
   )
 }
 
@@ -161,34 +151,40 @@ const GreetingBanner: React.FC = () => {
   )
 }
 
-const FlatListHeaderComponent = () => (
-  <>
-    <GreetingBanner />
-    <Categories />
-    <FeaturedNews />
-    <Box
-      flexDirection="row"
-      justifyContent="space-between"
-      alignItems="center"
-      marginBottom="md"
-      marginTop="lg"
-      marginHorizontal="lg"
-    >
-      <Text
-        variant="heading3"
-        fontSize={20}
-        fontFamily="Gilroy-Bold"
-        color="mainText"
+const FlatListHeaderComponent = () => {
+  const navigation = useNavigation<
+    NavigationProp<RootTabParamList, 'NewsScreen'>
+  >()
+
+  return (
+    <>
+      <GreetingBanner />
+      <Categories />
+      <FeaturedNews />
+      <Box
+        flexDirection="row"
+        justifyContent="space-between"
+        alignItems="center"
+        marginBottom="md"
+        marginTop="lg"
+        marginHorizontal="lg"
       >
-        Just For You
-      </Text>
-      <Pressable onPress={() => Alert.alert('hello', 'someting is happening')}>
-        <Text style={{ color: '#2b7efe' }} fontFamily="Gilroy-Bold">
-          See More
+        <Text
+          variant="heading3"
+          fontSize={20}
+          fontFamily="Gilroy-Bold"
+          color="mainText"
+        >
+          Just For You
         </Text>
-      </Pressable>
-    </Box>
-  </>
-)
+        <Pressable onPress={() => navigation.navigate('ExploreScreen')}>
+          <Text style={{ color: '#2b7efe' }} fontFamily="Gilroy-Bold">
+            See More
+          </Text>
+        </Pressable>
+      </Box>
+    </>
+  )
+}
 
 export default News

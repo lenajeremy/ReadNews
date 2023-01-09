@@ -16,17 +16,27 @@ const newsApi = createApi({
                 headers.set('Authorization', `Bearer ${token}`);
             }
 
+            // console.log(headers);
+
+
             return headers;
         }
     }),
     endpoints: (builder) => ({
-        getNews: builder.query<{ news: NewsType[] }, { page_number: number, token: string }>({
+        getNews: builder.query<{ news: NewsType[], currentPage: number, nextPage: number, perPage: number, totalPages: number }, { page_number: number }>({
             query: (args) => ({
                 url: '/news/get_news',
                 params: {
                     news_per_page: 10,
                     page_number: args.page_number
-                }
+                },
+            }),
+            transformResponse: (res: any) => ({
+                news: res.news,
+                currentPage: res.current_page,
+                nextPage: res.next_page,
+                perPage: res.per_page,
+                totalPages: res.total_pages,
             })
         }),
         registerInteraction: builder.mutation<void, string>({

@@ -5,14 +5,12 @@
 
 import { Feather, Foundation, Ionicons } from '@expo/vector-icons'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import { NewsScreen } from '../screens'
+import { ExploreScreen, NewsScreen, ProfileScreen } from '../screens'
 import { useTheme } from '@shopify/restyle'
 import { Theme } from '../theme'
+import { RootTabParamList } from './types'
+import { CustomTabBar } from '../components'
 
-
-export type RootTabParamList = {
-  NewsScreen: undefined
-}
 
 const BottomTab = createBottomTabNavigator<RootTabParamList>()
 
@@ -23,6 +21,7 @@ export default function BottomTabNavigator() {
     // @ts-ignore
     <BottomTab.Navigator
       initialRouteName="NewsScreen"
+      // tabBar={(props) => <CustomTabBar {...props} />}
       screenOptions={{
         tabBarStyle: {
           height: 80,
@@ -33,11 +32,11 @@ export default function BottomTabNavigator() {
           paddingTop: 24,
           backgroundColor: '#1c1c1e',
           borderTopWidth: 0,
-          flexDirection: 'column'
+          flexDirection: 'column',
         },
         tabBarShowLabel: false,
         tabBarActiveTintColor: colors.primaryBlue,
-        tabBarInactiveTintColor: colors.mainText
+        tabBarInactiveTintColor: colors.mainText,
       }}
     >
       {/* @ts-ignore */}
@@ -49,40 +48,39 @@ export default function BottomTabNavigator() {
             tabBarIcon: ({ focused, color }) =>
               focused ? (
                 // @ts-ignore
-                <Foundation
-                  name="home"
-                  size={24}
-                  color = {color}
-                /> 
+                <Foundation name="home" size={24} color={color} />
               ) : (
                 // @ts-ignore
-                <Feather
-                  name="home"
-                  size={24}
-                  color = {color}
-                />
+                <Feather name="home" size={24} color={color} />
               ),
           }}
         />
         <BottomTab.Screen
-          name="AnotherScreen"
-          component={NewsScreen}
+          name="ExploreScreen"
+          component={ExploreScreen}
           options={{
             tabBarIcon: ({ focused, color }) =>
               focused ? (
                 // @ts-ignore
-                <Ionicons
-                  name="ios-compass"
-                  size={24}
-                  color = {color}
-                />
+                <Ionicons name="ios-compass" size={24} color={color} />
               ) : (
                 // @ts-ignore
-                <Ionicons
-                  name="ios-compass-outline"
-                  size={24}
-                  color = {color}
-                />
+                <Ionicons name="ios-compass-outline" size={24} color={color} />
+              ),
+          }}
+        />
+
+        <BottomTab.Screen
+          name="ProfileScreen"
+          component={ProfileScreen}
+          options={{
+            tabBarIcon: ({ focused, color }) =>
+              focused ? (
+                // @ts-ignore
+                <Ionicons name="ios-compass" size={24} color={color} />
+              ) : (
+                // @ts-ignore
+                <Ionicons name="ios-compass-outline" size={24} color={color} />
               ),
           }}
         />

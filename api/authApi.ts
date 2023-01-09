@@ -10,6 +10,9 @@ const authApi = createApi({
                 url: '/login/',
                 method: 'POST',
                 body: body,
+                headers: {
+                    Authorization: "Something interesting",
+                }
             })
         }),
         register: builder.mutation<void, { email: string, password: string, fullName: string }>({
