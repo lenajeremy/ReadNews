@@ -35,7 +35,9 @@ const News = () => {
           page_number: _pageNumber ? _pageNumber : pageNumber,
         }).unwrap()
 
-        setAllNews([...allNews, ...res.news])
+        setAllNews(
+          _pageNumber === 1 ? [...res.news] : [...allNews, ...res.news],
+        )
         setPageNumber(res.nextPage)
       } catch (error) {
         console.error(error)
@@ -71,12 +73,15 @@ const News = () => {
       )}
       onRefresh={() => fetchNews(1)}
       refreshing={isFetching}
-      data={news.news}
+      data={allNews}
       keyExtractor={(item, index) => item.url + index.toString()}
       onEndReachedThreshold={0.9}
       onEndReached={() => fetchNews()}
       renderItem={({ item }) => (
-        <NewsComponent item={item} registerInteraction={registerInteraction} />
+        <NewsComponentMemoized
+          item={item}
+          registerInteraction={registerInteraction}
+        />
       )}
     />
   )
@@ -103,6 +108,8 @@ const NewsComponent = ({
             fontSize={18}
             lineHeight={26}
             fontFamily="Gilroy-Bold"
+            numberOfLines={2}
+            ellipsizeMode="clip"
           >
             {item.title.length >= 65
               ? item.title.slice(0, 62) + '...'
@@ -134,6 +141,8 @@ const NewsComponent = ({
     </Box>
   )
 }
+
+const NewsComponentMemoized = React.memo(NewsComponent)
 
 const GreetingBanner: React.FC = () => {
   const { firstName } = useAppSelector((store) => store.user)

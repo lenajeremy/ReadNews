@@ -50,9 +50,9 @@ const FeaturedNews: React.FC = () => {
 
   const styles = StyleSheet.create({
     featuredNewsContainer: {
-      width: DEVICE_WIDTH * 0.8,
-      height: 240,
-      marginRight: 16,
+      width: DEVICE_WIDTH * 0.87,
+      height: 250,
+      marginRight: 14,
       justifyContent: 'space-between',
       overflow: 'hidden',
       borderRadius: 16

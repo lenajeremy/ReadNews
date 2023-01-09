@@ -40,7 +40,7 @@ export const Header: React.FC = () => {
           strokeColor={colors.mainBackground}
           fillColor={colors.mainText}
         />
-        <Text color="mainText" marginLeft="sm" fontSize={20}>
+        <Text color="mainText" marginLeft="sm" fontSize={18} fontWeight = '600'>
           ReadNews
         </Text>
       </Box>
