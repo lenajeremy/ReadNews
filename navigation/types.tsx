@@ -9,6 +9,7 @@ import {
   NavigatorScreenParams,
 } from '@react-navigation/native'
 import { StackScreenProps } from '@react-navigation/stack'
+import { NewsType } from '../types'
 
 declare global {
   namespace ReactNavigation {
@@ -20,6 +21,10 @@ declare global {
 export type RootStackParamList = {
   Home: NavigatorScreenParams<RootTabParamList> | undefined
   Auth: NavigatorScreenParams<AuthStackParamList> | undefined
+  OpenNews:
+    | NewsType
+    | Exclude<NewsType, 'title' | 'image' | 'metadata'>
+    | undefined
 }
 
 export type RootStackScreenProps<

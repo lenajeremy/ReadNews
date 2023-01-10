@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { Alert, FlatList, Pressable, Image, ScrollView } from 'react-native'
+import {
+  Alert,
+  FlatList,
+  Pressable,
+  Image,
+  ScrollView,
+  ActivityIndicator,
+} from 'react-native'
 import { Box, Text } from '../shared'
 import LoadingNews from './LoadingNews'
 import Categories from './Categories'
@@ -13,12 +20,10 @@ import type { NewsType } from '../../types'
 import { useAppSelector } from '../../hooks/reduxhooks'
 import { NavigationProp, useNavigation } from '@react-navigation/native'
 import { RootStackParamList, RootTabParamList } from '../../navigation/types'
-import { isLoading } from 'expo-font'
 
 const News = () => {
   const [allNews, setAllNews] = React.useState<NewsType[]>([])
   const [pageNumber, setPageNumber] = React.useState<number>(1)
-  const user = useAppSelector((store) => store.user)
 
   const [
     getNewsFromAPI,
@@ -64,6 +69,7 @@ const News = () => {
   return (
     <FlatList
       ListHeaderComponent={FlatListHeaderComponent}
+      ListFooterComponent={() => (isFetching ? <ActivityIndicator /> : null)}
       ItemSeparatorComponent={() => (
         <Box
           height={3}
@@ -71,6 +77,9 @@ const News = () => {
           backgroundColor="transparentBackground"
         ></Box>
       )}
+      contentContainerStyle={{
+        paddingBottom: isFetching ? 100 : 80,
+      }}
       onRefresh={() => fetchNews(1)}
       refreshing={isFetching}
       data={allNews}
@@ -94,51 +103,57 @@ const NewsComponent = ({
   item: NewsType
   registerInteraction: (newurl: string) => void
 }) => {
+  const navigation = useNavigation()
+
   return (
-    <Box
-      flexDirection="row"
-      marginVertical="lg"
-      alignItems="center"
-      marginHorizontal="lg"
+    <Pressable
+      onPress={() => {
+        registerInteraction(item.url)
+        navigation.navigate('OpenNews', item)
+      }}
     >
-      <Box flex={2.5} marginRight="lg">
-        <Pressable onPress={() => registerInteraction(item.url)}>
+      <Box
+        flexDirection="row"
+        marginVertical="lg"
+        alignItems="center"
+        marginHorizontal="lg"
+      >
+        <Box flex={2.5} marginRight="lg">
           <Text
             color="mainText"
             fontSize={18}
             lineHeight={26}
             fontFamily="Gilroy-Bold"
-            numberOfLines={2}
-            ellipsizeMode="clip"
+            numberOfLines={3}
+            ellipsizeMode="tail"
           >
-            {item.title.length >= 65
-              ? item.title.slice(0, 62) + '...'
-              : item.title}
+            {item.title}
           </Text>
-        </Pressable>
-        <Box flexDirection="row" paddingVertical="sm">
+
+          <Box flexDirection="row" paddingVertical="sm">
+            <Image
+              source={{ uri: item.metadata.favicon }}
+              style={{
+                width: 20,
+                height: 20,
+                borderRadius: 10,
+                marginRight: 10,
+              }}
+            />
+            <Text color="mutedText" fontSize={13}>
+              {item.metadata.website}
+            </Text>
+          </Box>
+        </Box>
+        <Box width={90} height={90} borderRadius={12} overflow="hidden">
           <Image
-            source={{ uri: item.metadata.favicon }}
-            style={{
-              width: 20,
-              height: 20,
-              borderRadius: 10,
-              marginRight: 10,
-            }}
+            source={{ uri: item.img }}
+            style={{ height: '100%', width: '100%' }}
+            resizeMode="cover"
           />
-          <Text color="mutedText" fontSize={13}>
-            {item.metadata.website}
-          </Text>
         </Box>
       </Box>
-      <Box width={90} height={90} borderRadius={12} overflow="hidden">
-        <Image
-          source={{ uri: item.img }}
-          style={{ height: '100%', width: '100%' }}
-          resizeMode="cover"
-        />
-      </Box>
-    </Box>
+    </Pressable>
   )
 }
 

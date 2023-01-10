@@ -14,7 +14,7 @@ import { Theme } from '../theme'
 
 const ProfileScreen = () => {
   const { colors } = useTheme<Theme>()
-  const { firstName, lastName } = useAppSelector(store => store.user)
+  const { firstName, lastName, email } = useAppSelector(store => store.user)
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.mainBackground }}>
@@ -74,7 +74,7 @@ const ProfileScreen = () => {
               textAlign="center"
               color="mutedText"
             >
-              @jennifer_vars06
+              {email}
             </Text>
           </Box>
         </Box>
@@ -85,25 +85,24 @@ const ProfileScreen = () => {
 
 const styles = StyleSheet.create({
   backgroundImage: {
-    height: 200,
+    height: 180,
     width: '100%',
-    borderRadius: 16,
+    borderRadius: 12,
     overflow: 'hidden',
   },
   profileImage: {
     height: 120,
     width: 120,
     borderRadius: 60,
-    borderWidth: 6,
+    borderWidth: 4,
   },
   editPictureIcon: {
-    borderWidth: 4,
-    height: 45,
-    width: 45,
+    borderWidth: 3,
+    height: 40,
+    width: 40,
     borderRadius: 30,
-    backgroundColor: 'green',
     position: 'absolute',
-    bottom: 0,
+    bottom: 10,
     right: -10,
     alignItems: 'center',
     justifyContent: 'center',

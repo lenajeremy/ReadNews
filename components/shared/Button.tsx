@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
 import { useTheme } from '@shopify/restyle'
-import { Pressable, StyleSheet, ViewStyle } from 'react-native'
+import { Pressable, StyleSheet, TextStyle, ViewStyle } from 'react-native'
 import { Theme } from '../../theme'
 import Box from './Box'
 import Text from './Text'
@@ -39,9 +39,15 @@ const Button = ({
 
 type BackButtonProps = {
   pageName: string
+  style?: ViewStyle
+  textStyle?: TextStyle
 }
 
-export const BackButton = ({ pageName }: BackButtonProps) => {
+export const BackButton = ({
+  pageName,
+  style = {},
+  textStyle = {},
+}: BackButtonProps) => {
   const { spacing, colors } = useTheme<Theme>()
   const navigation = useNavigation()
 
@@ -58,12 +64,19 @@ export const BackButton = ({ pageName }: BackButtonProps) => {
         minWidth: 110,
         justifyContent: 'space-between',
         alignItems: 'center',
+        ...style,
       }}
     >
       <>
         {/* @ts-ignore */}
-        <Ionicons name="return-up-back-outline" size={24} color={colors.mainText} />
-        <Text variant="body">{pageName}</Text>
+        <Ionicons
+          name="return-up-back-outline"
+          size={24}
+          color={textStyle.color ?? colors.mainText}
+        />
+        <Text variant="body" style={textStyle} marginLeft = 'sm'>
+          {pageName}
+        </Text>
       </>
     </Button>
   )

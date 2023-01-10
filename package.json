@@ -24,6 +24,7 @@
     "@shopify/restyle": "^2.1.0",
     "expo": "~44.0.0",
     "expo-asset": "~8.4.4",
+    "expo-blur": "^12.0.1",
     "expo-constants": "~13.0.0",
     "expo-font": "~10.0.4",
     "expo-linear-gradient": "~11.0.3",
@@ -40,6 +41,7 @@
     "react-native-screens": "~3.10.1",
     "react-native-svg": "12.1.1",
     "react-native-web": "0.17.1",
+    "react-native-webview": "^11.26.0",
     "react-redux": "^8.0.1"
   },
   "devDependencies": {

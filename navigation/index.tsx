@@ -10,6 +10,7 @@ import * as React from 'react'
 import { RootStackParamList } from './types'
 import BottomTabNavigator from './BottomTabNavigator'
 import AuthStackScreens from './AuthStackNavigator'
+import { OpenNewsScreen } from '../screens'
 
 export default function Navigation() {
   return (
@@ -34,6 +35,7 @@ function RootNavigator() {
       <Stack.Group screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Home" component={BottomTabNavigator} />
         <Stack.Screen name="Auth" component={AuthStackScreens} />
+        <Stack.Screen name = 'OpenNews' component = {OpenNewsScreen} />
       </Stack.Group>
       
     </Stack.Navigator>
