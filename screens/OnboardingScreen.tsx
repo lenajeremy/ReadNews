@@ -30,22 +30,22 @@ import { clamp, opacity } from 'react-native-redash'
 const AnimatedBox = Animated.createAnimatedComponent(Box)
 const AnimatedText = Animated.createAnimatedComponent(Text)
 
-const OnboardingScreen = ({ navigation } : { navigation: any }) => {
+const OnboardingScreen = ({ navigation }: { navigation: any }) => {
   const slides = [
     {
       title: 'Read News Online 📰',
       description:
-        'Come on, get the latest news and updates everyday and add insights, your trusted knowledge with us',
+        'Stay informed on the latest happenings around the world with our curated selection of top news stories.',
     },
     {
       title: 'News you love😎',
       description:
-        'Come on, get the latest news and updates everyday and add insights, your trusted knowledge with us',
+        'Never miss a story on the topics you love and care about with our personalized and interest-based news feed.',
     },
     {
       title: 'Save for later📌',
       description:
-        'Come on, get the latest news and updates everyday and add insights, your trusted knowledge with us',
+        'Don\'t have time to read an article now? Save it for later and catch up on your saved stories at your convenience.',
     },
   ]
 
@@ -147,23 +147,34 @@ const OnboardingScreen = ({ navigation } : { navigation: any }) => {
     )
   })
 
-
   const dot1Styles = useAnimatedStyle(() => ({
-    backgroundColor: interpolateColor(opacity1.value, [0, 1], [colors.mainText, colors.chocolate]),
+    backgroundColor: interpolateColor(
+      opacity1.value,
+      [0, 1],
+      [colors.mainText, colors.chocolate],
+    ),
     opacity: interpolate(opacity1.value, [0, 1], [0.5, 1]),
-    transform: [{scale: interpolate(opacity1.value, [0, 1], [1, 1.5])}]
+    transform: [{ scale: interpolate(opacity1.value, [0, 1], [1, 1.5]) }],
   }))
-  
+
   const dot2Styles = useAnimatedStyle(() => ({
-    backgroundColor: interpolateColor(opacity2.value, [0, 1], [colors.mainText, colors.chocolate]),
+    backgroundColor: interpolateColor(
+      opacity2.value,
+      [0, 1],
+      [colors.mainText, colors.chocolate],
+    ),
     opacity: interpolate(opacity2.value, [0, 1], [0.5, 1]),
-    transform: [{scale: interpolate(opacity2.value, [0, 1], [1, 1.5])}]
+    transform: [{ scale: interpolate(opacity2.value, [0, 1], [1, 1.5]) }],
   }))
 
   const dot3Styles = useAnimatedStyle(() => ({
-    backgroundColor: interpolateColor(opacity3.value, [0, 1], [colors.mainText, colors.chocolate]),
+    backgroundColor: interpolateColor(
+      opacity3.value,
+      [0, 1],
+      [colors.mainText, colors.chocolate],
+    ),
     opacity: interpolate(opacity3.value, [0, 1], [0.5, 1]),
-    transform: [{scale: interpolate(opacity3.value, [0, 1], [1, 1.5])}]
+    transform: [{ scale: interpolate(opacity3.value, [0, 1], [1, 1.5]) }],
   }))
 
   return (
@@ -239,15 +250,9 @@ const OnboardingScreen = ({ navigation } : { navigation: any }) => {
         alignItems="center"
       >
         <Box style={styles.slideProgressIndicatorContainer}>
-          <AnimatedBox
-            style={[styles.slideProgressDot, dot1Styles]}
-          />
-          <AnimatedBox
-            style={[styles.slideProgressDot, dot2Styles]}
-          />
-          <AnimatedBox
-            style={[styles.slideProgressDot, dot3Styles]}
-          />
+          <AnimatedBox style={[styles.slideProgressDot, dot1Styles]} />
+          <AnimatedBox style={[styles.slideProgressDot, dot2Styles]} />
+          <AnimatedBox style={[styles.slideProgressDot, dot3Styles]} />
         </Box>
 
         <Box style={styles.buttonContainer}>
@@ -257,8 +262,10 @@ const OnboardingScreen = ({ navigation } : { navigation: any }) => {
               width: DEVICE_WIDTH * 0.8,
               height: 70,
               marginTop: 10,
-            }} variant={'text'}          >
-            <Text fontFamily="Blatant" fontSize={24} style ={{color: 'white'}}>
+            }}
+            variant={'text'}
+          >
+            <Text fontFamily="Blatant" fontSize={24} style={{ color: 'white' }}>
               GET STARTED
             </Text>
           </Button>
@@ -300,7 +307,12 @@ const AnimatedOnboardingText = ({
         {text}
       </AnimatedText>
 
-      <AnimatedText textAlign="center" opacity={0.7} lineHeight={36} fontSize = {18}>
+      <AnimatedText
+        textAlign="center"
+        opacity={0.7}
+        lineHeight={36}
+        fontSize={18}
+      >
         {description}
       </AnimatedText>
     </AnimatedBox>
