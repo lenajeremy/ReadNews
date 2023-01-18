@@ -39,6 +39,13 @@ const newsApi = createApi({
                 totalPages: res.total_pages,
             })
         }),
+        getNewsContent: builder.query<string, string>({
+            query: (url) => ({
+                url: '/news/get-content',
+                params: { url }
+            }),
+            transformResponse: (res: any) => res.text,
+        }),
         registerInteraction: builder.mutation<void, string>({
             query: (url) => ({
                 url: 'news/indicate_interaction/',
@@ -53,4 +60,4 @@ const newsApi = createApi({
 
 export default newsApi;
 
-export const { useLazyGetNewsQuery, useGetNewsQuery, useRegisterInteractionMutation } = newsApi;
+export const { useLazyGetNewsQuery, useGetNewsQuery, useRegisterInteractionMutation, useGetNewsContentQuery } = newsApi;
