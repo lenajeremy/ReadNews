@@ -71,10 +71,11 @@ const OpenNewsScreen = ({
                 backgroundColor: 'gray',
               },
               blockquote: {
-                backgroundColor: 'orange',
+                borderLeftColor: colors.mutedText,
+                borderLeftWidth: 6,
               },
-              paragraphText: { fontSize: 16, lineHeight: 30 },
-              text: { fontSize: 16, lineHeight: 30, color: colors.mutedText },
+              paragraphText: { fontSize: 17, lineHeight: 30 },
+              text: { fontSize: 17, lineHeight: 30, color: colors.mainText },
               link: { marginTop: -3 },
               linkLabel: {
                 fontSize: 16,
