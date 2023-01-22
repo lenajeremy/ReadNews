@@ -21,10 +21,20 @@ const authApi = createApi({
                 method: 'POST',
                 body: body
             })
+        }),
+        loginWithToken: builder.query<{ data: { email?: string, token?: string, first_name?: string, last_name?: string, hasSetInterests: boolean } }, string>({
+            query: (token) => ({
+                url: '/api/token/verify/',
+                params: { token },
+            }),
+            transformResponse: (res: any) => {
+                console.log(res, 'this is the response');
+                return res;
+            }
         })
     })
 })
 
 export default authApi;
 
-export const { useLoginMutation, useRegisterMutation } = authApi;
+export const { useLoginMutation, useRegisterMutation, useLazyLoginWithTokenQuery } = authApi;

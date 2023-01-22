@@ -9,7 +9,7 @@ import {
   DevSettings,
   useColorScheme,
 } from 'react-native'
-import { Box, Text, TextInput, Button, Toast } from '../components'
+import { Text, TextInput, Button, Toast } from '../components'
 import { useLoginMutation } from '../api/authApi'
 import { updateDetails } from '../redux/slices/userSlice'
 import { useAppDispatch } from '../hooks/reduxhooks'
@@ -17,12 +17,19 @@ import { useTheme } from '@shopify/restyle'
 import { Theme } from '../theme'
 import { NavigationProp, useNavigation } from '@react-navigation/native'
 import { StackScreenProps } from '@react-navigation/stack'
-import { EMAIL_VALIDATION_REGEX } from '../constants'
+import {
+  EMAIL_VALIDATION_REGEX,
+  HAS_OPENED_APP,
+  USER_TOKEN_KEY,
+} from '../constants'
+import useLocalStorage from '../hooks/useLocalStorage'
 
-export default function LoginScreen(props: StackScreenProps<ReactNavigation.AuthParamList>) {
+export default function LoginScreen(
+  props: StackScreenProps<ReactNavigation.AuthParamList>,
+) {
   const [loginFormValues, setLoginFormValues] = useState({
-    email: { value: 'jeremiah@fusionintel.io', valid: true },
-    password: { value: 'somethinginteresting', valid: true },
+    email: { value: 'jeremiahlena13@gmail.com', valid: true },
+    password: { value: 'areyoukiddingme', valid: true },
   })
 
   const navigation = useNavigation<
@@ -33,8 +40,12 @@ export default function LoginScreen(props: StackScreenProps<ReactNavigation.Auth
   >()
 
   const [login, { isLoading, data, isSuccess, error }] = useLoginMutation()
+
+  const [, updateToken] = useLocalStorage<string>(USER_TOKEN_KEY)
+  const [, updateHasOpenedApp] = useLocalStorage<boolean>(HAS_OPENED_APP)
+
   const dispatch = useAppDispatch()
-  const isDarkMode = useColorScheme() === 'dark';
+  const isDarkMode = useColorScheme() === 'dark'
 
   const handleLogin = async () => {
     await login({
@@ -52,7 +63,10 @@ export default function LoginScreen(props: StackScreenProps<ReactNavigation.Auth
         lastName: data?.data.last_name,
       }
 
+      updateHasOpenedApp(true)
       dispatch(updateDetails(user))
+
+      if (user.token) updateToken(user.token)
 
       props.navigation.popToTop()
 
@@ -142,7 +156,7 @@ export default function LoginScreen(props: StackScreenProps<ReactNavigation.Auth
               fontFamily="Blatant"
               letterSpacing={2}
               textTransform="uppercase"
-              color = {isDarkMode ? 'mainText' : 'mainBackground'}
+              color={isDarkMode ? 'mainText' : 'mainBackground'}
             >
               Login
             </Text>

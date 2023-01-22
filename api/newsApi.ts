@@ -27,7 +27,7 @@ const newsApi = createApi({
             query: (args) => ({
                 url: '/news/get_news',
                 params: {
-                    news_per_page: 10,
+                    news_per_page: 20,
                     page_number: args.page_number
                 },
             }),

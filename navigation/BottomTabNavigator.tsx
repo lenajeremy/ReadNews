@@ -19,8 +19,7 @@ export default function BottomTabNavigator() {
   return (
     // @ts-ignore
     <BottomTab.Navigator
-      initialRouteName="ProfileScreen"
-      // tabBar={(props) => <CustomTabBar {...props} />}
+      initialRouteName="NewsScreen"
       screenOptions={{
         tabBarStyle: {
           height: 80,
