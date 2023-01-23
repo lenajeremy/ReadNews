@@ -9,7 +9,11 @@ import { Ionicons } from '@expo/vector-icons'
 import Box from './Box'
 import { useTheme } from '@shopify/restyle'
 import { Theme } from '../../theme'
-import { interpolateColor, useDerivedValue, withTiming } from 'react-native-reanimated'
+import {
+  interpolateColor,
+  useDerivedValue,
+  withTiming,
+} from 'react-native-reanimated'
 
 type InputTypes = 'email' | 'password' | 'text'
 
@@ -21,6 +25,7 @@ interface TextInputProps {
   additionalStyles?: ViewStyle
   placeholder: string
   validate?: (value: string) => boolean
+  suffix?: React.ReactNode
 }
 
 const getKeyboardType = (type: InputTypes) => {
@@ -46,6 +51,7 @@ const TextInput = ({
   validate,
   additionalStyles,
   placeholder,
+  suffix,
 }: TextInputProps) => {
   const [secureText, setSecureText] = useState(true)
   const { colors } = useTheme<Theme>()
@@ -74,11 +80,15 @@ const TextInput = ({
     >
       <Box style={styles.iconContainer}>
         {/* @ts-ignore */}
-        <Ionicons
-          name={getIconString(type)}
-          size={20}
-          color={colors.mutedText}
-        />
+        {icon ? (
+          icon
+        ) : (
+          <Ionicons
+            name={getIconString(type)}
+            size={20}
+            color={colors.mutedText}
+          />
+        )}
       </Box>
       <RNTextInput
         placeholder={placeholder}
@@ -103,13 +113,15 @@ const TextInput = ({
         </Pressable>
       ) : null}
 
+      {suffix ? suffix : null}
+
       {/* Validator View */}
       <Box
         height={'100%'}
         width={3}
         position="absolute"
         right={0}
-        style = {{backgroundColor: getValidateLineColor()}}
+        style={{ backgroundColor: getValidateLineColor() }}
       />
     </Box>
   )

@@ -5,6 +5,7 @@ import {
   StyleSheet,
   ScrollView,
   useColorScheme,
+  ActivityIndicator,
 } from 'react-native'
 import { Box, Text, BackButton, ErrorBoundary } from '../components'
 import { StackScreenProps } from '@react-navigation/stack'
@@ -22,15 +23,21 @@ const OpenNewsScreen = ({
   route,
 }: StackScreenProps<RootStackParamList, 'OpenNews'>) => {
   const { colors, spacing } = useTheme<Theme>()
-  const TOP_SCREEN_HEIGHT = Dimensions.get('window').height * 0.35
+  const TOP_SCREEN_HEIGHT = Dimensions.get('window').height * 0.3
   const { width: DEVICE_WIDTH } = Dimensions.get('window')
   const isDarkMode = useColorScheme() === 'dark'
 
-  const { data: newsContent = '', isFetching } = useGetNewsContentQuery(
-    route.params?.url || '',
-  )
+  const {
+    data: newsContent = '',
+    isFetching,
+    isError,
+  } = useGetNewsContentQuery(route.params?.url || '')
   const [renderMdxError, setRenderMdxError] = React.useState<boolean>(false)
   const [viewMode, setViewMode] = React.useState<NewsViewMode>(NewsViewMode.MDX)
+
+  React.useEffect(() => {
+    if (isError) setViewMode(NewsViewMode.WEBVIEW)
+  }, [isError])
 
   return (
     <ScrollView>
@@ -55,6 +62,7 @@ const OpenNewsScreen = ({
             </Box>
           </Box>
         </Box>
+
         <Box
           flex={1}
           backgroundColor="mainBackground"
@@ -70,54 +78,70 @@ const OpenNewsScreen = ({
           >
             {route.params?.title}
           </Text>
-          <ErrorBoundary onError={() => setViewMode(NewsViewMode.WEBVIEW)}>
-            {viewMode === NewsViewMode.MDX ? (
-              <RenderMdx
-                componentStyle={{
-                  img: {
-                    width: DEVICE_WIDTH - spacing.lg * 2,
-                    height: 250,
-                    backgroundColor: 'gray',
-                  },
-                  listUnorderedItemText: {
-                    fontSize: 18,
-                    lineHeight: 30,
-                  },
-                  inline: {
-                    fontSize: 18,
-                    lineHeight: 30,
-                  },
-                  blockquote: {
-                    borderLeftColor: colors.mutedText,
-                    paddingLeft: 16,
-                    borderLeftWidth: 4,
-                    backgroundColor: isDarkMode ? '#3337' : '#FFF3',
-                  },
-                  paragraphText: {
-                    fontSize: 18,
-                    lineHeight: 30,
-                    textAlign: 'justify',
-                  },
-                  text: {
-                    fontSize: 18,
-                    lineHeight: 30,
-                    color: colors.mainText,
-                    textAlign: 'justify',
-                  },
-                  link: { marginTop: -3 },
-                  linkLabel: {
-                    fontSize: 18,
-                    lineHeight: 30,
-                    color: colors.chocolate,
-                  },
-                }}
-              >
-                {newsContent}
-              </RenderMdx>
-            ) : (
-              <WebView style = {{width: DEVICE_WIDTH, height: 500}} source={{ uri: route.params?.url as string }} />
-            )}
-          </ErrorBoundary>
+
+          {isFetching && <ActivityIndicator />}
+          {/* <Text>{JSON.stringify(res)}</Text> */}
+
+          <Box flex={1} backgroundColor="mainBackground">
+            <ErrorBoundary onError={() => setViewMode(NewsViewMode.WEBVIEW)}>
+              {viewMode === NewsViewMode.MDX ? (
+                <RenderMdx
+                  componentStyle={{
+                    root: {
+                      backgroundColor: colors.mainBackground,
+                    },
+                    img: {
+                      width: DEVICE_WIDTH - spacing.lg * 2,
+                      height: 250,
+                      backgroundColor: 'gray',
+                    },
+                    listUnorderedItemText: {
+                      fontSize: 18,
+                      lineHeight: 30,
+                    },
+                    inline: {
+                      fontSize: 18,
+                      lineHeight: 30,
+                    },
+                    blockquote: {
+                      borderLeftColor: colors.mutedText,
+                      paddingLeft: 16,
+                      borderLeftWidth: 4,
+                      backgroundColor: colors.transparentBackground,
+                    },
+                    codeBlock: {
+                      backgroundColor: colors.transparentBackground,
+                      fontFamily: 'Courier',
+                      padding: 8,
+                      fontSize: 16,
+                    },
+                    paragraphText: {
+                      fontSize: 18,
+                      lineHeight: 30,
+                    },
+                    text: {
+                      fontSize: 18,
+                      lineHeight: 30,
+                      color: colors.mainText,
+                    },
+                    link: { marginTop: -3 },
+                    linkLabel: {
+                      fontSize: 18,
+                      lineHeight: 30,
+                      color: colors.chocolate,
+                    },
+                  }}
+                >
+                  {newsContent}
+                </RenderMdx>
+              ) : (
+                <WebView
+                  style={{ width: DEVICE_WIDTH, height: 500 }}
+                  source={{ uri: route.params?.url as string }}
+                />
+              )}
+            </ErrorBoundary>
+          </Box>
         </Box>
       </Box>
     </ScrollView>

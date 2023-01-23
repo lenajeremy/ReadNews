@@ -16,6 +16,7 @@ export default function useCachedResources() {
           'Gilroy-Bold': require('../assets/fonts/Gilroy-Bold.ttf'),
           'Blatant-Bold': require('../assets/fonts/Blatant-Bold.otf'),
           'Blatant': require('../assets/fonts/Blatant.otf'),
+          'Courier': require('../assets/fonts/Courier.ttf')
         });
       } catch (e) {
         // We might want to provide this error information to an error reporting service

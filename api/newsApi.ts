@@ -44,7 +44,9 @@ const newsApi = createApi({
                 url: '/news/get-content',
                 params: { url }
             }),
-            transformResponse: (res: any) => res.text,
+            transformResponse: (res: any) => {
+                return res.text
+            },
         }),
         registerInteraction: builder.mutation<void, string>({
             query: (url) => ({
@@ -54,7 +56,8 @@ const newsApi = createApi({
                 },
                 method: "POST"
             })
-        })
+        }),
+
     })
 })
 
