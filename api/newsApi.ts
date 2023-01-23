@@ -57,10 +57,21 @@ const newsApi = createApi({
                 method: "POST"
             })
         }),
-
+        searchNews: builder.query<{ res: NewsType[] }, string>({
+            query: (title) => ({
+                url: '/news/search/',
+                params: { title }
+            })
+        })
     })
 })
 
 export default newsApi;
 
-export const { useLazyGetNewsQuery, useGetNewsQuery, useRegisterInteractionMutation, useGetNewsContentQuery } = newsApi;
+export const {
+    useLazyGetNewsQuery,
+    useGetNewsQuery,
+    useRegisterInteractionMutation,
+    useGetNewsContentQuery,
+    useLazySearchNewsQuery
+} = newsApi;
