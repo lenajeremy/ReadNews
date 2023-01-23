@@ -1,39 +1,25 @@
 import { Component } from 'react'
 import Text from './Text'
 import Box from './Box'
+import { ScrollView } from 'react-native'
+import { TouchableOpacity } from 'react-native-gesture-handler'
 
 class ErrorBoundary extends Component<
-  {},
+  { onError: VoidFunction; children: React.ReactNode },
   { hasError: boolean; errorMessage: string }
 > {
-  constructor(props:any) {
+  constructor(props: any) {
     super(props)
     this.state = { hasError: false, errorMessage: '' }
   }
 
-  static getDerivedStateFromError(error: Error) {
-    return { hasError: true, errorMessage: 'Some Message' }
-  }
-
   componentDidCatch() {
-      console.log('caught the error')
+    this.setState({ hasError: true, errorMessage: 'Some Message' })
+    this.props.onError()
   }
 
   render() {
-    if (this.state.hasError) {
-      return (
-        <Text fontSize={40} fontFamily="Blatant-Bold">
-          Hello There
-        </Text>
-      )
-    }
-
-    return (
-      <>
-        <Text>Working fine</Text>
-        {this.props.children}
-      </>
-    )
+    return this.props.children
   }
 }
 

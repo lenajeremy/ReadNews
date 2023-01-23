@@ -63,7 +63,7 @@ function RootNavigator() {
 
   if (isLoadingToken || isFetching) {
     return (
-      <Box flex={1} alignItems={'center'} justifyContent={'center'}>
+      <Box flex={1} alignItems={'center'} justifyContent={'center'} backgroundColor = 'mainBackground'>
         <ActivityIndicator />
         <Text>{String(isFetching) + String(isLoadingToken)}</Text>
       </Box>

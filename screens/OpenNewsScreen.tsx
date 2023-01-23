@@ -2,12 +2,11 @@ import * as React from 'react'
 import {
   Dimensions,
   ImageBackground,
-  StatusBar,
   StyleSheet,
   ScrollView,
   useColorScheme,
 } from 'react-native'
-import { Box, Text, BackButton } from '../components'
+import { Box, Text, BackButton, ErrorBoundary } from '../components'
 import { StackScreenProps } from '@react-navigation/stack'
 import { RootStackParamList } from '../navigation/types'
 import { useTheme } from '@shopify/restyle'
@@ -15,6 +14,8 @@ import { Theme } from '../theme'
 import { BlurView } from 'expo-blur'
 import { RenderMdx } from 'rn-mdx'
 import { useGetNewsContentQuery } from '../api/newsApi'
+import { NewsViewMode } from '../types'
+import WebView from 'react-native-webview'
 
 const OpenNewsScreen = ({
   navigation,
@@ -28,6 +29,8 @@ const OpenNewsScreen = ({
   const { data: newsContent = '', isFetching } = useGetNewsContentQuery(
     route.params?.url || '',
   )
+  const [renderMdxError, setRenderMdxError] = React.useState<boolean>(false)
+  const [viewMode, setViewMode] = React.useState<NewsViewMode>(NewsViewMode.MDX)
 
   return (
     <ScrollView>
@@ -67,31 +70,54 @@ const OpenNewsScreen = ({
           >
             {route.params?.title}
           </Text>
-          <RenderMdx
-            componentStyle={{
-              img: {
-                width: DEVICE_WIDTH - spacing.lg * 2,
-                height: 250,
-                backgroundColor: 'gray',
-              },
-              blockquote: {
-                borderLeftColor: colors.mutedText,
-                paddingLeft: 16,
-                borderLeftWidth: 4,
-                backgroundColor: isDarkMode ? '#3337' : '#FFF3',
-              },
-              paragraphText: { fontSize: 18, lineHeight: 30 },
-              text: { fontSize: 18, lineHeight: 30, color: colors.mainText },
-              link: { marginTop: -3 },
-              linkLabel: {
-                fontSize: 16,
-                lineHeight: 30,
-                color: colors.chocolate,
-              },
-            }}
-          >
-            {newsContent}
-          </RenderMdx>
+          <ErrorBoundary onError={() => setViewMode(NewsViewMode.WEBVIEW)}>
+            {viewMode === NewsViewMode.MDX ? (
+              <RenderMdx
+                componentStyle={{
+                  img: {
+                    width: DEVICE_WIDTH - spacing.lg * 2,
+                    height: 250,
+                    backgroundColor: 'gray',
+                  },
+                  listUnorderedItemText: {
+                    fontSize: 18,
+                    lineHeight: 30,
+                  },
+                  inline: {
+                    fontSize: 18,
+                    lineHeight: 30,
+                  },
+                  blockquote: {
+                    borderLeftColor: colors.mutedText,
+                    paddingLeft: 16,
+                    borderLeftWidth: 4,
+                    backgroundColor: isDarkMode ? '#3337' : '#FFF3',
+                  },
+                  paragraphText: {
+                    fontSize: 18,
+                    lineHeight: 30,
+                    textAlign: 'justify',
+                  },
+                  text: {
+                    fontSize: 18,
+                    lineHeight: 30,
+                    color: colors.mainText,
+                    textAlign: 'justify',
+                  },
+                  link: { marginTop: -3 },
+                  linkLabel: {
+                    fontSize: 18,
+                    lineHeight: 30,
+                    color: colors.chocolate,
+                  },
+                }}
+              >
+                {newsContent}
+              </RenderMdx>
+            ) : (
+              <WebView style = {{width: DEVICE_WIDTH, height: 500}} source={{ uri: route.params?.url as string }} />
+            )}
+          </ErrorBoundary>
         </Box>
       </Box>
     </ScrollView>
