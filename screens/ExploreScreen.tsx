@@ -5,14 +5,6 @@ import useLocalStorage from '../hooks/useLocalStorage'
 import { HAS_OPENED_APP, USER_TOKEN_KEY } from '../constants'
 
 const ExploreScreen = () => {
-  const [, updateToken] = useLocalStorage<string>(USER_TOKEN_KEY)
-  const [, updateIsOpen] = useLocalStorage<boolean>(HAS_OPENED_APP)
-
-  React.useEffect(() => {
-    updateToken(undefined)
-    // updateIsOpen(undefined)
-
-  }, [])
 
   return (
     <SafeAreaView style={{ flex: 1 }}>

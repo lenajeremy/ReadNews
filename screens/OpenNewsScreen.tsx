@@ -5,6 +5,7 @@ import {
   StatusBar,
   StyleSheet,
   ScrollView,
+  useColorScheme,
 } from 'react-native'
 import { Box, Text, BackButton } from '../components'
 import { StackScreenProps } from '@react-navigation/stack'
@@ -22,8 +23,11 @@ const OpenNewsScreen = ({
   const { colors, spacing } = useTheme<Theme>()
   const TOP_SCREEN_HEIGHT = Dimensions.get('window').height * 0.35
   const { width: DEVICE_WIDTH } = Dimensions.get('window')
+  const isDarkMode = useColorScheme() === 'dark'
 
-  const { data: newsContent = '', isFetching } = useGetNewsContentQuery(route.params?.url || '')
+  const { data: newsContent = '', isFetching } = useGetNewsContentQuery(
+    route.params?.url || '',
+  )
 
   return (
     <ScrollView>
@@ -72,10 +76,12 @@ const OpenNewsScreen = ({
               },
               blockquote: {
                 borderLeftColor: colors.mutedText,
-                borderLeftWidth: 6,
+                paddingLeft: 16,
+                borderLeftWidth: 4,
+                backgroundColor: isDarkMode ? '#3337' : '#FFF3',
               },
-              paragraphText: { fontSize: 17, lineHeight: 30 },
-              text: { fontSize: 17, lineHeight: 30, color: colors.mainText },
+              paragraphText: { fontSize: 18, lineHeight: 30 },
+              text: { fontSize: 18, lineHeight: 30, color: colors.mainText },
               link: { marginTop: -3 },
               linkLabel: {
                 fontSize: 16,

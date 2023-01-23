@@ -34,7 +34,7 @@ export default function Navigation() {
 const Stack = createStackNavigator<RootStackParamList>()
 
 function RootNavigator() {
-  const [token, , isLoadingToken] = useLocalStorage<string>(USER_TOKEN_KEY)
+  const [token, updateToken, isLoadingToken] = useLocalStorage<string>(USER_TOKEN_KEY)
   const [loginWithToken, { isFetching }] = useLazyLoginWithTokenQuery()
 
   const dispatch = useAppDispatch()
@@ -54,7 +54,7 @@ function RootNavigator() {
           )
         }
       } catch (error) {
-        console.error(error)
+        updateToken(undefined)
       }
     }
 
