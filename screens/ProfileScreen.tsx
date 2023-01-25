@@ -11,10 +11,17 @@ import {
 import { Text, Box, BackButton } from '../components'
 import { useAppSelector } from '../hooks/reduxhooks'
 import { Theme } from '../theme'
+import * as Updates from 'expo-updates'
+import localStorage from '../utils/localStorage'
 
 const ProfileScreen = () => {
   const { colors } = useTheme<Theme>()
-  const { firstName, lastName, email } = useAppSelector(store => store.user)
+  const { firstName, lastName, email } = useAppSelector((store) => store.user)
+
+  const logout = function () {
+    localStorage.clear()
+    Updates.reloadAsync()
+  }
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.mainBackground }}>
@@ -77,6 +84,10 @@ const ProfileScreen = () => {
               {email}
             </Text>
           </Box>
+
+          <Pressable onPress={logout}>
+            <Text>Logout</Text>
+          </Pressable>
         </Box>
       </Box>
     </SafeAreaView>

@@ -28,6 +28,7 @@ export default function BottomTabNavigator() {
           borderRadius: 16,
           marginHorizontal: spacing.lg,
           paddingTop: 24,
+          elevation: 0,
           // backgroundColor: colors.mainText,
           borderTopWidth: 0,
           flexDirection: 'column',
