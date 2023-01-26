@@ -10,14 +10,19 @@ const newsApi = createApi({
     baseQuery: fetchBaseQuery({
         baseUrl: API_URL, prepareHeaders: (headers, api) => {
 
-            const token = (api.getState() as RootState).user.token
+            // const stae = (api.getState() as RootState)
+            // console.log(stae)
 
-            if (token) {
+
+            
+            const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjc5NTM5NjkwLCJpYXQiOjE2NzQ3MDEyOTAsImp0aSI6IjM0NjM4ODZkN2Y1YTQ4ZDE4YjgyYzRhNGQ4ODIzZmE1IiwidXNlcl9pZCI6Nn0.RhgfLhxI35F0wRsz6vFAysAM_zJF6V7BNywl2AnfKJM'
+            console.log('before stting', token)
+            
+            // if (token) {
                 headers.set('Authorization', `Bearer ${token}`);
-            }
+            // }
 
-            // console.log(headers);
-
+            console.log(headers);
 
             return headers;
         }
@@ -31,13 +36,16 @@ const newsApi = createApi({
                     page_number: args.page_number
                 },
             }),
-            transformResponse: (res: any) => ({
-                news: res.news,
-                currentPage: res.current_page,
-                nextPage: res.next_page,
-                perPage: res.per_page,
-                totalPages: res.total_pages,
-            })
+            transformResponse: (res: any) => {
+                console.log(res)
+                return {
+                    news: res.news,
+                    currentPage: res.current_page,
+                    nextPage: res.next_page,
+                    perPage: res.per_page,
+                    totalPages: res.total_pages,
+                }
+            }
         }),
         getNewsContent: builder.query<string, string>({
             query: (url) => ({

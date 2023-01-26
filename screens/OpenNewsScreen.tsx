@@ -128,7 +128,7 @@ const OpenNewsScreen = ({
                     linkLabel: {
                       fontSize: 18,
                       lineHeight: 30,
-                      color: colors.chocolate,
+                      color: colors.primaryBlue,
                     },
                   }}
                 >

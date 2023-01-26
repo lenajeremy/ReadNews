@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { useTheme } from '@shopify/restyle'
 import { SafeAreaView, useColorScheme } from 'react-native'
 import { Header, News, Text } from '../components'
@@ -13,6 +14,7 @@ export const NewsScreen = ({
 
   return (
     <SafeAreaView style={{ backgroundColor: colors.mainBackground, flex: 1 }}>
+      <Text>{JSON.stringify(user, null, 3)}</Text>
       <Header />
       <News />
     </SafeAreaView>
