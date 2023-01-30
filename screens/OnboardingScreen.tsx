@@ -3,6 +3,7 @@ import {
   SafeAreaView,
   useWindowDimensions,
   StyleSheet,
+  Platform,
 } from 'react-native'
 import { Box, Button, Text } from '../components'
 import React, { useEffect } from 'react'
@@ -45,7 +46,7 @@ const OnboardingScreen = ({ navigation }: { navigation: any }) => {
     {
       title: 'Save for later📌',
       description:
-        'Don\'t have time to read an article now? Save it for later and catch up on your saved stories at your convenience.',
+        "Don't have time to read an article now? Save it for later and catch up on your saved stories at your convenience.",
     },
   ]
 
@@ -297,6 +298,7 @@ const AnimatedOnboardingText = ({
       px="lg"
       alignItems="center"
       width="90%"
+      pointerEvents={'none'}
     >
       <AnimatedText
         variant="heading1"
@@ -322,7 +324,7 @@ const AnimatedOnboardingText = ({
 const styles = StyleSheet.create({
   slideTextContainer: {
     position: 'absolute',
-    top: '57%',
+    top: Platform.OS === 'ios' ? '57%' : '53%',
   },
   slideProgressIndicatorContainer: {
     width: 70,
@@ -342,11 +344,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     width: '100%',
-    marginTop: 50,
+    marginTop: 32,
   },
   buttonAndIndicatorContainer: {
     position: 'absolute',
-    bottom: '17%',
+    top: Platform.OS === 'ios' ? '75%' : '73%',
   },
 })
 

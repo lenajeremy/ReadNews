@@ -48,7 +48,7 @@ function RootNavigator() {
             updateDetails({
               token: res.data.token,
               email: res.data.email,
-              lastName: res.data.email,
+              lastName: res.data.last_name,
               firstName: res.data.first_name,
             }),
           )

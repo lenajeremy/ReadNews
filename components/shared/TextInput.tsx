@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   TextInput as RNTextInput,
   StyleSheet,
@@ -7,6 +7,7 @@ import {
 } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import Box from './Box'
+import Text from './Text'
 import { useTheme } from '@shopify/restyle'
 import { Theme } from '../../theme'
 import {
@@ -30,7 +31,7 @@ interface TextInputProps {
 
 const getKeyboardType = (type: InputTypes) => {
   if (type === 'email') return 'email-address'
-  if (type === 'password') return 'visible-password'
+  if (type === 'password') return 'password'
   if (type === 'text') return 'default'
 
   return 'default'
@@ -95,6 +96,7 @@ const TextInput = ({
         style={[styles.input, { color: colors.mainText }]}
         value={value}
         secureTextEntry={type === 'password' && secureText}
+        // @ts-ignore
         keyboardType={getKeyboardType(type)}
         onChangeText={_onChangeText}
       />

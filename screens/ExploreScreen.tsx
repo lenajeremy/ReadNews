@@ -19,7 +19,8 @@ const ExploreScreen = () => {
 
   const [searchText, setSearchText] = React.useState<string>('')
   const [searchNews, { isFetching, data }] = useLazySearchNewsQuery()
-  const searchNewsDebounced = debounce(searchNews, 500)
+
+  const searchNewsDebounced = React.useMemo(() => debounce(searchNews, 300), [])
 
   React.useEffect(() => {
     ;(async function () {
@@ -76,7 +77,12 @@ const ExploreScreen = () => {
           )}
           ListEmptyComponent={() =>
             searchText && !isFetching ? (
-              <Box flex = {1} alignItems = 'center' justifyContent='center' marginTop='xl'>
+              <Box
+                flex={1}
+                alignItems="center"
+                justifyContent="center"
+                marginTop="xl"
+              >
                 <Image
                   source={require('../assets/images/notfound.png')}
                   style={{ height: 250, width: 250 }}
