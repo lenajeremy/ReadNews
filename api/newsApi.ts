@@ -10,17 +10,11 @@ const newsApi = createApi({
     baseQuery: fetchBaseQuery({
         baseUrl: API_URL, prepareHeaders: (headers, api) => {
 
-            // const stae = (api.getState() as RootState)
-            // console.log(stae)
+            const token = (api.getState() as RootState)
 
-
-            
-            const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjc5NTM5NjkwLCJpYXQiOjE2NzQ3MDEyOTAsImp0aSI6IjM0NjM4ODZkN2Y1YTQ4ZDE4YjgyYzRhNGQ4ODIzZmE1IiwidXNlcl9pZCI6Nn0.RhgfLhxI35F0wRsz6vFAysAM_zJF6V7BNywl2AnfKJM'
-            console.log('before stting', token)
-            
-            // if (token) {
+            if (token) {
                 headers.set('Authorization', `Bearer ${token}`);
-            // }
+            }
 
             console.log(headers);
 

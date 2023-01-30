@@ -11,11 +11,13 @@ import { useTheme } from '@shopify/restyle'
 import { Theme } from '../theme'
 import { RootTabParamList } from './types'
 import { Platform } from 'react-native'
+import { useColorScheme } from 'react-native'
 
 const BottomTab = createBottomTabNavigator<RootTabParamList>()
 
 export default function BottomTabNavigator() {
   const { colors, spacing } = useTheme<Theme>()
+  const isDark = useColorScheme() === 'dark'
 
   return (
     // @ts-ignore
@@ -33,6 +35,7 @@ export default function BottomTabNavigator() {
           elevation: 0,
           borderTopWidth: 0,
           flexDirection: 'column',
+          backgroundColor: isDark ? '#222' : 'white',
         },
         tabBarShowLabel: false,
         tabBarActiveTintColor: colors.primaryBlue,
