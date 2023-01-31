@@ -28,9 +28,6 @@ function useLocalStorage<T>(key: string): LocalStorageHooksValue<T> {
 
 
     const updateValue = React.useCallback((value: T | undefined) => {
-
-        console.log(`updating ${key} to ${value}`)
-
         if (value) {
             localStorage.setItem(key, JSON.stringify(value))
             setValue(value);
@@ -44,7 +41,6 @@ function useLocalStorage<T>(key: string): LocalStorageHooksValue<T> {
     }, [])
 
     React.useEffect(() => {
-        console.log(key, value, loading)
     }, [value, loading])
 
     return [value, updateValue, loading, clearAll]

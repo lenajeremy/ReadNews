@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { useNavigation } from '@react-navigation/native'
 import { Pressable, Image } from 'react-native'
-import { Box, Text } from '../index'
+import { Box, Text } from '../shared/index'
 import { NewsType } from '../../types'
 
 const NewsComponent = ({

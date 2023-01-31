@@ -4,6 +4,7 @@ import {
   StyleSheet,
   ViewStyle,
   Pressable,
+  Platform,
 } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import Box from './Box'
@@ -31,7 +32,8 @@ interface TextInputProps {
 
 const getKeyboardType = (type: InputTypes) => {
   if (type === 'email') return 'email-address'
-  if (type === 'password') return 'password'
+  if (type === 'password')
+    return Platform.OS === 'ios' ? 'default' : 'password'
   if (type === 'text') return 'default'
 
   return 'default'

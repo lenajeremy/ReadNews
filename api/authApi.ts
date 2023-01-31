@@ -23,11 +23,7 @@ const authApi = createApi({
             query: (token) => ({
                 url: '/api/token/verify/',
                 params: { token },
-            }),
-            transformResponse: (res: any) => {
-                console.log(res, 'this is the response');
-                return res;
-            }
+            })
         })
     })
 })

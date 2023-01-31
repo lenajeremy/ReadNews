@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { FlatList, Pressable, ActivityIndicator } from 'react-native'
 import { Box, Text } from '../shared'
 import NewsComponent from './NewsComponent'
@@ -8,8 +8,10 @@ import FeaturedNews from './FeaturedNews'
 import { getDateText, getTimeOfDay } from '../../utils/dateutils'
 import {
   useLazyGetNewsQuery,
+  useLazySearchNewsQuery,
   useRegisterInteractionMutation,
 } from '../../api/newsApi'
+
 import type { NewsType } from '../../types'
 import { useAppSelector } from '../../hooks/reduxhooks'
 import { NavigationProp, useNavigation } from '@react-navigation/native'
@@ -18,17 +20,13 @@ import { RootTabParamList } from '../../navigation/types'
 const News = () => {
   const [allNews, setAllNews] = React.useState<NewsType[]>([])
   const [pageNumber, setPageNumber] = React.useState<number>(1)
+  const token = useAppSelector((store) => store.user.token)
 
-  const [
-    getNewsFromAPI,
-    { isLoading, isFetching, error, data: news = { news: [] }, isSuccess },
-  ] = useLazyGetNewsQuery()
-
+  const [getNewsFromAPI, { isLoading, isFetching }] = useLazyGetNewsQuery()
   const [registerInteraction] = useRegisterInteractionMutation()
 
   const fetchNews = React.useCallback(
     async function (_pageNumber?: number) {
-      console.log('calling api')
       try {
         const res = await getNewsFromAPI({
           page_number: _pageNumber ? _pageNumber : pageNumber,
@@ -38,6 +36,7 @@ const News = () => {
           _pageNumber === 1 ? [...res.news] : [...allNews, ...res.news],
         )
         setPageNumber(res.nextPage)
+
       } catch (error) {
         console.error(error)
       }
@@ -46,8 +45,10 @@ const News = () => {
   )
 
   React.useEffect(() => {
-    fetchNews()
-  }, [])
+    if (token) {
+      fetchNews()
+    }
+  }, [token])
 
   if (isLoading) {
     return (

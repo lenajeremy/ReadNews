@@ -12,10 +12,9 @@ import { Theme } from '../theme'
 import { Ionicons } from '@expo/vector-icons'
 import debounce from '../utils/debounce'
 import { useLazySearchNewsQuery } from '../api/newsApi'
-import { ScrollView } from 'react-native-gesture-handler'
 
 const ExploreScreen = () => {
-  const { colors, spacing } = useTheme<Theme>()
+  const { colors } = useTheme<Theme>()
 
   const [searchText, setSearchText] = React.useState<string>('')
   const [searchNews, { isFetching, data }] = useLazySearchNewsQuery()
