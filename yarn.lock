@@ -4514,11 +4514,6 @@ expo-splash-screen@~0.17.5:
     "@expo/configure-splash-screen" "^0.6.0"
     "@expo/prebuild-config" "5.0.7"
 
-expo-status-bar@~1.4.2:
-  version "1.4.2"
-  resolved "https://registry.yarnpkg.com/expo-status-bar/-/expo-status-bar-1.4.2.tgz#14f2b9a6dc7d550578421f07e0046f5fafc2b403"
-  integrity sha512-ZWjO6D4ARGYfAd3SWDD3STNudHDhyBZDZjhhseqoEmsf7bS9ykny8KKOhlzJW24qIQNPhkgdvHhaw9fQwMJy3Q==
-
 expo-structured-headers@~3.0.0:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/expo-structured-headers/-/expo-structured-headers-3.0.1.tgz#291596c61acd2a45839ad6c6798c3d5cfc1eb4e9"
@@ -4547,7 +4542,7 @@ expo-updates@~0.15.6:
     resolve-from "^5.0.0"
     uuid "^3.4.0"
 
-expo@~47.0.12:
+expo@^47.0.0:
   version "47.0.13"
   resolved "https://registry.yarnpkg.com/expo/-/expo-47.0.13.tgz#f53f82e7f9e209f8a8b25f2493f58439958368cb"
   integrity sha512-9VjjGdViCJ9NfWbUE7brkwFBDvKuA35V345vMtHFYNKoGJjXib36yitmawreMDQFv0kMTqTnzc7T2191Pod7Ng==

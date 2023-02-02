@@ -53,6 +53,13 @@ const newsApi = createApi({
                     page_number: args.page_number
                 }
             }),
+            transformResponse: (res: any) => ({
+                news: res.news,
+                currentPage: res.current_page,
+                nextPage: res.next_page,
+                perPage: res.per_page,
+                totalPages: res.total_pages
+            })
         }),
     })
 })

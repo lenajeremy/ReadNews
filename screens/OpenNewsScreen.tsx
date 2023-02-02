@@ -24,14 +24,16 @@ const OpenNewsScreen = ({
 }: StackScreenProps<RootStackParamList, 'OpenNews'>) => {
   const { colors, spacing } = useTheme<Theme>()
   const TOP_SCREEN_HEIGHT = Dimensions.get('window').height * 0.3
-  const { width: DEVICE_WIDTH } = Dimensions.get('window')
-  const isDarkMode = useColorScheme() === 'dark'
+  const { width: DEVICE_WIDTH, height: DEVICE_HEIGHT } = Dimensions.get(
+    'window',
+  )
 
   const {
     data: newsContent = '',
     isFetching,
     isError,
   } = useGetNewsContentQuery(route.params?.url || '')
+
   const [renderMdxError, setRenderMdxError] = React.useState<boolean>(false)
   const [viewMode, setViewMode] = React.useState<NewsViewMode>(NewsViewMode.MDX)
 
@@ -40,8 +42,8 @@ const OpenNewsScreen = ({
   }, [isError])
 
   return (
-    <ScrollView>
-      <Box backgroundColor="mainBackground" flex={1}>
+    <ScrollView style={{ backgroundColor: colors.mainBackground }}>
+      <Box flex={1}>
         <Box height={TOP_SCREEN_HEIGHT}>
           <ImageBackground
             source={{ uri: route.params?.img }}
@@ -79,8 +81,16 @@ const OpenNewsScreen = ({
             {route.params?.title}
           </Text>
 
-          {isFetching && <ActivityIndicator />}
-          {/* <Text>{JSON.stringify(res)}</Text> */}
+          {isFetching && (
+            <Box
+              flex={1}
+              height={DEVICE_HEIGHT * 0.5}
+              alignItems="center"
+              justifyContent="center"
+            >
+              <ActivityIndicator />
+            </Box>
+          )}
 
           <Box flex={1} backgroundColor="mainBackground">
             <ErrorBoundary onError={() => setViewMode(NewsViewMode.WEBVIEW)}>
@@ -110,10 +120,15 @@ const OpenNewsScreen = ({
                       backgroundColor: colors.transparentBackground,
                     },
                     codeBlock: {
-                      backgroundColor: colors.transparentBackground,
                       fontFamily: 'Courier',
                       padding: 8,
-                      fontSize: 16,
+                      fontSize: 14,
+                    },
+                    codeBlockContainer: {
+                      padding: 4,
+                      backgroundColor: colors.transparentBackground,
+                      width: '100%',
+                      minHeight: 50,
                     },
                     paragraphText: {
                       fontSize: 18,
@@ -129,6 +144,19 @@ const OpenNewsScreen = ({
                       fontSize: 18,
                       lineHeight: 30,
                       color: colors.primaryBlue,
+                    },
+                    listOrderedItemIcon: {
+                      marginRight: 10,
+                      height: '100%',
+                      justifyContent: 'center',
+                    },
+                    // listOrderItemIconText: {
+                    //   fontSize: 18,
+                    //   lineHeight: 30,
+                    // },
+                    listOrderedItem: {
+                      flexDirection: 'row',
+                      alignItems: 'flex-start',
                     },
                   }}
                 >

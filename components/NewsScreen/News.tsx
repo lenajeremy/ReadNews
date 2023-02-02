@@ -28,15 +28,17 @@ const News = () => {
   const fetchNews = React.useCallback(
     async function (_pageNumber?: number) {
       try {
+        console.log(pageNumber, 'the page number is')
         const res = await getNewsFromAPI({
           page_number: _pageNumber ? _pageNumber : pageNumber,
         }).unwrap()
+
+        console.log(res)
 
         setAllNews(
           _pageNumber === 1 ? [...res.news] : [...allNews, ...res.news],
         )
         setPageNumber(res.nextPage)
-
       } catch (error) {
         console.error(error)
       }

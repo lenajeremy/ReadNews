@@ -19,12 +19,14 @@ const ExploreScreen = () => {
   const [searchText, setSearchText] = React.useState<string>('')
   const [searchNews, { isFetching, data }] = useLazySearchNewsQuery()
 
-  const searchNewsDebounced = React.useMemo(() => debounce(searchNews, 300), [])
+  const searchNewsDebounced = React.useMemo(() => debounce(searchNews, 200), [])
 
   React.useEffect(() => {
     ;(async function () {
-      const searchResults = await searchNewsDebounced(searchText).unwrap()
-      console.log(searchResults)
+      try {
+        const searchResults = await searchNewsDebounced(searchText).unwrap()
+        console.log(searchResults)
+      } catch (error) {}
     })()
   }, [searchText])
 
@@ -43,11 +45,15 @@ const ExploreScreen = () => {
             placeholder="Type to search..."
             type="text"
             suffix={
-              searchText ? (
+              isFetching ? (
+                <Box width={24} height={24} marginHorizontal="md">
+                  <ActivityIndicator size="small" />
+                </Box>
+              ) : searchText ? (
                 <Pressable onPress={() => setSearchText('')}>
                   <Box
-                    width={26}
-                    height={26}
+                    width={24}
+                    height={24}
                     marginHorizontal={'md'}
                     backgroundColor="mutedText"
                     alignItems="center"
@@ -97,8 +103,6 @@ const ExploreScreen = () => {
           keyExtractor={(item) => item.url}
         />
       </Box>
-
-      {isFetching ? <ActivityIndicator /> : null}
     </SafeAreaView>
   )
 }
