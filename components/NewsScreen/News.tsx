@@ -5,10 +5,9 @@ import NewsComponent from './NewsComponent'
 import LoadingNews from './LoadingNews'
 import Categories from './Categories'
 import FeaturedNews from './FeaturedNews'
-import { getDateText, getTimeOfDay } from '../../utils/dateutils'
+import { getDateText, getTimeOfDay } from '../../utils'
 import {
   useLazyGetNewsQuery,
-  useLazySearchNewsQuery,
   useRegisterInteractionMutation,
 } from '../../api/newsApi'
 
@@ -54,7 +53,7 @@ const News = () => {
 
   if (isLoading) {
     return (
-      <Box flex={1} alignItems = 'center' justifyContent='center'>
+      <Box flex={1} alignItems="center" justifyContent="center">
         <ActivityIndicator />
       </Box>
     )

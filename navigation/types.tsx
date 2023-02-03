@@ -9,7 +9,6 @@ import {
   NavigatorScreenParams,
 } from '@react-navigation/native'
 import { StackScreenProps } from '@react-navigation/stack'
-import { NewsType } from '../types'
 
 declare global {
   namespace ReactNavigation {
@@ -23,10 +22,10 @@ export type RootStackParamList = {
   Auth: NavigatorScreenParams<AuthStackParamList> | undefined
   OpenNews: {
     url: string
-    website?: string
-    favicon?: string
-    title?: string
-    img?: string
+    website: string
+    favicon: string
+    title: string
+    img: string
   }
 }
 

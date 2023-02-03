@@ -11,6 +11,8 @@ import * as SplashScreen from 'expo-splash-screen'
 import store from './redux/store'
 import * as Linking from 'expo-linking'
 
+import 'react-native-url-polyfill/auto'
+
 SplashScreen.preventAutoHideAsync().catch((error) => console.error(error))
 
 export default function App() {

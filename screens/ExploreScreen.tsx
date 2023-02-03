@@ -10,7 +10,7 @@ import { Box, NewsComponent, Text, TextInput } from '../components'
 import { useTheme } from '@shopify/restyle'
 import { Theme } from '../theme'
 import { Ionicons } from '@expo/vector-icons'
-import debounce from '../utils/debounce'
+import { debounce } from '../utils'
 import {
   useLazySearchNewsQuery,
   useRegisterInteractionMutation,

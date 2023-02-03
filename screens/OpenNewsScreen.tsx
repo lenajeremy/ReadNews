@@ -4,8 +4,9 @@ import {
   ImageBackground,
   StyleSheet,
   ActivityIndicator,
+  Share,
 } from 'react-native'
-import { Box, Text, BackButton, ErrorBoundary } from '../components'
+import { Box, Text, BackButton, ErrorBoundary, Button } from '../components'
 import { StackScreenProps } from '@react-navigation/stack'
 import { RootStackParamList } from '../navigation/types'
 import { useTheme } from '@shopify/restyle'
@@ -24,6 +25,7 @@ import {
 } from 'react-native-reanimated'
 import Reanimated from 'react-native-reanimated'
 import { useColorScheme } from 'react-native'
+import { generateNewLinkToShare } from '../utils'
 
 const AnimatedBox = Reanimated.createAnimatedComponent(Box)
 const AnimatedText = Reanimated.createAnimatedComponent(Text)
@@ -280,6 +282,40 @@ const OpenNewsScreen = ({
               )}
             </ErrorBoundary>
           </Box>
+
+          <Button
+            variant="outlined"
+            onPress={async () => {
+              const newLinkToShare = generateNewLinkToShare(
+                route.params.title as string,
+                route.params.url as string,
+                route.params.img as string,
+                route.params.website as string,
+                route.params.favicon as string,
+              )
+
+              const textToShare = `Hey... I felt to share this news with you. Read on the *ReadNews* app here: \n ${newLinkToShare}`
+
+              Share.share(
+                {
+                  title: 'Share',
+                  message: textToShare,
+                },
+                {
+                  dialogTitle: 'hello',
+                  subject: 'this is the subject',
+                  tintColor: colors.chocolate,
+                },
+              )
+              // const canShare = await Sharing.isAvailableAsync()
+              // console.log('can share', canShare)
+              // if (canShare) {
+              // Sharing.shareAsync('https://google.com', { UTI: 'text' })
+              // }
+            }}
+          >
+            <Text>Share</Text>
+          </Button>
         </Box>
       </Reanimated.ScrollView>
     </Box>

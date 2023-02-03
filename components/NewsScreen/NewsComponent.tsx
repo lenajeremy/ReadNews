@@ -17,7 +17,13 @@ const NewsComponent = ({
     <Pressable
       onPress={() => {
         registerInteraction(item.url)
-        navigation.navigate('OpenNews', item)
+        navigation.navigate('OpenNews', {
+          url: item.url,
+          img: item.img,
+          favicon: item.metadata.favicon,
+          website: item.metadata.website,
+          title: item.title,
+        })
       }}
     >
       <Box

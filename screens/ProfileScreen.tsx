@@ -24,11 +24,6 @@ const ProfileScreen = () => {
     Updates.reloadAsync()
   }
 
-  React.useEffect(() => {
-    const url = Linking.createURL('/')
-    console.log(url)
-  })
-
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.mainBackground }}>
       <Box backgroundColor="mainBackground" flex={1} paddingHorizontal="lg">
