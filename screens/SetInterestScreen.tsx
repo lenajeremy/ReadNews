@@ -14,7 +14,7 @@ import {
   useAddOrRemoveInterestsMutation,
 } from '../api/userApi'
 import { Theme } from '../theme'
-import { Box, Button, Text } from '../components'
+import { Box, Button, PressableWithHaptics, Text } from '../components'
 import React, { useEffect, useState } from 'react'
 import { NavigationProp, useNavigation } from '@react-navigation/native'
 
@@ -188,7 +188,7 @@ const InterestBox = ({
       borderWidth={1}
       style={styles.interestBox}
     >
-      <Pressable
+      <PressableWithHaptics
         onPress={() => onToggleSelect(selected, interest)}
         style={{
           paddingVertical: spacing.sm * 1.2,
@@ -207,7 +207,7 @@ const InterestBox = ({
         >
           {interest.name}
         </Text>
-      </Pressable>
+      </PressableWithHaptics>
     </Box>
   )
 }

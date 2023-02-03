@@ -1,6 +1,6 @@
 import React from 'react'
 import { FlatList, Pressable, ActivityIndicator } from 'react-native'
-import { Box, Text } from '../shared'
+import { Box, PressableWithHaptics, Text } from '../shared'
 import NewsComponent from './NewsComponent'
 import LoadingNews from './LoadingNews'
 import Categories from './Categories'
@@ -128,11 +128,11 @@ const FlatListHeaderComponent = () => {
         >
           Just For You
         </Text>
-        <Pressable onPress={() => navigation.navigate('ExploreScreen')}>
+        <PressableWithHaptics onPress={() => navigation.navigate('ExploreScreen')}>
           <Text style={{ color: '#2b7efe' }} fontFamily="Gilroy-Bold">
             See More
           </Text>
-        </Pressable>
+        </PressableWithHaptics>
       </Box>
     </>
   )

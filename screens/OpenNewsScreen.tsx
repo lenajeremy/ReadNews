@@ -5,8 +5,16 @@ import {
   StyleSheet,
   ActivityIndicator,
   Share,
+  Pressable,
 } from 'react-native'
-import { Box, Text, BackButton, ErrorBoundary, Button } from '../components'
+import {
+  Box,
+  Text,
+  BackButton,
+  ErrorBoundary,
+  Button,
+  PressableWithHaptics,
+} from '../components'
 import { StackScreenProps } from '@react-navigation/stack'
 import { RootStackParamList } from '../navigation/types'
 import { useTheme } from '@shopify/restyle'
@@ -26,6 +34,8 @@ import {
 import Reanimated from 'react-native-reanimated'
 import { useColorScheme } from 'react-native'
 import { generateNewLinkToShare } from '../utils'
+import { Ionicons } from '@expo/vector-icons'
+import * as Haptics from 'expo-haptics'
 
 const AnimatedBox = Reanimated.createAnimatedComponent(Box)
 const AnimatedText = Reanimated.createAnimatedComponent(Text)
@@ -126,6 +136,32 @@ const OpenNewsScreen = ({
   React.useEffect(() => {
     if (isError) setViewMode(NewsViewMode.WEBVIEW)
   }, [isError])
+
+  const share = React.useCallback(async () => {
+    await Haptics.impactAsync()
+
+    const newLinkToShare = generateNewLinkToShare(
+      route.params.title as string,
+      route.params.url as string,
+      route.params.img as string,
+      route.params.website as string,
+      route.params.favicon as string,
+    )
+
+    const textToShare = `Hey... I felt to share this news with you. Read on the *ReadNews* app here: \n ${newLinkToShare}`
+
+    Share.share(
+      {
+        title: 'Share',
+        message: textToShare,
+      },
+      {
+        dialogTitle: 'hello',
+        subject: 'this is the subject',
+        tintColor: colors.chocolate,
+      },
+    )
+  }, [])
 
   return (
     <Box flex={1} backgroundColor="mainBackground">
@@ -282,42 +318,30 @@ const OpenNewsScreen = ({
               )}
             </ErrorBoundary>
           </Box>
-
-          <Button
-            variant="outlined"
-            onPress={async () => {
-              const newLinkToShare = generateNewLinkToShare(
-                route.params.title as string,
-                route.params.url as string,
-                route.params.img as string,
-                route.params.website as string,
-                route.params.favicon as string,
-              )
-
-              const textToShare = `Hey... I felt to share this news with you. Read on the *ReadNews* app here: \n ${newLinkToShare}`
-
-              Share.share(
-                {
-                  title: 'Share',
-                  message: textToShare,
-                },
-                {
-                  dialogTitle: 'hello',
-                  subject: 'this is the subject',
-                  tintColor: colors.chocolate,
-                },
-              )
-              // const canShare = await Sharing.isAvailableAsync()
-              // console.log('can share', canShare)
-              // if (canShare) {
-              // Sharing.shareAsync('https://google.com', { UTI: 'text' })
-              // }
-            }}
-          >
-            <Text>Share</Text>
-          </Button>
         </Box>
       </Reanimated.ScrollView>
+
+      <AnimatedBox
+        backgroundColor={'transparentBackground'}
+        px="lg"
+        alignItems={'center'}
+        justifyContent="space-around"
+        style={[{ height: 90 }]}
+        flexDirection="row"
+        paddingBottom={'lg'}
+        borderTopColor={'mutedText'}
+        borderTopWidth={1.5}
+      >
+        <PressableWithHaptics>
+          <Ionicons name="thumbs-up" size={24} color={colors.mainText} />
+        </PressableWithHaptics>
+        <PressableWithHaptics>
+          <Ionicons name="bookmark" size={24} color={colors.mainText} />
+        </PressableWithHaptics>
+        <Pressable onPress={share}>
+          <Ionicons name="share" size={24} color={colors.mainText} />
+        </Pressable>
+      </AnimatedBox>
     </Box>
   )
 }

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Pressable } from 'react-native'
-import { Box, Text } from '../shared'
+import { Box, PressableWithHaptics, Text } from '../shared'
 
 const Categories: React.FC = () => {
   type CategoryOptions = 'Feeds' | 'Popular' | 'Following'
@@ -11,7 +11,7 @@ const Categories: React.FC = () => {
 
   const Category: React.FC<{ title: CategoryOptions }> = ({ title }) => {
     return (
-      <Pressable
+      <PressableWithHaptics
         onPress={() => setActiveCategory(title)}
         style={{ width: '32%' }}
       >
@@ -32,7 +32,7 @@ const Categories: React.FC = () => {
             {title}
           </Text>
         </Box>
-      </Pressable>
+      </PressableWithHaptics>
     )
   }
 

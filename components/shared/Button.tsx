@@ -1,10 +1,12 @@
 import { Ionicons } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
 import { useTheme } from '@shopify/restyle'
-import { Pressable, StyleSheet, TextStyle, ViewStyle } from 'react-native'
+import { StyleSheet, TextStyle, ViewStyle } from 'react-native'
 import { Theme } from '../../theme'
 import Box from './Box'
 import Text from './Text'
+import PressableWithHaptics from './PressableWithHaptics'
+import * as React from 'react'
 
 type ButtonVariants = 'outlined' | 'contained' | 'text' | 'disabled'
 
@@ -24,7 +26,9 @@ const Button = ({
   variant = 'contained',
 }: ButtonProps) => {
   return (
-    <Pressable onPress={loading || variant === 'disabled' ? () => {} : onPress}>
+    <PressableWithHaptics
+      onPress={loading || variant === 'disabled' ? () => {} : onPress}
+    >
       <Box
         style={[styles.buttonContainer, additionalStyles]}
         backgroundColor={
@@ -33,7 +37,7 @@ const Button = ({
       >
         {children}
       </Box>
-    </Pressable>
+    </PressableWithHaptics>
   )
 }
 
@@ -74,7 +78,7 @@ export const BackButton = ({
           size={24}
           color={textStyle.color ?? colors.mainText}
         />
-        <Text variant="body" style={textStyle} marginLeft = 'sm'>
+        <Text variant="body" style={textStyle} marginLeft="sm">
           {pageName}
         </Text>
       </>
