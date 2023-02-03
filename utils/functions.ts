@@ -5,12 +5,12 @@ export function debounce<T>(fn: T extends Function ? T : never, timeout: number)
     let timeoutId: number;
 
     return (function () {
-
         clearTimeout(timeoutId);
 
         timeoutId = setTimeout(() => {
+            console.log('running function')
             fn(...arguments)
-        }, timeoutId)
+        }, timeout)
     } as T)
 }
 

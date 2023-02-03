@@ -12,7 +12,6 @@ import {
   Text,
   BackButton,
   ErrorBoundary,
-  Button,
   PressableWithHaptics,
 } from '../components'
 import { StackScreenProps } from '@react-navigation/stack'
@@ -98,7 +97,6 @@ const OpenNewsScreen = ({
     marginTop: scrollViewMargin.value,
   }))
 
-  console.log(TOP_SCREEN_HEIGHT)
   const animatedStyle = useAnimatedStyle(() => ({
     opacity: opacityValue.value,
   }))
@@ -108,7 +106,6 @@ const OpenNewsScreen = ({
   }))
 
   const animatedTitleValues = useDerivedValue(() => {
-    console.log(heightValue.value)
     return {
       opacity:
         heightValue.value > TOP_SCREEN_HEIGHT
@@ -193,6 +190,7 @@ const OpenNewsScreen = ({
           ]}
           backgroundColor={isDarkMode ? 'chocolate' : 'blue200'}
           px="lg"
+          pointerEvents={'none'}
         >
           <Box height={60} alignItems="center" justifyContent="center">
             <AnimatedText
@@ -213,13 +211,7 @@ const OpenNewsScreen = ({
         scrollEventThrottle={16}
         style={scrollViewAnimatedStyle}
       >
-        <Box
-          flex={1}
-          backgroundColor="mainBackground"
-          // style={{ marginTop: -50 }}
-          // borderRadius={24}
-          padding="lg"
-        >
+        <Box flex={1} backgroundColor="mainBackground" padding="lg">
           <Text
             variant="heading2"
             mb="md"
@@ -250,7 +242,7 @@ const OpenNewsScreen = ({
                     },
                     img: {
                       width: DEVICE_WIDTH - spacing.lg * 2,
-                      height: 250,
+                      height: 200,
                       backgroundColor: 'gray',
                     },
                     listUnorderedItemText: {
@@ -332,13 +324,13 @@ const OpenNewsScreen = ({
         borderTopColor={'mutedText'}
         borderTopWidth={1.5}
       >
-        <PressableWithHaptics>
+        <PressableWithHaptics style={{ padding: 20 }}>
           <Ionicons name="thumbs-up" size={24} color={colors.mainText} />
         </PressableWithHaptics>
-        <PressableWithHaptics>
+        <PressableWithHaptics style={{ padding: 20 }}>
           <Ionicons name="bookmark" size={24} color={colors.mainText} />
         </PressableWithHaptics>
-        <Pressable onPress={share}>
+        <Pressable onPress={share} style={{ padding: 20 }}>
           <Ionicons name="share" size={24} color={colors.mainText} />
         </Pressable>
       </AnimatedBox>

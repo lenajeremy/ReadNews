@@ -23,7 +23,7 @@ const ExploreScreen = () => {
   const [searchNews, { isFetching, data }] = useLazySearchNewsQuery()
   const [registerInteraction] = useRegisterInteractionMutation()
 
-  const searchNewsDebounced = React.useMemo(() => debounce(searchNews, 200), [])
+  const searchNewsDebounced = React.useMemo(() => debounce(searchNews, 300), [])
 
   React.useEffect(() => {
     ;(async function () {
@@ -37,7 +37,7 @@ const ExploreScreen = () => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.mainBackground }}>
       <Box backgroundColor="mainBackground" flex={1} marginBottom="xl">
-        <Box padding="lg">
+        <Box padding="lg" paddingBottom="sm">
           <Text variant="heading1" marginBottom="md">
             Search
           </Text>
@@ -102,8 +102,7 @@ const ExploreScreen = () => {
               </Box>
             ) : null
           }
-          style={{ marginBottom: 100 }}
-          contentContainerStyle={{ marginBottom: 100 }}
+          style={{ marginBottom: 40 }}
           keyExtractor={(item) => item.url}
         />
       </Box>
