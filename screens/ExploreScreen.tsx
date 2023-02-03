@@ -11,13 +11,17 @@ import { useTheme } from '@shopify/restyle'
 import { Theme } from '../theme'
 import { Ionicons } from '@expo/vector-icons'
 import debounce from '../utils/debounce'
-import { useLazySearchNewsQuery } from '../api/newsApi'
+import {
+  useLazySearchNewsQuery,
+  useRegisterInteractionMutation,
+} from '../api/newsApi'
 
 const ExploreScreen = () => {
   const { colors } = useTheme<Theme>()
 
-  const [searchText, setSearchText] = React.useState<string>('')
+  const [searchText, setSearchText] = React.useState<string>('Google')
   const [searchNews, { isFetching, data }] = useLazySearchNewsQuery()
+  const [registerInteraction] = useRegisterInteractionMutation()
 
   const searchNewsDebounced = React.useMemo(() => debounce(searchNews, 200), [])
 
@@ -77,7 +81,7 @@ const ExploreScreen = () => {
           renderItem={({ item }) => (
             <NewsComponent
               item={item}
-              registerInteraction={(url) => console.log(url)}
+              registerInteraction={registerInteraction}
             />
           )}
           ListEmptyComponent={() =>

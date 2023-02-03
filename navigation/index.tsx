@@ -18,10 +18,11 @@ import { Box, Text } from '../components'
 import { useLazyLoginWithTokenQuery } from '../api/authApi'
 import { useAppDispatch } from '../hooks/reduxhooks'
 import { updateDetails } from '../redux/slices/userSlice'
+import linkingconfigurations from './LinkingConfiguration'
 
 export default function Navigation() {
   return (
-    <NavigationContainer>
+    <NavigationContainer linking={linkingconfigurations}>
       <RootNavigator />
     </NavigationContainer>
   )

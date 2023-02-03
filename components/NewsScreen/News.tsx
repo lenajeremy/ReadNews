@@ -54,11 +54,8 @@ const News = () => {
 
   if (isLoading) {
     return (
-      <Box>
-        <LoadingNews />
-        <LoadingNews />
-        <LoadingNews />
-        <LoadingNews />
+      <Box flex={1} alignItems = 'center' justifyContent='center'>
+        <ActivityIndicator />
       </Box>
     )
   }

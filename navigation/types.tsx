@@ -21,10 +21,13 @@ declare global {
 export type RootStackParamList = {
   Home: NavigatorScreenParams<RootTabParamList> | undefined
   Auth: NavigatorScreenParams<AuthStackParamList> | undefined
-  OpenNews:
-    | NewsType
-    | Exclude<NewsType, 'title' | 'image' | 'metadata'>
-    | undefined
+  OpenNews: {
+    url: string
+    website?: string
+    favicon?: string
+    title?: string
+    img?: string
+  }
 }
 
 export type RootStackScreenProps<

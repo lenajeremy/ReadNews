@@ -13,6 +13,7 @@ import { useAppSelector } from '../hooks/reduxhooks'
 import { Theme } from '../theme'
 import * as Updates from 'expo-updates'
 import localStorage from '../utils/localStorage'
+import Linking from 'expo-linking'
 
 const ProfileScreen = () => {
   const { colors } = useTheme<Theme>()
@@ -22,6 +23,11 @@ const ProfileScreen = () => {
     localStorage.clear()
     Updates.reloadAsync()
   }
+
+  React.useEffect(() => {
+    const url = Linking.createURL('/')
+    console.log(url)
+  })
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.mainBackground }}>
