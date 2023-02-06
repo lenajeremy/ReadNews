@@ -13,7 +13,7 @@ import { useAppSelector } from '../hooks/reduxhooks'
 import { Theme } from '../theme'
 import * as Updates from 'expo-updates'
 import localStorage from '../utils/localStorage'
-import Linking from 'expo-linking'
+import * as Linking from 'expo-linking'
 
 const ProfileScreen = () => {
   const { colors } = useTheme<Theme>()

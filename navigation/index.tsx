@@ -14,7 +14,7 @@ import { OpenNewsScreen } from '../screens'
 import useLocalStorage from '../hooks/useLocalStorage'
 import { USER_TOKEN_KEY } from '../constants'
 import { ActivityIndicator } from 'react-native'
-import { Box, Text } from '../components'
+import { Box, PressableWithHaptics, Text } from '../components'
 import { useLazyLoginWithTokenQuery } from '../api/authApi'
 import { useAppDispatch } from '../hooks/reduxhooks'
 import { updateDetails } from '../redux/slices/userSlice'
@@ -35,8 +35,10 @@ export default function Navigation() {
 const Stack = createStackNavigator<RootStackParamList>()
 
 function RootNavigator() {
-  const [token, updateToken, isLoadingToken] = useLocalStorage<string>(USER_TOKEN_KEY)
-  const [loginWithToken, { isFetching }] = useLazyLoginWithTokenQuery()
+  const [token, updateToken, isLoadingToken] = useLocalStorage<string>(
+    USER_TOKEN_KEY,
+  )
+  const [loginWithToken, { isFetching, isError }] = useLazyLoginWithTokenQuery()
 
   const dispatch = useAppDispatch()
 
@@ -55,16 +57,32 @@ function RootNavigator() {
           )
         }
       } catch (error) {
-        updateToken(undefined)
+        // updateToken(undefined)
       }
     }
 
     login()
   }, [token])
 
+  if (isError) {
+    return (
+      <Box>
+        <Text>{'An error occured'}</Text>
+        <PressableWithHaptics onPress={() => loginWithToken(token as string)}>
+          Retry
+        </PressableWithHaptics>
+      </Box>
+    )
+  }
+
   if (isLoadingToken || isFetching) {
     return (
-      <Box flex={1} alignItems={'center'} justifyContent={'center'} backgroundColor = 'mainBackground'>
+      <Box
+        flex={1}
+        alignItems={'center'}
+        justifyContent={'center'}
+        backgroundColor="mainBackground"
+      >
         <ActivityIndicator />
       </Box>
     )

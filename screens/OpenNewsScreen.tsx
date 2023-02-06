@@ -5,6 +5,7 @@ import {
   StyleSheet,
   ActivityIndicator,
   Share,
+  ShareAction,
   Pressable,
 } from 'react-native'
 import {
@@ -20,7 +21,10 @@ import { useTheme } from '@shopify/restyle'
 import { Theme } from '../theme'
 import { BlurView } from 'expo-blur'
 import { RenderMdx } from 'rn-mdx'
-import { useGetNewsContentQuery } from '../api/newsApi'
+import {
+  useGetNewsContentQuery,
+  useRegisterInteractionMutation,
+} from '../api/newsApi'
 import { NewsViewMode } from '../types'
 import WebView from 'react-native-webview'
 import {
@@ -134,8 +138,14 @@ const OpenNewsScreen = ({
     if (isError) setViewMode(NewsViewMode.WEBVIEW)
   }, [isError])
 
+  const [registerInteraction] = useRegisterInteractionMutation()
+  const [isLiked, setLiked] = React.useState<boolean>(false)
+  const [isSaved, setSaved] = React.useState<boolean>(false)
+
   const share = React.useCallback(async () => {
     await Haptics.impactAsync()
+
+    console.log(navigation.getState())
 
     const newLinkToShare = generateNewLinkToShare(
       route.params.title as string,
@@ -143,14 +153,17 @@ const OpenNewsScreen = ({
       route.params.img as string,
       route.params.website as string,
       route.params.favicon as string,
+      navigation.getState().routeNames[
+        navigation.getState().routeNames.length - 1
+      ],
     )
 
-    const textToShare = `Hey... I felt to share this news with you. Read on the *ReadNews* app here: \n ${newLinkToShare}`
+    // const textToShare = `Hey... I felt to share this news with you. Read on the *ReadNews* app here: \n ${newLinkToShare}`
 
-    Share.share(
+    const shareAction = await Share.share(
       {
         title: 'Share',
-        message: textToShare,
+        message: newLinkToShare,
       },
       {
         dialogTitle: 'hello',
@@ -158,7 +171,44 @@ const OpenNewsScreen = ({
         tintColor: colors.chocolate,
       },
     )
+
+    if (shareAction.action === Share.sharedAction) {
+      const res = await registerInteraction({
+        url: route.params.url,
+        action: 'SHARE',
+        effect: 'POSITIVE',
+      })
+      console.log(res)
+    }
   }, [])
+
+  const like = React.useCallback(async () => {
+    try {
+      const res = await registerInteraction({
+        url: route.params.url,
+        action: 'LIKE',
+        effect: isLiked ? 'NEGATIVE' : 'POSITIVE',
+      })
+
+      if (res) {
+        setLiked(!isLiked)
+      }
+    } catch (error) {}
+  }, [isLiked])
+
+  const save = React.useCallback(async () => {
+    try {
+      const res = await registerInteraction({
+        url: route.params.url,
+        action: 'SAVE',
+        effect: isLiked ? 'NEGATIVE' : 'POSITIVE',
+      })
+
+      if (res) {
+        setSaved(!isSaved)
+      }
+    } catch (error) {}
+  }, [isSaved])
 
   return (
     <Box flex={1} backgroundColor="mainBackground">
@@ -324,14 +374,22 @@ const OpenNewsScreen = ({
         borderTopColor={'mutedText'}
         borderTopWidth={1.5}
       >
-        <PressableWithHaptics style={{ padding: 20 }}>
-          <Ionicons name="thumbs-up" size={24} color={colors.mainText} />
+        <PressableWithHaptics style={{ padding: 20 }} onPress={like}>
+          <Ionicons
+            name={isLiked ? 'heart' : 'heart-outline'}
+            size={24}
+            color={isLiked ? colors.primaryBlue : colors.mainText}
+          />
         </PressableWithHaptics>
-        <PressableWithHaptics style={{ padding: 20 }}>
-          <Ionicons name="bookmark" size={24} color={colors.mainText} />
+        <PressableWithHaptics style={{ padding: 20 }} onPress={save}>
+          <Ionicons
+            name={isSaved ? 'bookmark' : 'bookmark-outline'}
+            size={24}
+            color={isSaved ? colors.primaryBlue : colors.mainText}
+          />
         </PressableWithHaptics>
         <Pressable onPress={share} style={{ padding: 20 }}>
-          <Ionicons name="share" size={24} color={colors.mainText} />
+          <Ionicons name="share-outline" size={24} color={colors.mainText} />
         </Pressable>
       </AnimatedBox>
     </Box>

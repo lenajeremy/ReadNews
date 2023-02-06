@@ -1,4 +1,5 @@
 import * as Linking from 'expo-linking'
+import { API_URL } from '../constants';
 
 
 export function debounce<T>(fn: T extends Function ? T : never, timeout: number): T {
@@ -57,16 +58,18 @@ export const getDateText = () => {
         } ${now.getDate()}th`;
 };
 
-export const generateNewLinkToShare = (title: string, url: string, img: string, website: string, favicon: string): string => {
+export const generateNewLinkToShare = (title: string, url: string, img: string, website: string, favicon: string, route: string): string => {
 
-    const expoURL = Linking.createURL('/OpenNews');
-    const urlParams = new URLSearchParams()
+    const expoURL = Linking.createURL('/');
+    // const urlParams = new URLSearchParams()
 
-    urlParams.set('title', title);
-    urlParams.set('url', url);
-    urlParams.set('img', img);
-    urlParams.set('website', website);
-    urlParams.set('favicon', favicon)
+    // urlParams.set('title', title);
+    // urlParams.set('url', url);
+    // urlParams.set('img', img);
+    // urlParams.set('website', website);
+    // urlParams.set('favicon', favicon)
 
-    return `${expoURL}?${urlParams.toString()}`
+    // // return `${expoURL}${route}?${urlParams.toString()}
+
+    return `${API_URL}/news/redirect?url=${url}&route=${route}&host=${expoURL}`
 }

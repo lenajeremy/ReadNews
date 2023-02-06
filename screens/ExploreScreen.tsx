@@ -22,7 +22,7 @@ const ExploreScreen = () => {
   const [searchText, setSearchText] = React.useState<string>('Google')
   const [searchNews, { isFetching, data }] = useLazySearchNewsQuery()
   const [registerInteraction] = useRegisterInteractionMutation()
-
+  
   const searchNewsDebounced = React.useMemo(() => debounce(searchNews, 300), [])
 
   React.useEffect(() => {

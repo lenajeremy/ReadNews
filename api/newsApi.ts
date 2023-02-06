@@ -30,11 +30,15 @@ const newsApi = createApi({
                 return res.text
             },
         }),
-        registerInteraction: builder.mutation<void, string>({
-            query: (url) => ({
+        registerInteraction: builder.mutation<void, { url: string, action?: 'READ' | 'SAVE' | 'LIKE' | 'SHARE', effect?: 'POSITIVE' | 'NEGATIVE' }>({
+            query: (args) => ({
                 url: 'news/indicate_interaction/',
-                body: {
-                    news_url: url,
+                body: args.action === 'READ' ? {
+                    news_url: args.url,
+                } : {
+                    effect: args.effect,
+                    action: args.action,
+                    news_url: args.url
                 },
                 method: "POST"
             })
