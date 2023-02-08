@@ -1,15 +1,15 @@
+import { TimeoutId } from '@reduxjs/toolkit/dist/query/core/buildMiddleware/types';
 import * as Linking from 'expo-linking'
 import { API_URL } from '../constants';
 
 
 export function debounce<T>(fn: T extends Function ? T : never, timeout: number): T {
-    let timeoutId: number;
+    let timeoutId: TimeoutId;
 
     return (function () {
         clearTimeout(timeoutId);
 
         timeoutId = setTimeout(() => {
-            console.log('running function')
             fn(...arguments)
         }, timeout)
     } as T)

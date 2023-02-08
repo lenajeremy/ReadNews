@@ -15,8 +15,6 @@ const newsApi = createApi({
                 headers.set('Authorization', `Bearer ${token}`);
             }
 
-            console.log(headers)
-
             return headers;
         }
     }),
@@ -33,9 +31,7 @@ const newsApi = createApi({
         registerInteraction: builder.mutation<void, { url: string, action?: 'READ' | 'SAVE' | 'LIKE' | 'SHARE', effect?: 'POSITIVE' | 'NEGATIVE' }>({
             query: (args) => ({
                 url: 'news/indicate_interaction/',
-                body: args.action === 'READ' ? {
-                    news_url: args.url,
-                } : {
+                body: {
                     effect: args.effect,
                     action: args.action,
                     news_url: args.url

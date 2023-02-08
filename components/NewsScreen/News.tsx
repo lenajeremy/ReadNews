@@ -32,8 +32,6 @@ const News = () => {
           page_number: _pageNumber ? _pageNumber : pageNumber,
         }).unwrap()
 
-        console.log(res)
-
         setAllNews(
           _pageNumber === 1 ? [...res.news] : [...allNews, ...res.news],
         )
@@ -80,7 +78,12 @@ const News = () => {
       onEndReachedThreshold={0.9}
       onEndReached={() => fetchNews()}
       renderItem={({ item }) => (
-        <NewsComponent item={item} registerInteraction={registerInteraction} />
+        <NewsComponent
+          item={item}
+          registerInteraction={(url) =>
+            registerInteraction({ url, action: 'READ', effect: 'POSITIVE' })
+          }
+        />
       )}
     />
   )
@@ -128,7 +131,9 @@ const FlatListHeaderComponent = () => {
         >
           Just For You
         </Text>
-        <PressableWithHaptics onPress={() => navigation.navigate('ExploreScreen')}>
+        <PressableWithHaptics
+          onPress={() => navigation.navigate('ExploreScreen')}
+        >
           <Text style={{ color: '#2b7efe' }} fontFamily="Gilroy-Bold">
             See More
           </Text>
