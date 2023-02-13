@@ -1,8 +1,10 @@
 import * as React from 'react'
 import { useNavigation } from '@react-navigation/native'
-import { Pressable, Image } from 'react-native'
+import { Image } from 'react-native'
 import { Box, PressableWithHaptics, Text } from '../shared/index'
 import { NewsType } from '../../types'
+// @ts-ignore
+// import Image from 'expo-cached-image'
 
 const NewsComponent = ({
   item,
@@ -52,6 +54,7 @@ const NewsComponent = ({
                 height: 20,
                 borderRadius: 10,
                 marginRight: 10,
+                backgroundColor: 'gray',
               }}
             />
             <Text color="mutedText" fontSize={13}>
@@ -61,9 +64,14 @@ const NewsComponent = ({
         </Box>
         <Box width={90} height={90} borderRadius={12} overflow="hidden">
           <Image
-            source={{ uri: item.img }}
-            style={{ height: '100%', width: '100%' }}
+            source={{ uri: item.img, expiresIn: 1800 }}
+            style={{
+              height: '100%',
+              width: '100%',
+              backgroundColor: 'lightgray',
+            }}
             resizeMode="cover"
+            cacheKey={item.img}
           />
         </Box>
       </Box>

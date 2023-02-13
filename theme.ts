@@ -46,11 +46,11 @@ const theme = createTheme({
     },
     textVariants: {
         heading1: {
-            fontSize: 34,
+            fontSize: 30,
             fontFamily: 'Blatant-Bold'
         },
         heading2: {
-            fontSize: 30,
+            fontSize: 26,
             fontFamily: 'Blatant',
             lineHeight: 32
         },

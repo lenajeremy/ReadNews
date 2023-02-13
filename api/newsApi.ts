@@ -19,13 +19,13 @@ const newsApi = createApi({
         }
     }),
     endpoints: (builder) => ({
-        getNewsContent: builder.query<string, string>({
+        getNewsContent: builder.query<{ text: string, isLiked: boolean, isSaved: boolean }, string>({
             query: (url) => ({
-                url: '/news/get-content',
+                url: '/news/get-details',
                 params: { url }
             }),
             transformResponse: (res: any) => {
-                return res.text
+                return { text: res.text_content, isLiked: res.is_liked, isSaved: res.is_saved };
             },
         }),
         registerInteraction: builder.mutation<void, { url: string, action?: 'READ' | 'SAVE' | 'LIKE' | 'SHARE', effect?: 'POSITIVE' | 'NEGATIVE' }>({

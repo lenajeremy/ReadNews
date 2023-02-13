@@ -27,7 +27,6 @@ const News = () => {
   const fetchNews = React.useCallback(
     async function (_pageNumber?: number) {
       try {
-        console.log(pageNumber, 'the page number is')
         const res = await getNewsFromAPI({
           page_number: _pageNumber ? _pageNumber : pageNumber,
         }).unwrap()
@@ -63,7 +62,7 @@ const News = () => {
       ListFooterComponent={() => (isFetching ? <ActivityIndicator /> : null)}
       ItemSeparatorComponent={() => (
         <Box
-          height={3}
+          height={2}
           width={'100%'}
           backgroundColor="transparentBackground"
         ></Box>

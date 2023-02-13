@@ -53,13 +53,11 @@ const OpenNewsScreen = ({
     'window',
   )
 
-  const {
-    data: newsContent = '',
-    isFetching,
-    isError,
-  } = useGetNewsContentQuery(route.params?.url || '')
-
   const isDarkMode = useColorScheme() === 'dark'
+
+  const { data, isFetching, isError } = useGetNewsContentQuery(
+    route.params?.url || '',
+  )
 
   const [renderMdxError, setRenderMdxError] = React.useState<boolean>(false)
   const [viewMode, setViewMode] = React.useState<NewsViewMode>(NewsViewMode.MDX)
@@ -141,6 +139,11 @@ const OpenNewsScreen = ({
   const [registerInteraction] = useRegisterInteractionMutation()
   const [isLiked, setLiked] = React.useState<boolean>(false)
   const [isSaved, setSaved] = React.useState<boolean>(false)
+
+  React.useEffect(() => {
+    setLiked(data?.isLiked || false)
+    setSaved(data?.isSaved || false)
+  }, [data])
 
   const share = React.useCallback(async () => {
     await Haptics.impactAsync()
@@ -296,11 +299,11 @@ const OpenNewsScreen = ({
                       backgroundColor: 'gray',
                     },
                     listUnorderedItemText: {
-                      fontSize: 18,
+                      fontSize: 16,
                       lineHeight: 30,
                     },
                     inline: {
-                      fontSize: 18,
+                      fontSize: 16,
                       lineHeight: 30,
                     },
                     blockquote: {
@@ -314,6 +317,10 @@ const OpenNewsScreen = ({
                       padding: 8,
                       fontSize: 14,
                     },
+                    heading: {
+                      fontFamily: 'Blatant',
+                    },
+                    // @ts-ignore
                     codeBlockContainer: {
                       padding: 4,
                       backgroundColor: colors.transparentBackground,
@@ -321,17 +328,19 @@ const OpenNewsScreen = ({
                       minHeight: 50,
                     },
                     paragraphText: {
-                      fontSize: 18,
+                      fontSize: 16,
                       lineHeight: 30,
                     },
                     text: {
-                      fontSize: 18,
+                      fontSize: 16,
                       lineHeight: 30,
                       color: colors.mainText,
+                      fontFamily: 'Gilroy',
+                      fontWeight: '500',
                     },
                     link: { marginTop: -3 },
                     linkLabel: {
-                      fontSize: 18,
+                      fontSize: 16,
                       lineHeight: 30,
                       color: colors.primaryBlue,
                     },
@@ -341,7 +350,7 @@ const OpenNewsScreen = ({
                       justifyContent: 'center',
                     },
                     // listOrderItemIconText: {
-                    //   fontSize: 18,
+                    //   fontSize: 16,
                     //   lineHeight: 30,
                     // },
                     listOrderedItem: {
@@ -350,7 +359,7 @@ const OpenNewsScreen = ({
                     },
                   }}
                 >
-                  {newsContent}
+                  {data?.text}
                 </RenderMdx>
               ) : (
                 <WebView

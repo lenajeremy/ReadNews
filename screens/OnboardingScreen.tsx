@@ -310,10 +310,12 @@ const AnimatedOnboardingText = ({
       </AnimatedText>
 
       <AnimatedText
+        fontFamily={'Gilroy'}
         textAlign="center"
+        letterSpacing={0.2}
         opacity={0.7}
-        lineHeight={36}
-        fontSize={18}
+        lineHeight={32}
+        fontSize={16}
       >
         {description}
       </AnimatedText>
