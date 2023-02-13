@@ -252,6 +252,7 @@ const OpenNewsScreen = ({
               style={[{ width: '80%' }, animatedTitleStyle]}
               ellipsizeMode="tail"
               numberOfLines={1}
+              textAlign = 'center'
             >
               {route.params?.title}
             </AnimatedText>
@@ -299,12 +300,12 @@ const OpenNewsScreen = ({
                       backgroundColor: 'gray',
                     },
                     listUnorderedItemText: {
-                      fontSize: 16,
-                      lineHeight: 30,
+                      fontSize: 18,
+                      lineHeight: 32,
                     },
                     inline: {
-                      fontSize: 16,
-                      lineHeight: 30,
+                      fontSize: 18,
+                      lineHeight: 32,
                     },
                     blockquote: {
                       borderLeftColor: colors.mutedText,
@@ -328,20 +329,20 @@ const OpenNewsScreen = ({
                       minHeight: 50,
                     },
                     paragraphText: {
-                      fontSize: 16,
-                      lineHeight: 30,
+                      fontSize: 18,
+                      lineHeight: 32,
                     },
                     text: {
-                      fontSize: 16,
-                      lineHeight: 30,
+                      fontSize: 18,
+                      lineHeight: 32,
                       color: colors.mainText,
                       fontFamily: 'Gilroy',
                       fontWeight: '500',
                     },
                     link: { marginTop: -3 },
                     linkLabel: {
-                      fontSize: 16,
-                      lineHeight: 30,
+                      fontSize: 18,
+                      lineHeight: 32,
                       color: colors.primaryBlue,
                     },
                     listOrderedItemIcon: {

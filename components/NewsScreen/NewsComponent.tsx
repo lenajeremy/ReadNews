@@ -12,6 +12,8 @@ import Reanimated, {
   interpolateColor,
 } from 'react-native-reanimated'
 import { Ionicons } from '@expo/vector-icons'
+import * as Haptics from 'expo-haptics'
+
 // @ts-ignore
 // import Image from 'expo-cached-image'
 
@@ -20,7 +22,7 @@ const AnimatedBox = Reanimated.createAnimatedComponent(Box)
 const NewsComponent = ({
   item,
   registerInteraction,
-  removeItem
+  removeItem,
 }: {
   item: NewsType
   registerInteraction: (newurl: string) => void
@@ -34,15 +36,20 @@ const NewsComponent = ({
       gesture.config = { position: 0 }
     })
     .onUpdate((e) => {
-      console.log(e.translationX, e.translationY)
+      if (Math.abs(e.translationX) > 85 && Math.abs(e.translationX) < 88)
+        Haptics.notificationAsync()
       translationValue.value =
         (gesture.config.position as number) + e.translationX
     })
     .onEnd((e) => {
-      if (Math.abs(e.translationX) >= 85) {
-        translationValue.value = withTiming(DEVICE_WIDTH)
+      if (Math.abs(e.translationX) > 85) {
+        translationValue.value = withTiming(
+          Math.sign(e.translationX) * DEVICE_WIDTH,
+          { duration: 400 },
+        )
+      } else {
+        translationValue.value = withTiming(0, { duration: 400 })
       }
-      translationValue.value = withTiming(0, { duration: 400 })
     })
 
   const translationValue = useSharedValue<number>(0)
