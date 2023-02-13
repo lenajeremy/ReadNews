@@ -1,5 +1,5 @@
 import React from 'react'
-import { FlatList, Pressable, ActivityIndicator } from 'react-native'
+import { FlatList, Pressable, ActivityIndicator, Alert } from 'react-native'
 import { Box, PressableWithHaptics, Text } from '../shared'
 import NewsComponent from './NewsComponent'
 import LoadingNews from './LoadingNews'
@@ -79,8 +79,9 @@ const News = () => {
       renderItem={({ item }) => (
         <NewsComponent
           item={item}
+          removeItem = {(url) => Alert.alert('URL:', url)}
           registerInteraction={(url) =>
-            registerInteraction({ url, action: 'READ', effect: 'POSITIVE' })
+            registerInteraction({ url, action: 'READ' })
           }
         />
       )}

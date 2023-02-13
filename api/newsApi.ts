@@ -28,7 +28,7 @@ const newsApi = createApi({
                 return { text: res.text_content, isLiked: res.is_liked, isSaved: res.is_saved };
             },
         }),
-        registerInteraction: builder.mutation<void, { url: string, action?: 'READ' | 'SAVE' | 'LIKE' | 'SHARE', effect?: 'POSITIVE' | 'NEGATIVE' }>({
+        registerInteraction: builder.mutation<void, { url: string, action?: 'READ' | 'SAVE' | 'LIKE' | 'SHARE' | 'DISLIKE', effect?: 'POSITIVE' | 'NEGATIVE' }>({
             query: (args) => ({
                 url: 'news/indicate_interaction/',
                 body: {

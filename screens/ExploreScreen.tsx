@@ -5,6 +5,7 @@ import {
   Pressable,
   SafeAreaView,
   Image,
+  Alert,
 } from 'react-native'
 import { Box, NewsComponent, Text, TextInput } from '../components'
 import { useTheme } from '@shopify/restyle'
@@ -81,6 +82,7 @@ const ExploreScreen = () => {
           renderItem={({ item }) => (
             <NewsComponent
               item={item}
+              removeItem={(url) => Alert.alert('URL:', url)}
               registerInteraction={(url) =>
                 registerInteraction({ url, action: 'READ', effect: 'POSITIVE' })
               }
