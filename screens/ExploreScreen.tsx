@@ -1,7 +1,6 @@
 import * as React from 'react'
 import {
   ActivityIndicator,
-  FlatList,
   Pressable,
   SafeAreaView,
   Image,
@@ -16,6 +15,7 @@ import {
   useLazySearchNewsQuery,
   useRegisterInteractionMutation,
 } from '../api/newsApi'
+import { FlatList } from 'react-native-gesture-handler'
 
 const ExploreScreen = () => {
   const { colors } = useTheme<Theme>()

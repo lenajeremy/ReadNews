@@ -31,6 +31,8 @@ const NewsComponent = ({
   const { width: DEVICE_WIDTH } = useWindowDimensions()
   const gesture = Gesture.Pan()
 
+  gesture.minDistance(40)
+
   gesture
     .onBegin((e) => {
       gesture.config = { position: 0 }
