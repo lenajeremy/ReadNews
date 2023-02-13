@@ -47,6 +47,8 @@ const NewsComponent = ({
           Math.sign(e.translationX) * DEVICE_WIDTH,
           { duration: 400 },
         )
+
+        removeItem(item.url)
       } else {
         translationValue.value = withTiming(0, { duration: 400 })
       }

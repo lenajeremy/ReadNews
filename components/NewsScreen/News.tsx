@@ -79,7 +79,10 @@ const News = () => {
       renderItem={({ item }) => (
         <NewsComponent
           item={item}
-          removeItem = {(url) => Alert.alert('URL:', url)}
+          removeItem={(url) => {
+            setAllNews(allNews.filter((news) => news.url !== url))
+            registerInteraction({ url, action: 'DISLIKE' })
+          }}
           registerInteraction={(url) =>
             registerInteraction({ url, action: 'READ' })
           }
