@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { useNavigation } from '@react-navigation/native'
-import { Image, useWindowDimensions } from 'react-native'
+import { Image, useWindowDimensions, View } from 'react-native'
 import { Box, PressableWithHaptics, Text } from '../shared/index'
 import { NewsType } from '../../types'
 import { GestureDetector, Gesture } from 'react-native-gesture-handler'
@@ -10,6 +10,9 @@ import Reanimated, {
   withSpring,
   withTiming,
   interpolateColor,
+  runOnJS,
+  interpolate,
+  Extrapolation
 } from 'react-native-reanimated'
 import { Ionicons } from '@expo/vector-icons'
 import * as Haptics from 'expo-haptics'
@@ -31,6 +34,18 @@ const NewsComponent = ({
   const { width: DEVICE_WIDTH } = useWindowDimensions()
   const gesture = Gesture.Pan()
 
+  const containerRef = React.useRef<React.ComponentRef<typeof View>>(null)
+  const [containerHeight, setContainerHeight] = React.useState<number>(0)
+
+  containerRef.current?.measureInWindow((x, y, width, height) => {
+    setContainerHeight(height)
+  })
+
+  const heightValue = useSharedValue(containerHeight)
+  const heightStyle = useAnimatedStyle(() => {
+    return { height: heightValue.value }
+  })
+
   gesture.minDistance(40)
 
   gesture
@@ -48,7 +63,9 @@ const NewsComponent = ({
         translationValue.value = withTiming(
           Math.sign(e.translationX) * DEVICE_WIDTH,
           { duration: 400 },
-          () => removeItem(item.url),
+          () => {
+            runOnJS(removeItem)(item.url)
+          },
         )
       } else {
         translationValue.value = withTiming(0, { duration: 400 })
@@ -77,7 +94,7 @@ const NewsComponent = ({
           })
         }}
       >
-        <Box position="relative">
+        <AnimatedBox position="relative" ref={containerRef}>
           <AnimatedBox
             zIndex={2}
             flexDirection="row"
@@ -140,7 +157,7 @@ const NewsComponent = ({
             <Ionicons name={'archive'} color="white" size={20} />
             <Ionicons name={'archive'} color="white" size={20} />
           </Box>
-        </Box>
+        </AnimatedBox>
       </PressableWithHaptics>
     </GestureDetector>
   )

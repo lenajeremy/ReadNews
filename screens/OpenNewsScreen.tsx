@@ -55,7 +55,7 @@ const OpenNewsScreen = ({
 
   const isDarkMode = useColorScheme() === 'dark'
 
-  const { data, isFetching, isError } = useGetNewsContentQuery(
+  const { data, isFetching, isLoading, isError } = useGetNewsContentQuery(
     route.params?.url || '',
   )
 
@@ -141,14 +141,18 @@ const OpenNewsScreen = ({
   const [isSaved, setSaved] = React.useState<boolean>(false)
 
   React.useEffect(() => {
-    setLiked(data?.isLiked || false)
-    setSaved(data?.isSaved || false)
+    if (data) {
+      setLiked(data.isLiked || false)
+      setSaved(data.isSaved || false)
+
+      if (!data.text) {
+        setViewMode(NewsViewMode.WEBVIEW)
+      }
+    }
   }, [data])
 
   const share = React.useCallback(async () => {
     await Haptics.impactAsync()
-
-    console.log(navigation.getState())
 
     const newLinkToShare = generateNewLinkToShare(
       route.params.title as string,
@@ -252,7 +256,7 @@ const OpenNewsScreen = ({
               style={[{ width: '80%' }, animatedTitleStyle]}
               ellipsizeMode="tail"
               numberOfLines={1}
-              textAlign = 'center'
+              textAlign="center"
             >
               {route.params?.title}
             </AnimatedText>
@@ -265,17 +269,29 @@ const OpenNewsScreen = ({
         scrollEventThrottle={16}
         style={scrollViewAnimatedStyle}
       >
-        <Box flex={1} backgroundColor="mainBackground" padding="lg">
-          <Text
-            variant="heading2"
-            mb="md"
-            style={{ width: '95%' }}
-            lineHeight={34}
+        <Box
+          flex={1}
+          backgroundColor="mainBackground"
+          paddingHorizontal={viewMode === NewsViewMode.MDX ? 'lg' : 'xxs'}
+          paddingVertical="lg"
+        >
+          {viewMode == NewsViewMode.MDX && (
+            <Text
+              variant="heading2"
+              mb="md"
+              style={{ width: '95%' }}
+              lineHeight={34}
+            >
+              {route.params?.title}
+            </Text>
+          )}
+          <PressableWithHaptics
+            onPress={() => setViewMode(viewMode == NewsViewMode.WEBVIEW ? NewsViewMode.MDX : NewsViewMode.WEBVIEW)}
           >
-            {route.params?.title}
-          </Text>
+            <Text>Open as {viewMode == NewsViewMode.MDX ? 'web page' : 'text'} </Text>
+          </PressableWithHaptics>
 
-          {isFetching && (
+          {isLoading && (
             <Box
               flex={1}
               height={DEVICE_HEIGHT * 0.5}
@@ -300,11 +316,11 @@ const OpenNewsScreen = ({
                       backgroundColor: 'gray',
                     },
                     listUnorderedItemText: {
-                      fontSize: 18,
+                      fontSize: 17,
                       lineHeight: 32,
                     },
                     inline: {
-                      fontSize: 18,
+                      fontSize: 17,
                       lineHeight: 32,
                     },
                     blockquote: {
@@ -329,19 +345,18 @@ const OpenNewsScreen = ({
                       minHeight: 50,
                     },
                     paragraphText: {
-                      fontSize: 18,
+                      fontSize: 17,
                       lineHeight: 32,
                     },
                     text: {
-                      fontSize: 18,
+                      fontSize: 17,
                       lineHeight: 32,
                       color: colors.mainText,
-                      fontFamily: 'Gilroy',
-                      fontWeight: '500',
+                      // fontWeight: '500',
                     },
                     link: { marginTop: -3 },
                     linkLabel: {
-                      fontSize: 18,
+                      fontSize: 17,
                       lineHeight: 32,
                       color: colors.primaryBlue,
                     },
@@ -364,7 +379,9 @@ const OpenNewsScreen = ({
                 </RenderMdx>
               ) : (
                 <WebView
-                  style={{ width: DEVICE_WIDTH, height: 500 }}
+                  incognito={true}
+                  cacheEnabled={false}
+                  style={{ width: DEVICE_WIDTH, height: DEVICE_HEIGHT }}
                   source={{ uri: route.params?.url as string }}
                 />
               )}

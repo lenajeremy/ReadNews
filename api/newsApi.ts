@@ -18,15 +18,17 @@ const newsApi = createApi({
             return headers;
         }
     }),
+    tagTypes: ['NEWS_DETAILS'],
     endpoints: (builder) => ({
         getNewsContent: builder.query<{ text: string, isLiked: boolean, isSaved: boolean }, string>({
             query: (url) => ({
-                url: '/news/get-details',
+                url: '/news/get-details/',
                 params: { url }
             }),
             transformResponse: (res: any) => {
                 return { text: res.text_content, isLiked: res.is_liked, isSaved: res.is_saved };
             },
+            providesTags: (res, err, url) => ([{ type: 'NEWS_DETAILS', id: url }])
         }),
         registerInteraction: builder.mutation<void, { url: string, action?: 'READ' | 'SAVE' | 'LIKE' | 'SHARE' | 'DISLIKE', effect?: 'POSITIVE' | 'NEGATIVE' }>({
             query: (args) => ({
@@ -37,7 +39,8 @@ const newsApi = createApi({
                     news_url: args.url
                 },
                 method: "POST"
-            })
+            }),
+            invalidatesTags: (res, err, args) => ([{ type: 'NEWS_DETAILS', id: args.url }])
         }),
         searchNews: builder.query<{ res: NewsType[] }, string>({
             query: (title) => ({
