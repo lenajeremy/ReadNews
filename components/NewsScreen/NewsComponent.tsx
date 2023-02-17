@@ -12,7 +12,7 @@ import Reanimated, {
   interpolateColor,
   runOnJS,
   interpolate,
-  Extrapolation
+  Extrapolation,
 } from 'react-native-reanimated'
 import { Ionicons } from '@expo/vector-icons'
 import * as Haptics from 'expo-haptics'
@@ -78,6 +78,12 @@ const NewsComponent = ({
     transform: [{ translateX: translationValue.value }],
   }))
 
+  const dateString = React.useMemo(() => {
+    const date = new Date(item.metadata.time_added)
+
+    return date.toDateString()
+  }, [item.metadata.time_added])
+
   const navigation = useNavigation()
 
   return (
@@ -116,7 +122,7 @@ const NewsComponent = ({
                 {item.title}
               </Text>
 
-              <Box flexDirection="row" paddingVertical="sm">
+              <Box flexDirection="row" paddingVertical="sm" alignItems="center">
                 <Image
                   source={{ uri: item.metadata.favicon }}
                   style={{
@@ -129,6 +135,18 @@ const NewsComponent = ({
                 />
                 <Text color="mutedText" fontSize={13}>
                   {item.metadata.website}
+                </Text>
+
+                <Box
+                  backgroundColor="mutedText"
+                  width={5}
+                  opacity={0.6}
+                  height={5}
+                  borderRadius={3}
+                  marginHorizontal={'sm'}
+                />
+                <Text color="mutedText" fontSize={13}>
+                  {dateString}
                 </Text>
               </Box>
             </Box>

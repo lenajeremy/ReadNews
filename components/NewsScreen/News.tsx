@@ -21,7 +21,7 @@ const News = () => {
   const [pageNumber, setPageNumber] = React.useState<number>(1)
   const token = useAppSelector((store) => store.user.token)
 
-  const [getNewsFromAPI, { isLoading, isFetching }] = useLazyGetNewsQuery()
+  const [getNewsFromAPI, { isLoading, isFetching,  }] = useLazyGetNewsQuery()
   const [registerInteraction] = useRegisterInteractionMutation()
 
   const fetchNews = React.useCallback(
@@ -30,6 +30,8 @@ const News = () => {
         const res = await getNewsFromAPI({
           page_number: _pageNumber ? _pageNumber : pageNumber,
         }).unwrap()
+
+        console.log(res)
 
         setAllNews(
           _pageNumber === 1 ? [...res.news] : [...allNews, ...res.news],

@@ -5,6 +5,7 @@ export type NewsType = {
   metadata: {
     favicon: string
     website: string
+    time_added: string
   }
 }
 

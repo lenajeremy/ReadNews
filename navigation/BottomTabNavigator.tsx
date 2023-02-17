@@ -12,6 +12,9 @@ import { Theme } from '../theme'
 import { RootTabParamList } from './types'
 import { Platform } from 'react-native'
 import { useColorScheme } from 'react-native'
+import HomeIcon from '../assets/illustrations/homeicon'
+import SearchIcon from '../assets/illustrations/searchicon'
+import ProfileIcon from '../assets/illustrations/profileicon'
 
 const BottomTab = createBottomTabNavigator<RootTabParamList>()
 
@@ -48,20 +51,24 @@ export default function BottomTabNavigator() {
           name="NewsScreen"
           component={NewsScreen}
           options={{
-            tabBarIcon: ({ focused, color }) => (
-              // @ts-ignore
-              <Feather name="menu" size={24} color={color} />
-            ),
+            tabBarIcon: ({ focused }) =>
+              focused ? (
+                <HomeIcon variant="filled" />
+              ) : (
+                <HomeIcon variant="outlined" />
+              ),
           }}
         />
         <BottomTab.Screen
           name="ExploreScreen"
           component={ExploreScreen}
           options={{
-            tabBarIcon: ({ focused, color }) => (
-              // @ts-ignore
-              <Ionicons name="search-outline" size={24} color={color} />
-            ),
+            tabBarIcon: ({ focused }) =>
+              focused ? (
+                <SearchIcon variant="filled" />
+              ) : (
+                <SearchIcon variant="outlined" />
+              ),
           }}
         />
 
@@ -69,13 +76,11 @@ export default function BottomTabNavigator() {
           name="ProfileScreen"
           component={ProfileScreen}
           options={{
-            tabBarIcon: ({ focused, color }) =>
+            tabBarIcon: ({ focused }) =>
               focused ? (
-                // @ts-ignore
-                <Ionicons name="ios-person" size={24} color={color} />
+                <ProfileIcon variant="filled" />
               ) : (
-                // @ts-ignore
-                <Ionicons name="ios-person-outline" size={24} color={color} />
+                <ProfileIcon variant="outlined" />
               ),
           }}
         />

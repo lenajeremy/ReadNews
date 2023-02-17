@@ -352,7 +352,7 @@ const OpenNewsScreen = ({
                       fontSize: 17,
                       lineHeight: 32,
                       color: colors.mainText,
-                      // fontWeight: '500',
+                      textAlign: 'justify'
                     },
                     link: { marginTop: -3 },
                     linkLabel: {
