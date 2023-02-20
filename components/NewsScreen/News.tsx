@@ -21,7 +21,7 @@ const News = () => {
   const [pageNumber, setPageNumber] = React.useState<number>(1)
   const token = useAppSelector((store) => store.user.token)
 
-  const [getNewsFromAPI, { isLoading, isFetching,  }] = useLazyGetNewsQuery()
+  const [getNewsFromAPI, { isLoading, isFetching }] = useLazyGetNewsQuery()
   const [registerInteraction] = useRegisterInteractionMutation()
 
   const fetchNews = React.useCallback(
@@ -83,10 +83,10 @@ const News = () => {
           item={item}
           removeItem={(url) => {
             setAllNews(allNews.filter((news) => news.url !== url))
-            registerInteraction({ url, action: 'DISLIKE' })
+            registerInteraction({ url, action: 'DISLIKE', effect: 'POSITIVE'})
           }}
           registerInteraction={(url) =>
-            registerInteraction({ url, action: 'READ' })
+            registerInteraction({ url, action: 'READ', effect: 'POSITIVE' })
           }
         />
       )}
