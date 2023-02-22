@@ -1,6 +1,6 @@
 import React from 'react'
 import { FlatList, Pressable, ActivityIndicator, Alert } from 'react-native'
-import { Box, PressableWithHaptics, Text } from '../shared'
+import { Box, Button, PressableWithHaptics, Text } from '../shared'
 import NewsComponent from './NewsComponent'
 import Categories from './Categories'
 import FeaturedNews from './FeaturedNews'
@@ -83,7 +83,10 @@ const News = () => {
   const [pageNumber, setPageNumber] = React.useState<number>(1)
   const token = useAppSelector((store) => store.user.token)
 
-  const [getNewsFromAPI, { isLoading, isFetching }] = useLazyGetNewsQuery()
+  const [
+    getNewsFromAPI,
+    { isLoading, isFetching, isError },
+  ] = useLazyGetNewsQuery()
   const [registerInteraction] = useRegisterInteractionMutation()
 
   const fetchNews = React.useCallback(
@@ -116,6 +119,21 @@ const News = () => {
     return (
       <Box flex={1} alignItems="center" justifyContent="center">
         <ActivityIndicator />
+      </Box>
+    )
+  }
+
+  if (isError) {
+    return (
+      <Box flex={1}>
+        {Object.values(map)}
+
+        <Box flex={1} alignItems="center" >
+          <Text marginVertical='md'>Error occurred while loading news</Text>
+          <Button onPress={() => fetchNews(1)} variant="text">
+            <Text>Retry</Text>
+          </Button>
+        </Box>
       </Box>
     )
   }
