@@ -43,7 +43,6 @@ import * as Haptics from 'expo-haptics'
 import BottomSheet, {
   BottomSheetBackdrop,
   BottomSheetBackdropProps,
-  BottomSheetScrollView,
 } from '@gorhom/bottom-sheet'
 
 const AnimatedBox = Reanimated.createAnimatedComponent(Box)
@@ -54,7 +53,6 @@ const OpenNewsScreen = ({
   route,
 }: StackScreenProps<RootStackParamList, 'OpenNews'>) => {
   const { colors, spacing } = useTheme<Theme>()
-  const TOP_SCREEN_HEIGHT = Dimensions.get('window').height * 0.2
   const { width: DEVICE_WIDTH, height: DEVICE_HEIGHT } = Dimensions.get(
     'window',
   )
@@ -68,7 +66,12 @@ const OpenNewsScreen = ({
   )
 
   const [renderMdxError, setRenderMdxError] = React.useState<boolean>(false)
-  const [viewMode, setViewMode] = React.useState<NewsViewMode>(NewsViewMode.MDX)
+  const [viewMode, setViewMode] = React.useState<NewsViewMode>(
+    NewsViewMode.WEBVIEW,
+  )
+
+  const TOP_SCREEN_HEIGHT =
+    viewMode === NewsViewMode.MDX ? Dimensions.get('window').height * 0.2 : 0
 
   const scrollPosition = useSharedValue<number>(0)
 
@@ -227,10 +230,6 @@ const OpenNewsScreen = ({
 
   const snapPoints = React.useMemo(() => ['50%'], [])
 
-  const handleSheetChanges = React.useCallback((index: number) => {
-    console.log('handleSheetChanges', index)
-  }, [])
-
   const renderBottomSheetBackdrop = React.useCallback(
     (props: BottomSheetBackdropProps) => (
       <BottomSheetBackdrop
@@ -246,51 +245,55 @@ const OpenNewsScreen = ({
 
   return (
     <Box flex={1} backgroundColor="mainBackground">
-      <AnimatedBox style={heightStyle} position="absolute" width={'100%'}>
-        <ImageBackground
-          source={{ uri: route.params?.img }}
-          style={StyleSheet.absoluteFillObject}
-        />
-        <Box
-          flexDirection="row"
-          paddingHorizontal="lg"
-          style={{ marginTop: 50 }}
-        >
-          <Box borderRadius={25} overflow="hidden">
-            <BlurView intensity={50}>
-              <BackButton
-                pageName={route.params?.website as string}
-                style={{ backgroundColor: colors.mainBackground + '55' }}
-              />
-            </BlurView>
+      {viewMode === NewsViewMode.MDX && (
+        <AnimatedBox style={heightStyle} position="absolute" width={'100%'}>
+          <ImageBackground
+            source={{ uri: route.params?.img }}
+            style={StyleSheet.absoluteFillObject}
+          />
+          <Box
+            flexDirection="row"
+            paddingHorizontal="lg"
+            style={{ marginTop: 50 }}
+          >
+            <Box borderRadius={25} overflow="hidden">
+              <BlurView intensity={50}>
+                <BackButton
+                  pageName={route.params?.website as string}
+                  style={{ backgroundColor: colors.mainBackground + '55' }}
+                />
+              </BlurView>
+            </Box>
           </Box>
-        </Box>
 
-        <AnimatedBox
-          style={[
-            StyleSheet.absoluteFillObject,
-            animatedStyle,
-            { paddingTop: 40 },
-          ]}
-          backgroundColor={isDarkMode ? 'chocolate' : 'blue200'}
-          px="lg"
-          pointerEvents={'none'}
-        >
-          <Box height={60} alignItems="center" justifyContent="center">
-            <AnimatedText
-              fontSize={20}
-              fontFamily="Blatant"
-              style={[{ width: '80%' }, animatedTitleStyle]}
-              ellipsizeMode="tail"
-              numberOfLines={1}
-              textAlign="center"
-            >
-              {route.params?.title}
-            </AnimatedText>
-          </Box>
+          <AnimatedBox
+            style={[
+              StyleSheet.absoluteFillObject,
+              animatedStyle,
+              { paddingTop: 40 },
+            ]}
+            backgroundColor={isDarkMode ? 'chocolate' : 'blue200'}
+            px="lg"
+            pointerEvents={'none'}
+          >
+            <Box height={60} alignItems="center" justifyContent="center">
+              <AnimatedText
+                fontSize={20}
+                fontFamily="Blatant"
+                style={[{ width: '80%' }, animatedTitleStyle]}
+                ellipsizeMode="tail"
+                numberOfLines={1}
+                textAlign="center"
+              >
+                {route.params?.title}
+              </AnimatedText>
+            </Box>
+          </AnimatedBox>
         </AnimatedBox>
-      </AnimatedBox>
+      )}
+
       <Reanimated.ScrollView
+        showsVerticalScrollIndicator={false}
         onScroll={(e) => (scrollPosition.value = e.nativeEvent.contentOffset.y)}
         scrollEventThrottle={16}
         style={scrollViewAnimatedStyle}
@@ -298,8 +301,8 @@ const OpenNewsScreen = ({
         <Box
           flex={1}
           backgroundColor="mainBackground"
-          paddingHorizontal={viewMode === NewsViewMode.MDX ? 'lg' : 'xxs'}
-          paddingVertical="lg"
+          paddingHorizontal={viewMode === NewsViewMode.MDX ? 'lg' : 'none'}
+          paddingVertical={viewMode === NewsViewMode.WEBVIEW ? 'none' : 'lg'}
         >
           {viewMode == NewsViewMode.MDX && (
             <Text
@@ -324,7 +327,7 @@ const OpenNewsScreen = ({
           {isLoading && (
             <Box
               flex={1}
-              height={DEVICE_HEIGHT * 0.5}
+              height={DEVICE_HEIGHT}
               alignItems="center"
               justifyContent="center"
             >
@@ -332,9 +335,32 @@ const OpenNewsScreen = ({
             </Box>
           )}
 
-          <Box flex={1} backgroundColor="mainBackground">
-            <ErrorBoundary onError={() => setViewMode(NewsViewMode.WEBVIEW)}>
-              {viewMode === NewsViewMode.MDX ? (
+          <Box backgroundColor="mainBackground">
+            <SafeAreaView
+              style={{
+                opacity: viewMode === NewsViewMode.WEBVIEW ? 1 : 0,
+                height: viewMode === NewsViewMode.WEBVIEW ? 'auto' : 0,
+              }}
+            >
+              <WebView
+                incognito={true}
+                cacheEnabled={false}
+                style={{ width: DEVICE_WIDTH, height: DEVICE_HEIGHT }}
+                source={{ uri: route.params?.url as string }}
+              />
+            </SafeAreaView>
+
+            <ErrorBoundary
+              onError={() => {
+                setRenderMdxError(true)
+                setViewMode(NewsViewMode.WEBVIEW)
+              }}
+            >
+              <Box
+                opacity={viewMode === NewsViewMode.MDX ? 1 : 0}
+                flex={1}
+                height={viewMode === NewsViewMode.MDX ? 'auto' : 0}
+              >
                 <RenderMdx
                   componentStyle={{
                     root: {
@@ -342,8 +368,8 @@ const OpenNewsScreen = ({
                     },
                     img: {
                       width: DEVICE_WIDTH - spacing.lg * 2,
-                      height: 800,
-                      backgroundColor: 'gray',
+                      height: 250,
+                      backgroundColor: 'lightgray',
                     },
                     listUnorderedItemText: {
                       fontSize: 17,
@@ -406,14 +432,7 @@ const OpenNewsScreen = ({
                 >
                   {data?.text}
                 </RenderMdx>
-              ) : (
-                <WebView
-                  incognito={true}
-                  cacheEnabled={false}
-                  style={{ width: DEVICE_WIDTH, height: DEVICE_HEIGHT }}
-                  source={{ uri: route.params?.url as string }}
-                />
-              )}
+              </Box>
             </ErrorBoundary>
           </Box>
         </Box>
@@ -421,13 +440,18 @@ const OpenNewsScreen = ({
       <SafeAreaView>
         <AnimatedBox
           backgroundColor={'mainBackground'}
-          px="lg"
           alignItems={'center'}
           justifyContent="space-around"
           flexDirection="row"
           borderTopColor={'transparentBackground'}
           borderTopWidth={1.5}
         >
+          <PressableWithHaptics
+            onPress={navigation.goBack}
+            style={{ padding: 16 }}
+          >
+            <Ionicons name="arrow-back" size={24} color={colors.mainText} />
+          </PressableWithHaptics>
           <PressableWithHaptics style={{ padding: 16 }} onPress={like}>
             <Ionicons
               name={isLiked ? 'heart' : 'heart-outline'}
@@ -459,7 +483,6 @@ const OpenNewsScreen = ({
 
       <BottomSheet
         ref={bottomSheetRef}
-        onChange={handleSheetChanges}
         enablePanDownToClose={true}
         snapPoints={snapPoints}
         index={-1}
@@ -471,33 +494,59 @@ const OpenNewsScreen = ({
           width: 40,
         }}
       >
-        <Box padding="md" paddingHorizontal='lg'>
+        <Box padding="md" paddingHorizontal="lg">
           <BottomSheetItem
-            icon={<Ionicons name="heart" color={colors.mainText} size={24} />}
+            icon={
+              <Ionicons
+                name="heart"
+                color={isLiked ? colors.error : colors.mainText}
+                size={24}
+              />
+            }
             title={'I like this news'}
-          />
-          <BottomSheetItem
-            icon={<Ionicons name="heart-dislike" color={colors.mainText} size={24} />}
-            title={"I don't like this news"}
+            onPress={like}
           />
           <BottomSheetItem
             icon={
               <Ionicons
-                name="reader"
+                name="heart-dislike"
                 color={colors.mainText}
                 size={24}
               />
             }
-            title={'Open Reader Mode'}
+            title={"I don't like this news"}
           />
           <BottomSheetItem
-            icon={<Ionicons name='bookmark' color={colors.mainText} size={24} />}
-            title={'Save for later'}
+            disabled={renderMdxError || data?.text === ''}
+            icon={<Ionicons name="reader" color={colors.mainText} size={24} />}
+            title={`${
+              viewMode === NewsViewMode.MDX ? 'Close' : 'Open'
+            } Reader Mode`}
+            onPress={() =>
+              setViewMode(
+                viewMode === NewsViewMode.MDX
+                  ? NewsViewMode.WEBVIEW
+                  : NewsViewMode.MDX,
+              )
+            }
+          />
+          <BottomSheetItem
+            icon={
+              <Ionicons
+                name="bookmark"
+                color={isSaved ? colors.primaryBlue : colors.mainText}
+                size={24}
+              />
+            }
+            title={isSaved ? 'Remove from save for later' : 'Save for later'}
             loading
           />
           <BottomSheetItem
-            icon={<Ionicons name="share-social" color={colors.mainText} size={24} />}
+            icon={
+              <Ionicons name="share-social" color={colors.mainText} size={24} />
+            }
             title={'Share with your friends'}
+            onPress={share}
           />
         </Box>
       </BottomSheet>

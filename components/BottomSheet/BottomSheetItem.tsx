@@ -1,23 +1,26 @@
 import * as React from 'react'
 import { Box, PressableWithHaptics, Text } from '../shared'
-import { Theme } from '../../theme'
-import { useTheme } from '@shopify/restyle'
-import { EvilIcons } from '@expo/vector-icons'
-import { TouchableOpacity } from '@gorhom/bottom-sheet'
-import { ActivityIndicator } from 'react-native'
+import { ActivityIndicator, Image } from 'react-native'
 
 const BottomSheetItem = ({
   icon,
   title,
   loading,
+  disabled,
+  onPress,
 }: {
   icon: React.ReactNode
   title: string
   onPress?: VoidFunction
   loading?: boolean
+  disabled?: boolean
 }) => {
   return (
-    <TouchableOpacity>
+    <PressableWithHaptics
+      disabled={disabled}
+      onPress={disabled ? () => {} : onPress ? onPress : () => {}}
+    >
+      <Image />
       <Box
         flexDirection="row"
         paddingBottom="md"
@@ -25,6 +28,7 @@ const BottomSheetItem = ({
         marginBottom="xxs"
         alignItems="center"
         justifyContent="space-between"
+        opacity={disabled ? 0.5 : 1}
       >
         <Box flexDirection="row" alignItems="center">
           <Box
@@ -41,7 +45,7 @@ const BottomSheetItem = ({
         </Box>
         {loading && <ActivityIndicator size="small" />}
       </Box>
-    </TouchableOpacity>
+    </PressableWithHaptics>
   )
 }
 

@@ -38,6 +38,7 @@ const theme = createTheme({
         success: '#26B97A',
     },
     spacing: {
+        none: 0,
         xxs: 3,
         xs: 6,
         sm: 8,
