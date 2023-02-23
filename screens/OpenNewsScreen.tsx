@@ -5,8 +5,6 @@ import {
   StyleSheet,
   ActivityIndicator,
   Share,
-  ShareAction,
-  Pressable,
 } from 'react-native'
 import {
   Box,
@@ -14,6 +12,7 @@ import {
   BackButton,
   ErrorBoundary,
   PressableWithHaptics,
+  Button,
 } from '../components'
 import { StackScreenProps } from '@react-navigation/stack'
 import { RootStackParamList } from '../navigation/types'
@@ -39,6 +38,7 @@ import { useColorScheme } from 'react-native'
 import { generateNewLinkToShare } from '../utils'
 import { Ionicons } from '@expo/vector-icons'
 import * as Haptics from 'expo-haptics'
+import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet'
 
 const AnimatedBox = Reanimated.createAnimatedComponent(Box)
 const AnimatedText = Reanimated.createAnimatedComponent(Text)
@@ -52,6 +52,8 @@ const OpenNewsScreen = ({
   const { width: DEVICE_WIDTH, height: DEVICE_HEIGHT } = Dimensions.get(
     'window',
   )
+
+  const bottomSheetRef = React.useRef<BottomSheet>(null)
 
   const isDarkMode = useColorScheme() === 'dark'
 
@@ -217,6 +219,14 @@ const OpenNewsScreen = ({
     } catch (error) {}
   }, [isSaved])
 
+  const snapPoints = React.useMemo(() => ['60%'], [])
+
+  const handleSheetChanges = React.useCallback((index: number) => {
+    console.log('handleSheetChanges', index)
+  }, [])
+
+  const bottomSheetState = useSharedValue<'opened' | 'closed'>('closed')
+
   return (
     <Box flex={1} backgroundColor="mainBackground">
       <AnimatedBox style={heightStyle} position="absolute" width={'100%'}>
@@ -263,7 +273,6 @@ const OpenNewsScreen = ({
           </Box>
         </AnimatedBox>
       </AnimatedBox>
-
       <Reanimated.ScrollView
         onScroll={(e) => (scrollPosition.value = e.nativeEvent.contentOffset.y)}
         scrollEventThrottle={16}
@@ -286,10 +295,14 @@ const OpenNewsScreen = ({
             </Text>
           )}
           <PressableWithHaptics
-            onPress={() => setViewMode(viewMode == NewsViewMode.WEBVIEW ? NewsViewMode.MDX : NewsViewMode.WEBVIEW)}
-          >
-            <Text>Open as {viewMode == NewsViewMode.MDX ? 'web page' : 'text'} </Text>
-          </PressableWithHaptics>
+            onPress={() =>
+              setViewMode(
+                viewMode == NewsViewMode.WEBVIEW
+                  ? NewsViewMode.MDX
+                  : NewsViewMode.WEBVIEW,
+              )
+            }
+          ></PressableWithHaptics>
 
           {isLoading && (
             <Box
@@ -352,7 +365,6 @@ const OpenNewsScreen = ({
                       fontSize: 17,
                       lineHeight: 32,
                       color: colors.mainText,
-                      textAlign: 'justify'
                     },
                     link: { marginTop: -3 },
                     linkLabel: {
@@ -389,16 +401,15 @@ const OpenNewsScreen = ({
           </Box>
         </Box>
       </Reanimated.ScrollView>
-
       <AnimatedBox
-        backgroundColor={'transparentBackground'}
+        backgroundColor={'mainBackground'}
         px="lg"
         alignItems={'center'}
         justifyContent="space-around"
         style={[{ height: 90 }]}
         flexDirection="row"
         paddingBottom={'lg'}
-        borderTopColor={'mutedText'}
+        borderTopColor={'transparentBackground'}
         borderTopWidth={1.5}
       >
         <PressableWithHaptics style={{ padding: 20 }} onPress={like}>
@@ -415,10 +426,49 @@ const OpenNewsScreen = ({
             color={isSaved ? colors.primaryBlue : colors.mainText}
           />
         </PressableWithHaptics>
-        <Pressable onPress={share} style={{ padding: 20 }}>
-          <Ionicons name="share-outline" size={24} color={colors.mainText} />
-        </Pressable>
+        <PressableWithHaptics
+          onPress={() => {
+            bottomSheetRef.current?.expand()
+          }}
+        >
+          <Ionicons
+            name="ellipsis-horizontal-circle"
+            size={24}
+            color={colors.mainText}
+          />
+        </PressableWithHaptics>
       </AnimatedBox>
+
+      <BottomSheet
+        ref={bottomSheetRef}
+        onChange={handleSheetChanges}
+        enablePanDownToClose={true}
+        snapPoints={snapPoints}
+        index={-1}
+        backgroundStyle={{ backgroundColor: colors.bottomSheetBackground }}
+        backdropComponent={(props) => (
+          <BottomSheetBackdrop
+            {...props}
+            appearsOnIndex={0}
+            disappearsOnIndex={-1}
+            enableTouchThrough={false}
+            opacity = {0.8}
+          />
+        )}
+        handleIndicatorStyle={{
+          backgroundColor: colors.mutedText,
+          height: 6,
+          width: 40,
+        }}
+      >
+        <Box paddingHorizontal="md">
+          <Button onPress={() => console.log('pressed')} variant="text">
+            <Text>This is really Awesome</Text>
+          </Button>
+        </Box>
+
+        <Text>Hello There</Text>
+      </BottomSheet>
     </Box>
   )
 }

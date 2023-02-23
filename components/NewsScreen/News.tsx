@@ -14,11 +14,7 @@ import type { NewsType } from '../../types'
 import { useAppSelector } from '../../hooks/reduxhooks'
 import { NavigationProp, useNavigation } from '@react-navigation/native'
 import { RootTabParamList } from '../../navigation/types'
-import Animated, {
-  interpolateColor,
-  useAnimatedStyle,
-  useSharedValue,
-} from 'react-native-reanimated'
+
 
 const isNews = (res: any): res is NewsType => {
   return Boolean(res?.url)
@@ -49,11 +45,12 @@ const News = () => {
   >()
 
   const map: Record<HeaderElementKeys, React.ReactNode> = {
-    greetingbanner: <GreetingBanner />,
-    categories: <Categories />,
-    featurednews: <FeaturedNews />,
+    greetingbanner: <GreetingBanner key={'greetingbanner'} />,
+    categories: <Categories key={'categories'} />,
+    featurednews: <FeaturedNews key={'featurednews'} />,
     titleheader: (
       <Box
+        key={'titleheader'}
         flexDirection="row"
         justifyContent="space-between"
         alignItems="center"
@@ -126,10 +123,10 @@ const News = () => {
   if (isError) {
     return (
       <Box flex={1}>
-        {Object.values(map)}
+        {Object.entries(map).map((entry) => entry[1])}
 
-        <Box flex={1} alignItems="center" >
-          <Text marginVertical='md'>Error occurred while loading news</Text>
+        <Box flex={1} alignItems="center">
+          <Text marginVertical="md">Error occurred while loading news</Text>
           <Button onPress={() => fetchNews(1)} variant="text">
             <Text>Retry</Text>
           </Button>
@@ -208,46 +205,47 @@ const GreetingBanner: React.FC = () => {
   )
 }
 
-const FlatListHeaderComponent = ({
-  animatedCategoriesStyles,
-}: {
-  animatedCategoriesStyles: any
-}) => {
-  const navigation = useNavigation<
-    NavigationProp<RootTabParamList, 'NewsScreen'>
-  >()
+// const FlatListHeaderComponent = ({
+//   animatedCategoriesStyles,
+// }: {
+//   animatedCategoriesStyles: any
+// }) => {
+//   const navigation = useNavigation<
+//     NavigationProp<RootTabParamList, 'NewsScreen'>
+//   >()
 
-  const components = [
-    <GreetingBanner />,
-    <Categories />,
-    <FeaturedNews />,
-    <Box
-      flexDirection="row"
-      justifyContent="space-between"
-      alignItems="center"
-      marginBottom="md"
-      marginTop="lg"
-      marginHorizontal="lg"
-    >
-      <Text
-        variant="heading3"
-        fontSize={20}
-        fontFamily="Gilroy-Bold"
-        color="mainText"
-      >
-        Just For You
-      </Text>
-      <PressableWithHaptics
-        onPress={() => navigation.navigate('ExploreScreen')}
-      >
-        <Text style={{ color: '#2b7efe' }} fontFamily="Gilroy-Bold">
-          See More
-        </Text>
-      </PressableWithHaptics>
-    </Box>,
-  ]
+//   const components = [
+//     <GreetingBanner key={'greetingbanner'} />,
+//     <Categories key={'categories'} />,
+//     <FeaturedNews key={'featurednews'} />,
+//     <Box
+//       key={'titleheader'}
+//       flexDirection="row"
+//       justifyContent="space-between"
+//       alignItems="center"
+//       marginBottom="md"
+//       marginTop="lg"
+//       marginHorizontal="lg"
+//     >
+//       <Text
+//         variant="heading3"
+//         fontSize={20}
+//         fontFamily="Gilroy-Bold"
+//         color="mainText"
+//       >
+//         Just For You
+//       </Text>
+//       <PressableWithHaptics
+//         onPress={() => navigation.navigate('ExploreScreen')}
+//       >
+//         <Text style={{ color: '#2b7efe' }} fontFamily="Gilroy-Bold">
+//           See More
+//         </Text>
+//       </PressableWithHaptics>
+//     </Box>,
+//   ]
 
-  return components
-}
+//   return components
+// }
 
 export default News

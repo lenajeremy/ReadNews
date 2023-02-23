@@ -30,6 +30,7 @@ const theme = createTheme({
         transparent: palette.transparent,
         transparentBackground: '#33333315',
         light: palette.white,
+        bottomSheetBackground: 'lightgray',
 
         blue200: palette.blue200,
         primaryBlue: palette.blue700,
@@ -72,8 +73,8 @@ export const darkTheme = {
         ...theme.colors,
         mainBackground: palette.black,
         mainText: palette.gray200,
-        // mutedText: palette.gray200,
         transparentBackground: '#ffffff10',
+        bottomSheetBackground: '#242526'
     }
 }
 
