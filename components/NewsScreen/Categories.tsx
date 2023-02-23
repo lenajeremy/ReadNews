@@ -41,7 +41,7 @@ const Categories: React.FC = () => {
   return (
     <Box backgroundColor='mainBackground'>
       <AnimatedBox
-        marginBottom="md"
+        marginBottom="sm"
         borderRadius={20}
         marginHorizontal={'lg'}
         backgroundColor="transparentBackground"

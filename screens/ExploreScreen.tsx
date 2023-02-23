@@ -45,20 +45,20 @@ const ExploreScreen = () => {
           <TextInput
             value={searchText}
             onChangeText={(text) => setSearchText(text)}
-            icon={<Ionicons name="search" size={20} color={colors.mainText} />}
-            additionalStyles={{ height: 60 }}
+            icon={<Ionicons name="search" size={18} color={colors.mainText} />}
+            additionalStyles={{ height: 50 }}
             placeholder="Type to search..."
             type="text"
             suffix={
               isFetching ? (
-                <Box width={24} height={24} marginHorizontal="md">
+                <Box width={20} height={20} marginHorizontal="md">
                   <ActivityIndicator size="small" />
                 </Box>
               ) : searchText ? (
                 <Pressable onPress={() => setSearchText('')}>
                   <Box
-                    width={24}
-                    height={24}
+                    width={20}
+                    height={20}
                     marginHorizontal={'md'}
                     backgroundColor="mutedText"
                     alignItems="center"
@@ -68,7 +68,7 @@ const ExploreScreen = () => {
                     <Ionicons
                       name="close"
                       color={colors.mainBackground}
-                      size={20}
+                      size={16}
                     />
                   </Box>
                 </Pressable>
@@ -90,23 +90,15 @@ const ExploreScreen = () => {
           )}
           ListEmptyComponent={() =>
             searchText && !isFetching ? (
-              <Box
-                flex={1}
-                alignItems="center"
-                justifyContent="center"
-                marginTop="xl"
-              >
-                <Image
-                  source={require('../assets/images/notfound.png')}
-                  style={{ height: 250, width: 250 }}
-                />
-                <Text variant="heading1" textAlign="center">
+              <Box flex={1} alignItems="center" justifyContent="center">
+                <Text variant="heading2" textAlign="center">
                   Not Found 😢
                 </Text>
               </Box>
             ) : null
           }
-          style={{ marginBottom: 40 }}
+          style={{ marginBottom: 30 }}
+          contentContainerStyle={{ flex: data?.res.length === 0 ? 1 : 0 }}
           keyExtractor={(item) => item.url}
         />
       </Box>

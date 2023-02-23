@@ -29,7 +29,7 @@ export default function BottomTabNavigator() {
       screenOptions={{
         tabBarStyle: {
           alignItems: 'center',
-          height: 80,
+          height: 70,
           position: 'absolute',
           bottom: 40,
           borderRadius: 16,

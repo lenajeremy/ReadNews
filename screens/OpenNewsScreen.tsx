@@ -5,6 +5,7 @@ import {
   StyleSheet,
   ActivityIndicator,
   Share,
+  SafeAreaView,
 } from 'react-native'
 import {
   Box,
@@ -13,6 +14,7 @@ import {
   ErrorBoundary,
   PressableWithHaptics,
   Button,
+  BottomSheetItem,
 } from '../components'
 import { StackScreenProps } from '@react-navigation/stack'
 import { RootStackParamList } from '../navigation/types'
@@ -38,7 +40,11 @@ import { useColorScheme } from 'react-native'
 import { generateNewLinkToShare } from '../utils'
 import { Ionicons } from '@expo/vector-icons'
 import * as Haptics from 'expo-haptics'
-import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet'
+import BottomSheet, {
+  BottomSheetBackdrop,
+  BottomSheetBackdropProps,
+  BottomSheetScrollView,
+} from '@gorhom/bottom-sheet'
 
 const AnimatedBox = Reanimated.createAnimatedComponent(Box)
 const AnimatedText = Reanimated.createAnimatedComponent(Text)
@@ -219,13 +225,24 @@ const OpenNewsScreen = ({
     } catch (error) {}
   }, [isSaved])
 
-  const snapPoints = React.useMemo(() => ['60%'], [])
+  const snapPoints = React.useMemo(() => ['50%'], [])
 
   const handleSheetChanges = React.useCallback((index: number) => {
     console.log('handleSheetChanges', index)
   }, [])
 
-  const bottomSheetState = useSharedValue<'opened' | 'closed'>('closed')
+  const renderBottomSheetBackdrop = React.useCallback(
+    (props: BottomSheetBackdropProps) => (
+      <BottomSheetBackdrop
+        {...props}
+        appearsOnIndex={0}
+        disappearsOnIndex={-1}
+        enableTouchThrough={false}
+        opacity={0.8}
+      />
+    ),
+    [],
+  )
 
   return (
     <Box flex={1} backgroundColor="mainBackground">
@@ -325,7 +342,7 @@ const OpenNewsScreen = ({
                     },
                     img: {
                       width: DEVICE_WIDTH - spacing.lg * 2,
-                      height: 200,
+                      height: 800,
                       backgroundColor: 'gray',
                     },
                     listUnorderedItemText: {
@@ -401,43 +418,44 @@ const OpenNewsScreen = ({
           </Box>
         </Box>
       </Reanimated.ScrollView>
-      <AnimatedBox
-        backgroundColor={'mainBackground'}
-        px="lg"
-        alignItems={'center'}
-        justifyContent="space-around"
-        style={[{ height: 90 }]}
-        flexDirection="row"
-        paddingBottom={'lg'}
-        borderTopColor={'transparentBackground'}
-        borderTopWidth={1.5}
-      >
-        <PressableWithHaptics style={{ padding: 20 }} onPress={like}>
-          <Ionicons
-            name={isLiked ? 'heart' : 'heart-outline'}
-            size={24}
-            color={isLiked ? colors.primaryBlue : colors.mainText}
-          />
-        </PressableWithHaptics>
-        <PressableWithHaptics style={{ padding: 20 }} onPress={save}>
-          <Ionicons
-            name={isSaved ? 'bookmark' : 'bookmark-outline'}
-            size={24}
-            color={isSaved ? colors.primaryBlue : colors.mainText}
-          />
-        </PressableWithHaptics>
-        <PressableWithHaptics
-          onPress={() => {
-            bottomSheetRef.current?.expand()
-          }}
+      <SafeAreaView>
+        <AnimatedBox
+          backgroundColor={'mainBackground'}
+          px="lg"
+          alignItems={'center'}
+          justifyContent="space-around"
+          flexDirection="row"
+          borderTopColor={'transparentBackground'}
+          borderTopWidth={1.5}
         >
-          <Ionicons
-            name="ellipsis-horizontal-circle"
-            size={24}
-            color={colors.mainText}
-          />
-        </PressableWithHaptics>
-      </AnimatedBox>
+          <PressableWithHaptics style={{ padding: 16 }} onPress={like}>
+            <Ionicons
+              name={isLiked ? 'heart' : 'heart-outline'}
+              size={24}
+              color={isLiked ? colors.error : colors.mainText}
+            />
+          </PressableWithHaptics>
+          <PressableWithHaptics style={{ padding: 16 }} onPress={save}>
+            <Ionicons
+              name={isSaved ? 'bookmark' : 'bookmark-outline'}
+              size={24}
+              color={isSaved ? colors.primaryBlue : colors.mainText}
+            />
+          </PressableWithHaptics>
+          <PressableWithHaptics
+            style={{ padding: 16 }}
+            onPress={() => {
+              bottomSheetRef.current?.expand()
+            }}
+          >
+            <Ionicons
+              name="ellipsis-horizontal-circle"
+              size={24}
+              color={colors.mainText}
+            />
+          </PressableWithHaptics>
+        </AnimatedBox>
+      </SafeAreaView>
 
       <BottomSheet
         ref={bottomSheetRef}
@@ -446,28 +464,42 @@ const OpenNewsScreen = ({
         snapPoints={snapPoints}
         index={-1}
         backgroundStyle={{ backgroundColor: colors.bottomSheetBackground }}
-        backdropComponent={(props) => (
-          <BottomSheetBackdrop
-            {...props}
-            appearsOnIndex={0}
-            disappearsOnIndex={-1}
-            enableTouchThrough={false}
-            opacity = {0.8}
-          />
-        )}
+        backdropComponent={renderBottomSheetBackdrop}
         handleIndicatorStyle={{
           backgroundColor: colors.mutedText,
           height: 6,
           width: 40,
         }}
       >
-        <Box paddingHorizontal="md">
-          <Button onPress={() => console.log('pressed')} variant="text">
-            <Text>This is really Awesome</Text>
-          </Button>
+        <Box padding="md" paddingHorizontal='lg'>
+          <BottomSheetItem
+            icon={<Ionicons name="heart" color={colors.mainText} size={24} />}
+            title={'I like this news'}
+          />
+          <BottomSheetItem
+            icon={<Ionicons name="heart-dislike" color={colors.mainText} size={24} />}
+            title={"I don't like this news"}
+          />
+          <BottomSheetItem
+            icon={
+              <Ionicons
+                name="reader"
+                color={colors.mainText}
+                size={24}
+              />
+            }
+            title={'Open Reader Mode'}
+          />
+          <BottomSheetItem
+            icon={<Ionicons name='bookmark' color={colors.mainText} size={24} />}
+            title={'Save for later'}
+            loading
+          />
+          <BottomSheetItem
+            icon={<Ionicons name="share-social" color={colors.mainText} size={24} />}
+            title={'Share with your friends'}
+          />
         </Box>
-
-        <Text>Hello There</Text>
       </BottomSheet>
     </Box>
   )
