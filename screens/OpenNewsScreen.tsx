@@ -34,6 +34,7 @@ import {
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
+  withTiming,
 } from 'react-native-reanimated'
 import Reanimated from 'react-native-reanimated'
 import { useColorScheme } from 'react-native'
@@ -243,6 +244,15 @@ const OpenNewsScreen = ({
     [],
   )
 
+  const loadProgress = useSharedValue<number>(0)
+
+  const loadIndicatorStyle = useAnimatedStyle(() => ({
+    height: loadProgress.value === 1 ? 0 : 2.5,
+    width: loadProgress.value * DEVICE_WIDTH,
+    backgroundColor:
+      loadProgress.value === 1 ? colors.transparent : colors.primaryBlue,
+  }))
+
   return (
     <Box flex={1} backgroundColor="mainBackground">
       {viewMode === NewsViewMode.MDX && (
@@ -344,6 +354,11 @@ const OpenNewsScreen = ({
             >
               <WebView
                 incognito={true}
+                onLoadProgress={(e) => {
+                  loadProgress.value = withTiming(e.nativeEvent.progress, {
+                    duration: 500,
+                  })
+                }}
                 cacheEnabled={false}
                 style={{ width: DEVICE_WIDTH, height: DEVICE_HEIGHT }}
                 source={{ uri: route.params?.url as string }}
@@ -437,6 +452,7 @@ const OpenNewsScreen = ({
           </Box>
         </Box>
       </Reanimated.ScrollView>
+      <AnimatedBox style={loadIndicatorStyle} />
       <SafeAreaView>
         <AnimatedBox
           backgroundColor={'mainBackground'}
