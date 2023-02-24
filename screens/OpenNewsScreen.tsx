@@ -29,6 +29,7 @@ import {
 import { NewsViewMode } from '../types'
 import WebView from 'react-native-webview'
 import {
+  Easing,
   Extrapolate,
   interpolate,
   useAnimatedStyle,
@@ -45,6 +46,7 @@ import BottomSheet, {
   BottomSheetBackdrop,
   BottomSheetBackdropProps,
 } from '@gorhom/bottom-sheet'
+import Constants from 'expo-constants'
 
 const AnimatedBox = Reanimated.createAnimatedComponent(Box)
 const AnimatedText = Reanimated.createAnimatedComponent(Text)
@@ -74,6 +76,8 @@ const OpenNewsScreen = ({
   const TOP_SCREEN_HEIGHT =
     viewMode === NewsViewMode.MDX ? Dimensions.get('window').height * 0.2 : 0
 
+  const STATUS_BAR_HEIGHT = Constants.statusBarHeight
+
   const scrollPosition = useSharedValue<number>(0)
 
   const opacityValue = useDerivedValue(() =>
@@ -92,8 +96,8 @@ const OpenNewsScreen = ({
       ? TOP_SCREEN_HEIGHT - scrollPosition.value
       : interpolate(
           scrollPosition.value,
-          [0, 100],
-          [TOP_SCREEN_HEIGHT, 100],
+          [0, STATUS_BAR_HEIGHT + 60],
+          [TOP_SCREEN_HEIGHT, STATUS_BAR_HEIGHT + 40],
           Extrapolate.CLAMP,
         ),
   )
@@ -101,8 +105,8 @@ const OpenNewsScreen = ({
   const scrollViewMargin = useDerivedValue(() =>
     interpolate(
       scrollPosition.value,
-      [0, 100],
-      [TOP_SCREEN_HEIGHT, 100],
+      [0, STATUS_BAR_HEIGHT + 60],
+      [TOP_SCREEN_HEIGHT, STATUS_BAR_HEIGHT + 40],
       Extrapolate.CLAMP,
     ),
   )
@@ -120,28 +124,32 @@ const OpenNewsScreen = ({
   }))
 
   const animatedTitleValues = useDerivedValue(() => {
+    let interpolated = interpolate(
+      heightValue.value,
+      [STATUS_BAR_HEIGHT + 40, STATUS_BAR_HEIGHT + 60],
+      [-4, STATUS_BAR_HEIGHT / 2],
+      Extrapolate.CLAMP,
+    )
+
+    console.log(interpolated)
     return {
       opacity:
         heightValue.value > TOP_SCREEN_HEIGHT
           ? 0
           : interpolate(
               heightValue.value,
-              [150, 100],
-              [0, 1],
+              [STATUS_BAR_HEIGHT + 40, STATUS_BAR_HEIGHT + 50],
+              [1, 0],
               Extrapolate.CLAMP,
             ),
-      translateY: interpolate(
-        heightValue.value,
-        [150, 100],
-        [125, 0],
-        Extrapolate.CLAMP,
-      ),
+      translateY: interpolated,
     }
   })
 
   const animatedTitleStyle = useAnimatedStyle(() => ({
     opacity: animatedTitleValues.value.opacity,
     transform: [{ translateY: animatedTitleValues.value.translateY }],
+    zIndex: 1000,
   }))
 
   React.useEffect(() => {
@@ -238,7 +246,7 @@ const OpenNewsScreen = ({
         appearsOnIndex={0}
         disappearsOnIndex={-1}
         enableTouchThrough={false}
-        opacity={0.8}
+        opacity={0.7}
       />
     ),
     [],
@@ -264,7 +272,7 @@ const OpenNewsScreen = ({
           <Box
             flexDirection="row"
             paddingHorizontal="lg"
-            style={{ marginTop: 50 }}
+            style={{ marginTop: STATUS_BAR_HEIGHT + 8 }}
           >
             <Box borderRadius={25} overflow="hidden">
               <BlurView intensity={50}>
@@ -304,7 +312,9 @@ const OpenNewsScreen = ({
 
       <Reanimated.ScrollView
         showsVerticalScrollIndicator={false}
-        onScroll={(e) => (scrollPosition.value = e.nativeEvent.contentOffset.y)}
+        onScroll={(e) => {
+          scrollPosition.value = e.nativeEvent.contentOffset.y
+        }}
         scrollEventThrottle={16}
         style={scrollViewAnimatedStyle}
       >
@@ -324,16 +334,6 @@ const OpenNewsScreen = ({
               {route.params?.title}
             </Text>
           )}
-          <PressableWithHaptics
-            onPress={() =>
-              setViewMode(
-                viewMode == NewsViewMode.WEBVIEW
-                  ? NewsViewMode.MDX
-                  : NewsViewMode.WEBVIEW,
-              )
-            }
-          ></PressableWithHaptics>
-
           {isLoading && (
             <Box
               flex={1}
@@ -356,7 +356,8 @@ const OpenNewsScreen = ({
                 incognito={true}
                 onLoadProgress={(e) => {
                   loadProgress.value = withTiming(e.nativeEvent.progress, {
-                    duration: 500,
+                    duration: 800,
+                    easing: Easing.cubic,
                   })
                 }}
                 cacheEnabled={false}
@@ -428,7 +429,10 @@ const OpenNewsScreen = ({
                     linkLabel: {
                       fontSize: 17,
                       lineHeight: 32,
-                      color: colors.primaryBlue,
+                      textDecorationColor: colors.mainText,
+                      textDecorationLine: 'underline',
+                      textDecorationStyle: 'solid',
+                      // color: colors.,
                     },
                     listOrderedItemIcon: {
                       marginRight: 10,
@@ -538,13 +542,18 @@ const OpenNewsScreen = ({
             title={`${
               viewMode === NewsViewMode.MDX ? 'Close' : 'Open'
             } Reader Mode`}
-            onPress={() =>
+            onPress={() => {
               setViewMode(
                 viewMode === NewsViewMode.MDX
                   ? NewsViewMode.WEBVIEW
                   : NewsViewMode.MDX,
               )
-            }
+
+              if (viewMode === NewsViewMode.MDX) {
+                // @ts-ignore
+                scrollViewMargin.value = STATUS_BAR_HEIGHT
+              }
+            }}
           />
           <BottomSheetItem
             icon={

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Box, PressableWithHaptics, Text } from '../shared'
-import { ActivityIndicator, Image } from 'react-native'
+import { ActivityIndicator } from 'react-native'
 
 const BottomSheetItem = ({
   icon,
@@ -20,11 +20,10 @@ const BottomSheetItem = ({
       disabled={disabled}
       onPress={disabled ? () => {} : onPress ? onPress : () => {}}
     >
-      <Image />
       <Box
         flexDirection="row"
         paddingBottom="md"
-        paddingVertical="sm"
+        paddingVertical="xs"
         marginBottom="xxs"
         alignItems="center"
         justifyContent="space-between"
@@ -33,7 +32,7 @@ const BottomSheetItem = ({
         <Box flexDirection="row" alignItems="center">
           <Box
             backgroundColor="transparentBackground"
-            padding="sm"
+            padding="xs"
             borderRadius={200}
           >
             {icon}

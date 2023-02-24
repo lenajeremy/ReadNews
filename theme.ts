@@ -30,9 +30,10 @@ const theme = createTheme({
         transparent: palette.transparent,
         transparentBackground: '#33333315',
         light: palette.white,
-        bottomSheetBackground: 'lightgray',
+        bottomSheetBackground: palette.whiteShade,
 
         blue200: palette.blue200,
+        blue400: palette.blue400,
         primaryBlue: palette.blue700,
         error: '#f91980',
         success: '#26B97A',
@@ -42,7 +43,7 @@ const theme = createTheme({
         xxs: 3,
         xs: 6,
         sm: 8,
-        md: 16,
+        md: 14,
         lg: 24,
         xl: 36
     },
