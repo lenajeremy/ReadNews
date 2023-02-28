@@ -24,7 +24,7 @@ const ExploreScreen = () => {
   const [searchNews, { isFetching, data }] = useLazySearchNewsQuery()
   const [registerInteraction] = useRegisterInteractionMutation()
 
-  const searchNewsDebounced = React.useMemo(() => debounce(searchNews, 300), [])
+  const searchNewsDebounced = React.useMemo(() => debounce(searchNews, 800), [])
 
   React.useEffect(() => {
     ;(async function () {

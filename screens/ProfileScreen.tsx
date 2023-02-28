@@ -21,6 +21,8 @@ const ProfileScreen = () => {
 
   const logout = function () {
     localStorage.clear()
+
+    // logging out also has to invalidate the token from the backend
     Updates.reloadAsync()
   }
 

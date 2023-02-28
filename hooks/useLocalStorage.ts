@@ -24,7 +24,7 @@ function useLocalStorage<T>(key: string): LocalStorageHooksValue<T> {
 
             setLoading(false)
         })()
-    })
+    }, []);
 
 
     const updateValue = React.useCallback((value: T | undefined) => {
@@ -40,10 +40,9 @@ function useLocalStorage<T>(key: string): LocalStorageHooksValue<T> {
         localStorage.clear();
     }, [])
 
-    React.useEffect(() => {
-    }, [value, loading])
+    const values: LocalStorageHooksValue<T> = React.useMemo(() => ([value, updateValue, loading, clearAll]), [value, updateValue, loading])
 
-    return [value, updateValue, loading, clearAll]
+    return values;
 }
 
 export default useLocalStorage;

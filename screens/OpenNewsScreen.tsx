@@ -131,7 +131,6 @@ const OpenNewsScreen = ({
       Extrapolate.CLAMP,
     )
 
-    console.log(interpolated)
     return {
       opacity:
         heightValue.value > TOP_SCREEN_HEIGHT
@@ -205,7 +204,6 @@ const OpenNewsScreen = ({
         action: 'SHARE',
         effect: 'POSITIVE',
       })
-      console.log(res)
     }
   }, [])
 

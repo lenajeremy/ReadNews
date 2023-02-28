@@ -100,7 +100,7 @@ const TextInput = ({
         secureTextEntry={type === 'password' && secureText}
         // @ts-ignore
         keyboardType={getKeyboardType(type)}
-        placeholderTextColor = {colors.mutedText}
+        placeholderTextColor = {colors.mediumGrayBackground}
         onChangeText={_onChangeText}
       />
 
