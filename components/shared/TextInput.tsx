@@ -11,11 +11,7 @@ import Box from './Box'
 import Text from './Text'
 import { useTheme } from '@shopify/restyle'
 import { Theme } from '../../theme'
-import {
-  interpolateColor,
-  useDerivedValue,
-  withTiming,
-} from 'react-native-reanimated'
+import { useDebounce } from '../../utils'
 
 type InputTypes = 'email' | 'password' | 'text'
 
@@ -32,8 +28,7 @@ interface TextInputProps {
 
 const getKeyboardType = (type: InputTypes) => {
   if (type === 'email') return 'email-address'
-  if (type === 'password')
-    return Platform.OS === 'ios' ? 'default' : 'password'
+  if (type === 'password') return Platform.OS === 'ios' ? 'default' : 'password'
   if (type === 'text') return 'default'
 
   return 'default'
@@ -51,13 +46,15 @@ const TextInput = ({
   onChangeText,
   icon,
   type,
-  validate,
+  validate = (val: string) => false,
   additionalStyles,
   placeholder,
   suffix,
 }: TextInputProps) => {
   const [secureText, setSecureText] = useState(true)
   const { colors } = useTheme<Theme>()
+
+  const [debouncedValidate, isValidated] = useDebounce(validate, 500, false)
 
   // validation state is either of 0, 1 or NaN to represent invalid, valid and null respectively
   const [validationState, setValidationState] = useState<number>(NaN)
@@ -69,11 +66,14 @@ const TextInput = ({
     return colors.transparent
   }
 
-  const _onChangeText = (text: string) => {
-    const isValid = validate?.call(null, text)
-    setValidationState(Number(isValid))
+  React.useEffect(() => {
+    console.log(isValidated, 'is valid')
+    setValidationState(Number(isValidated))
+  }, [isValidated])
 
-    onChangeText(text, isValid)
+  const _onChangeText = (text: string) => {
+    debouncedValidate(text)
+    onChangeText(text, isValidated)
   }
 
   return (
@@ -100,7 +100,7 @@ const TextInput = ({
         secureTextEntry={type === 'password' && secureText}
         // @ts-ignore
         keyboardType={getKeyboardType(type)}
-        placeholderTextColor = {colors.mediumGrayBackground}
+        placeholderTextColor={colors.mediumGrayBackground}
         onChangeText={_onChangeText}
       />
 

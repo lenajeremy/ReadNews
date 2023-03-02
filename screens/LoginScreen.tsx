@@ -9,7 +9,7 @@ import {
   DevSettings,
   useColorScheme,
 } from 'react-native'
-import { Text, TextInput, Button, Toast } from '../components'
+import { Text, TextInput, Button, Toast, Box } from '../components'
 import { useLoginMutation } from '../api/authApi'
 import { updateDetails } from '../redux/slices/userSlice'
 import { useAppDispatch } from '../hooks/reduxhooks'
@@ -29,7 +29,7 @@ export default function LoginScreen(
 ) {
   const [loginFormValues, setLoginFormValues] = useState({
     email: { value: 'jeremiahlena13@gmail.com', valid: true },
-    password: { value: 'areyoukiddingme', valid: true },
+    password: { value: 'somethinginteresting', valid: true },
   })
 
   const navigation = useNavigation<
@@ -126,15 +126,15 @@ export default function LoginScreen(
         />
 
         <Pressable
-          onPress={() => authNavigation.navigate('Register')}
+          onPress={() => authNavigation.navigate('RequestPasswordReset')}
           style={{
             justifyContent: 'center',
-            marginTop: spacing.lg,
-            marginBottom: spacing.sm,
+            paddingTop: spacing.lg,
+            paddingBottom: spacing.sm,
           }}
         >
-          <Text color="mainText" fontSize={16}>
-            Don't have an account? Register
+          <Text color="chocolate" textAlign="right" fontWeight="500">
+            Forgot Password?
           </Text>
         </Pressable>
 
@@ -162,6 +162,23 @@ export default function LoginScreen(
             </Text>
           )}
         </Button>
+
+        <Box
+          flexDirection="row"
+          alignItems={'flex-end'}
+          justifyContent="center"
+          mt="xl"
+        >
+          <Text color="chocolate" fontWeight="500">
+            New to ReadNews?
+          </Text>
+          <Pressable onPress={() => authNavigation.navigate('Register')}>
+            <Text color="chocolate" fontWeight="500">
+              {' '}
+              Register
+            </Text>
+          </Pressable>
+        </Box>
 
         {isSuccess && (
           <Text selectable>{JSON.stringify(data?.data, null, 3)}</Text>

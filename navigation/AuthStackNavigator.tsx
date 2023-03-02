@@ -5,6 +5,7 @@ import LoginScreen from '../screens/LoginScreen'
 import RegisterScreen from '../screens/RegisterScreen'
 import OnboardingScreen from '../screens/OnboardingScreen'
 import SetInterestScreen from '../screens/SetInterestScreen'
+import RequestPasswordResetScreen from '../screens/RequestPasswordResetScreen'
 import useLocalStorage from '../hooks/useLocalStorage'
 import { HAS_OPENED_APP } from '../constants'
 
@@ -31,6 +32,10 @@ const AuthStackScreens = () => {
         />
         <AuthStackNavigator.Screen name="Login" component={LoginScreen} />
         <AuthStackNavigator.Screen name="Register" component={RegisterScreen} />
+        <AuthStackNavigator.Screen
+          name="RequestPasswordReset"
+          component={RequestPasswordResetScreen}
+        />
         <AuthStackNavigator.Screen
           name="SetInterest"
           component={SetInterestScreen}

@@ -27,12 +27,12 @@ const Button = ({
 }: ButtonProps) => {
   return (
     <PressableWithHaptics
-      onPress={loading || variant === 'disabled' ? () => {} : onPress}
+      onPress={loading || variant === 'disabled' ? null : onPress}
     >
       <Box
         style={[styles.buttonContainer, additionalStyles]}
         backgroundColor={
-          loading || variant === 'disabled' ? 'grayBackground' : 'chocolate'
+          (loading || variant === 'disabled') ? 'grayBackground' : 'chocolate'
         }
       >
         {children}

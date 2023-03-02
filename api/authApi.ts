@@ -24,10 +24,21 @@ const authApi = createApi({
                 url: '/api/token/verify/',
                 params: { token },
             })
+        }),
+        requestPasswordToken: builder.query<void, string>({
+            query: (email) => ({
+                url: '/request-password-reset/',
+                params: { email }
+            })
         })
     })
 })
 
 export default authApi;
 
-export const { useLoginMutation, useRegisterMutation, useLazyLoginWithTokenQuery } = authApi;
+export const { 
+    useLoginMutation, 
+    useRegisterMutation, 
+    useLazyLoginWithTokenQuery, 
+    useLazyRequestPasswordTokenQuery 
+} = authApi;

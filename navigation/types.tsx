@@ -38,6 +38,7 @@ export type AuthStackParamList = {
   Login: undefined
   Register: undefined
   SetInterest: undefined
+  RequestPasswordReset: undefined
 }
 
 export type AuthStackScreenProps<

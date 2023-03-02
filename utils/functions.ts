@@ -1,18 +1,31 @@
 import { TimeoutId } from '@reduxjs/toolkit/dist/query/core/buildMiddleware/types';
 import * as Linking from 'expo-linking'
 import { API_URL } from '../constants';
+import * as React from 'react'
 
 
-export function debounce<T>(fn: T extends Function ? T : never, timeout: number): T {
+export function useDebounce<T>(fn: T extends (...args: any) => any ? T : never, timeout: number, defaultReturnValue: ReturnType<typeof fn>): [T, ReturnType<typeof fn>] {
     let timeoutId: TimeoutId;
 
-    return (function () {
+    const [returnValue, setReturnValue] = React.useState<ReturnType<typeof fn>>(defaultReturnValue);
+
+    const debouncedFunction = function () {
         clearTimeout(timeoutId);
 
         timeoutId = setTimeout(() => {
-            fn(...arguments)
+            const val = fn(...arguments);
+            setReturnValue(val);
         }, timeout)
-    } as T)
+
+    } as T;
+
+    const values: [T, ReturnType<typeof fn>] = React.useMemo(() => [debouncedFunction, returnValue], [returnValue])
+
+    return values;
+}
+
+function returnboolean(): boolean {
+    return false;
 }
 
 export const getTimeOfDay = () => {

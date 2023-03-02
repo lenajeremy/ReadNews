@@ -263,6 +263,7 @@ const OnboardingScreen = ({ navigation }: { navigation: any }) => {
               width: DEVICE_WIDTH * 0.8,
               height: 70,
               marginTop: 10,
+              backgroundColor: colors.chocolate
             }}
             variant={'text'}
           >
@@ -313,9 +314,9 @@ const AnimatedOnboardingText = ({
         fontFamily={'Gilroy'}
         textAlign="center"
         letterSpacing={0.2}
-        opacity={0.7}
-        lineHeight={32}
-        fontSize={16}
+        opacity={0.8}
+        lineHeight={34}
+        fontSize={17}
       >
         {description}
       </AnimatedText>
