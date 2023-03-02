@@ -10,7 +10,7 @@ import { Box, NewsComponent, Text, TextInput } from '../components'
 import { useTheme } from '@shopify/restyle'
 import { Theme } from '../theme'
 import { Ionicons } from '@expo/vector-icons'
-import { debounce } from '../utils'
+import { useDebounce } from '../utils'
 import {
   useLazySearchNewsQuery,
   useRegisterInteractionMutation,
@@ -24,7 +24,11 @@ const ExploreScreen = () => {
   const [searchNews, { isFetching, data }] = useLazySearchNewsQuery()
   const [registerInteraction] = useRegisterInteractionMutation()
 
-  const searchNewsDebounced = React.useMemo(() => debounce(searchNews, 800), [])
+  const [searchNewsDebounced, something] = useDebounce(
+    searchNews,
+    800,
+    '' as any,
+  )
 
   React.useEffect(() => {
     ;(async function () {
