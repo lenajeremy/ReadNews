@@ -1,10 +1,13 @@
 import * as React from 'react'
 import { ActivityIndicator, Dimensions, SafeAreaView } from 'react-native'
-import { Text, Box, TextInput, Button } from '../components'
+import * as Linking from 'expo-linking'
+import { Text, Box, TextInput, Button, PressableWithHaptics } from '../components'
 import { useTheme } from '@shopify/restyle'
 import { Theme } from '../theme'
-import { EMAIL_VALIDATION_REGEX } from '../constants'
+import { APP_LINKING_BASE_URL, EMAIL_VALIDATION_REGEX } from '../constants'
 import { useLazyRequestPasswordTokenQuery } from '../api/authApi'
+import { useNavigation } from '@react-navigation/native'
+import { getPageRouteName } from '../utils'
 
 const RequestPasswordResetScreen = () => {
   const { spacing, colors } = useTheme<Theme>()
@@ -16,6 +19,8 @@ const RequestPasswordResetScreen = () => {
     requestPasswordReset,
     { isFetching, isError },
   ] = useLazyRequestPasswordTokenQuery()
+
+  const navigation = useNavigation()
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.mainBackground }}>
@@ -44,7 +49,13 @@ const RequestPasswordResetScreen = () => {
           validate={(email) => EMAIL_VALIDATION_REGEX.test(email)}
         />
         <Button
-          onPress={() => requestPasswordReset(email)}
+          onPress={() =>
+            requestPasswordReset({
+              email,
+              route: 'Auth/ResetPassword',
+              host: APP_LINKING_BASE_URL,
+            })
+          }
           additionalStyles={{
             width: DEVICE_WIDTH - spacing.md * 2,
             height: 60,

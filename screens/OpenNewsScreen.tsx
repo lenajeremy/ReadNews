@@ -39,7 +39,7 @@ import {
 } from 'react-native-reanimated'
 import Reanimated from 'react-native-reanimated'
 import { useColorScheme } from 'react-native'
-import { generateNewLinkToShare } from '../utils'
+import { generateNewLinkToShare, getPageRouteName } from '../utils'
 import { Ionicons } from '@expo/vector-icons'
 import * as Haptics from 'expo-haptics'
 import BottomSheet, {
@@ -47,6 +47,7 @@ import BottomSheet, {
   BottomSheetBackdropProps,
 } from '@gorhom/bottom-sheet'
 import Constants from 'expo-constants'
+import * as Linking from 'expo-linking'
 
 const AnimatedBox = Reanimated.createAnimatedComponent(Box)
 const AnimatedText = Reanimated.createAnimatedComponent(Text)
@@ -179,9 +180,7 @@ const OpenNewsScreen = ({
       route.params.img as string,
       route.params.website as string,
       route.params.favicon as string,
-      navigation.getState().routeNames[
-        navigation.getState().routeNames.length - 1
-      ],
+      getPageRouteName(navigation),
     )
 
     // const textToShare = `Hey... I felt to share this news with you. Read on the *ReadNews* app here: \n ${newLinkToShare}`

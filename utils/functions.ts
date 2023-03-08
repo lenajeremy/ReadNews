@@ -1,7 +1,8 @@
 import { TimeoutId } from '@reduxjs/toolkit/dist/query/core/buildMiddleware/types';
 import * as Linking from 'expo-linking'
-import { API_URL } from '../constants';
+import { API_URL, APP_LINKING_BASE_URL } from '../constants';
 import * as React from 'react'
+import { NavigationProp } from '@react-navigation/native';
 
 
 export function useDebounce<T>(fn: T extends (...args: any) => any ? T : never, timeout: number, defaultReturnValue: ReturnType<typeof fn>): [T, ReturnType<typeof fn>] {
@@ -73,16 +74,13 @@ export const getDateText = () => {
 
 export const generateNewLinkToShare = (title: string, url: string, img: string, website: string, favicon: string, route: string): string => {
 
-    const expoURL = Linking.createURL('/');
-    // const urlParams = new URLSearchParams()
-
-    // urlParams.set('title', title);
-    // urlParams.set('url', url);
-    // urlParams.set('img', img);
-    // urlParams.set('website', website);
-    // urlParams.set('favicon', favicon)
-
-    // // return `${expoURL}${route}?${urlParams.toString()}
+    const expoURL = APP_LINKING_BASE_URL;
 
     return `${API_URL}/news/redirect?url=${url}&route=${route}&host=${expoURL}`
 }
+
+export const getPageRouteName = (navigation: NavigationProp<any>) => {
+    return navigation.getState().routes[
+        navigation.getState().routes.length - 1
+    ].name
+};

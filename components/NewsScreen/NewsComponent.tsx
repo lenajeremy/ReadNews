@@ -14,7 +14,7 @@ import Reanimated, {
   interpolate,
   Extrapolation,
 } from 'react-native-reanimated'
-import { Ionicons } from '@expo/vector-icons'
+import { AntDesign, Ionicons } from '@expo/vector-icons'
 import * as Haptics from 'expo-haptics'
 
 // @ts-ignore
@@ -163,7 +163,7 @@ const NewsComponent = ({
             </Box>
           </AnimatedBox>
           <Box
-            style={{ backgroundColor: 'green', paddingHorizontal: 40 }}
+            style={{ backgroundColor: 'tomato', paddingHorizontal: 40 }}
             alignItems="center"
             justifyContent="space-between"
             position="absolute"
@@ -172,8 +172,8 @@ const NewsComponent = ({
             height="100%"
             zIndex={1}
           >
-            <Ionicons name={'archive'} color="white" size={20} />
-            <Ionicons name={'archive'} color="white" size={20} />
+            <AntDesign name={'dislike1'} color="white" size={20} />
+            <AntDesign name={'dislike1'} color="white" size={20} />
           </Box>
         </AnimatedBox>
       </PressableWithHaptics>

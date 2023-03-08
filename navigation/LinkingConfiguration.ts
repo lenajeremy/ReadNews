@@ -5,12 +5,13 @@
  */
 
 import { LinkingOptions } from '@react-navigation/native';
-import * as Linking from 'expo-linking';
+import { APP_LINKING_BASE_URL } from '../constants';
+
 
 import { RootStackParamList } from './types';
 
 const linking: LinkingOptions<RootStackParamList> = {
-  prefixes: [Linking.createURL('/')],
+  prefixes: [APP_LINKING_BASE_URL],
 };
 
 export default linking;

@@ -15,7 +15,7 @@ import {
 } from '../components'
 import { useTheme } from '@shopify/restyle'
 import { Theme } from '../theme'
-import { EvilIcons, Ionicons } from '@expo/vector-icons'
+import { AntDesign, EvilIcons, Ionicons, MaterialIcons } from '@expo/vector-icons'
 import { useDebounce } from '../utils'
 import {
   useLazySearchNewsQuery,
@@ -28,7 +28,7 @@ import { RECENT_SEARCH_QUERIES_TOKEN_KEY } from '../constants'
 const ExploreScreen = () => {
   const { colors } = useTheme<Theme>()
 
-  const [searchText, setSearchText] = React.useState<string>('jeremiah')
+  const [searchText, setSearchText] = React.useState<string>('')
   const [searchNews, { isFetching, data }] = useLazySearchNewsQuery()
   const [registerInteraction] = useRegisterInteractionMutation()
   const [recentQueries, updateRecentQueries] = useLocalStorage<string[]>(
@@ -201,12 +201,12 @@ const RecentQueries = ({
                   borderRadius={'50%'}
                   borderColor={'transparentBackground'}
                   borderWidth={1.5}
-                  width={36}
-                  height={36}
+                  width={30}
+                  height={30}
                   alignItems={'center'}
                   justifyContent={'center'}
                 >
-                  <EvilIcons name="search" size={24} color={colors.mutedText} />
+                  <AntDesign name="search1" size={16} color={colors.mutedText} />
                 </Box>
                 <Text
                   key={query}
@@ -219,7 +219,7 @@ const RecentQueries = ({
               </Box>
 
               <PressableWithHaptics onPress={() => removeQuery(query)}>
-                <Ionicons name="close" size={14} color={colors.primaryBlue} />
+                <AntDesign name="close" size={16} color={colors.mutedText} />
               </PressableWithHaptics>
             </Box>
           ))}

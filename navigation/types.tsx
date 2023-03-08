@@ -39,6 +39,10 @@ export type AuthStackParamList = {
   Register: undefined
   SetInterest: undefined
   RequestPasswordReset: undefined
+  ResetPassword: {
+    passwordResetToken: string
+    userId: string
+  }
 }
 
 export type AuthStackScreenProps<

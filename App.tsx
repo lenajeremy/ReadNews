@@ -13,7 +13,8 @@ import * as Updates from 'expo-updates'
 import * as Notifications from 'expo-notifications'
 import useLocalStorage from './hooks/useLocalStorage'
 import { PUSH_NOTIFICATION_TOKEN_KEY } from './constants'
-import 'react-native-url-polyfill/auto'
+import * as Linking from 'expo-linking'
+// import 'react-native-url-polyfill/auto'
 
 SplashScreen.preventAutoHideAsync().catch((error) => console.error(error))
 
@@ -23,8 +24,12 @@ export default function App() {
     pushNotificationToken,
     updatePushNotificationToken,
     isLoadingPushNotificationtoken,
-    clearAll
   ] = useLocalStorage<string>(PUSH_NOTIFICATION_TOKEN_KEY)
+
+  const url = Linking.useURL()
+
+  const parsed = Linking.parse(String(url))
+  console.log(parsed, '\n\n', url)
 
   const [appLoaded, setAppLoaded] = React.useState(false)
   const isDarkMode = useColorScheme() === 'dark'

@@ -25,10 +25,10 @@ const authApi = createApi({
                 params: { token },
             })
         }),
-        requestPasswordToken: builder.query<void, string>({
-            query: (email) => ({
+        requestPasswordToken: builder.query<void, { email: string, host: string, route: string }>({
+            query: (args) => ({
                 url: '/request-password-reset/',
-                params: { email }
+                params: args
             })
         })
     })
@@ -36,9 +36,9 @@ const authApi = createApi({
 
 export default authApi;
 
-export const { 
-    useLoginMutation, 
-    useRegisterMutation, 
-    useLazyLoginWithTokenQuery, 
-    useLazyRequestPasswordTokenQuery 
+export const {
+    useLoginMutation,
+    useRegisterMutation,
+    useLazyLoginWithTokenQuery,
+    useLazyRequestPasswordTokenQuery
 } = authApi;
