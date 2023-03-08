@@ -30,6 +30,18 @@ const authApi = createApi({
                 url: '/request-password-reset/',
                 params: args
             })
+        }),
+        resetPassword: builder.mutation<void, { newPassword: string, confirmNewPassword: string, userId: string, resetPasswordToken: string }>({
+            query: (args) => ({
+                url: `/reset-password/${String(args.userId)}/${args.resetPasswordToken}/`,
+                method: 'POST',
+                body: {
+                    new_password: args.newPassword,
+                    confirm_new_password: args.confirmNewPassword,
+                    reset_token: args.resetPasswordToken,
+                    user_id: args.userId,
+                }
+            })
         })
     })
 })
@@ -40,5 +52,6 @@ export const {
     useLoginMutation,
     useRegisterMutation,
     useLazyLoginWithTokenQuery,
-    useLazyRequestPasswordTokenQuery
+    useLazyRequestPasswordTokenQuery,
+    useResetPasswordMutation,
 } = authApi;
