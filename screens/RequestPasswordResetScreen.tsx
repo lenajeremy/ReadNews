@@ -39,12 +39,8 @@ const RequestPasswordResetScreen = () => {
           value={email}
           type="email"
           placeholder="Enter your email"
-          onChangeText={(email, valid) => {
-            setEmail(email)
-            setIsValid(Boolean(valid))
-
-            console.log(valid, email)
-          }}
+          onChangeText={(email) => setEmail(email)}
+          onValidate={(isValid) => setIsValid(isValid)}
           validate={(email) => EMAIL_VALIDATION_REGEX.test(email)}
         />
         <Button
@@ -54,7 +50,7 @@ const RequestPasswordResetScreen = () => {
             height: 60,
             marginTop: 10,
           }}
-          variant={'disabled'}
+          variant={isValid ? 'contained' : 'disabled'}
           loading={isFetching}
         >
           {isFetching ? (
@@ -65,7 +61,6 @@ const RequestPasswordResetScreen = () => {
             </Text>
           )}
         </Button>
-        <Text>{String(isValid)}</Text>
       </Box>
     </SafeAreaView>
   )

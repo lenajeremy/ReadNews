@@ -23,6 +23,7 @@ export default function App() {
     pushNotificationToken,
     updatePushNotificationToken,
     isLoadingPushNotificationtoken,
+    clearAll
   ] = useLocalStorage<string>(PUSH_NOTIFICATION_TOKEN_KEY)
 
   const [appLoaded, setAppLoaded] = React.useState(false)

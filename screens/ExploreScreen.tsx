@@ -3,39 +3,75 @@ import {
   ActivityIndicator,
   Pressable,
   SafeAreaView,
-  Image,
+  ScrollView,
   Alert,
 } from 'react-native'
-import { Box, NewsComponent, Text, TextInput } from '../components'
+import {
+  Box,
+  NewsComponent,
+  PressableWithHaptics,
+  Text,
+  TextInput,
+} from '../components'
 import { useTheme } from '@shopify/restyle'
 import { Theme } from '../theme'
-import { Ionicons } from '@expo/vector-icons'
+import { EvilIcons, Ionicons } from '@expo/vector-icons'
 import { useDebounce } from '../utils'
 import {
   useLazySearchNewsQuery,
   useRegisterInteractionMutation,
 } from '../api/newsApi'
 import { FlatList } from 'react-native-gesture-handler'
+import useLocalStorage from '../hooks/useLocalStorage'
+import { RECENT_SEARCH_QUERIES_TOKEN_KEY } from '../constants'
 
 const ExploreScreen = () => {
   const { colors } = useTheme<Theme>()
 
-  const [searchText, setSearchText] = React.useState<string>('Google')
+  const [searchText, setSearchText] = React.useState<string>('jeremiah')
   const [searchNews, { isFetching, data }] = useLazySearchNewsQuery()
   const [registerInteraction] = useRegisterInteractionMutation()
+  const [recentQueries, updateRecentQueries] = useLocalStorage<string[]>(
+    RECENT_SEARCH_QUERIES_TOKEN_KEY,
+    [],
+  )
+  const MAX_QUERY_LENGTH = 10
 
-  const [searchNewsDebounced, something] = useDebounce(
-    searchNews,
-    800,
+  const searchForNewsAndUpdateSearchQueries = React.useCallback(
+    async (searchQuery: string) => {
+      if (searchQuery.trim()) {
+        try {
+          const res = await searchNews(searchQuery).unwrap()
+          if (res) {
+            const previousQueries = new Set(recentQueries)
+            previousQueries.add(searchQuery)
+            if (previousQueries.size > MAX_QUERY_LENGTH) {
+              previousQueries.delete(Array.from(previousQueries)[0])
+            }
+
+            updateRecentQueries(Array.from(previousQueries))
+          }
+        } catch (error) {
+          console.error(error)
+        }
+      }
+    },
+    [recentQueries],
+  )
+
+  const [searchNewsAndUpdateQueriesDebounced] = useDebounce(
+    searchForNewsAndUpdateSearchQueries,
+    600,
     '' as any,
   )
 
   React.useEffect(() => {
     ;(async function () {
       try {
-        const searchResults = await searchNewsDebounced(searchText).unwrap()
-        console.log(searchResults)
-      } catch (error) {}
+        await searchNewsAndUpdateQueriesDebounced(searchText)
+      } catch (error) {
+        console.log('there is an error', error)
+      }
     })()
   }, [searchText])
 
@@ -80,34 +116,118 @@ const ExploreScreen = () => {
             }
           />
         </Box>
-        <FlatList
-          showsVerticalScrollIndicator={false}
-          data={data?.res}
-          renderItem={({ item }) => (
-            <NewsComponent
-              item={item}
-              removeItem={(url) => Alert.alert('URL:', url)}
-              registerInteraction={(url) =>
-                registerInteraction({ url, action: 'READ', effect: 'POSITIVE' })
-              }
-            />
-          )}
-          ListEmptyComponent={() =>
-            searchText && !isFetching ? (
-              <Box flex={1} alignItems="center" justifyContent="center">
-                <Text variant="heading2" textAlign="center">
-                  Not Found 😢
-                </Text>
-              </Box>
-            ) : null
-          }
-          style={{ marginBottom: 30 }}
-          contentContainerStyle={{ flex: data?.res.length === 0 ? 1 : 0 }}
-          keyExtractor={(item) => item.url}
-        />
+        {searchText === '' && recentQueries ? (
+          <RecentQueries
+            queries={recentQueries}
+            onClick={(queryText: string) => setSearchText(queryText)}
+            removeQuery={(queryText: string) => {
+              const set = new Set(recentQueries)
+              set.delete(queryText)
+              updateRecentQueries(Array.from(set))
+            }}
+          />
+        ) : (
+          <FlatList
+            ItemSeparatorComponent={() => (
+              <Box
+                height={2}
+                width={'100%'}
+                backgroundColor="transparentBackground"
+              />
+            )}
+            showsVerticalScrollIndicator={false}
+            data={data?.res}
+            renderItem={({ item }) => (
+              <NewsComponent
+                item={item}
+                removeItem={(url) => Alert.alert('URL:', url)}
+                registerInteraction={(url) =>
+                  registerInteraction({
+                    url,
+                    action: 'READ',
+                    effect: 'POSITIVE',
+                  })
+                }
+              />
+            )}
+            ListEmptyComponent={() =>
+              searchText && !isFetching ? (
+                <Box flex={1} alignItems="center" justifyContent="center">
+                  <Text variant="heading2" textAlign="center">
+                    Not Found 😢
+                  </Text>
+                </Box>
+              ) : null
+            }
+            style={{ marginBottom: 30 }}
+            contentContainerStyle={{ flex: data?.res.length === 0 ? 1 : 0 }}
+            keyExtractor={(item) => item.url}
+          />
+        )}
       </Box>
     </SafeAreaView>
   )
 }
 
+const RecentQueries = ({
+  queries,
+  onClick,
+  removeQuery,
+}: {
+  removeQuery: (queryText: string) => void
+  queries: string[]
+  onClick: (queryText: string) => void
+}) => {
+  const { colors } = useTheme<Theme>()
+  return (
+    <Box padding="lg" paddingTop="sm">
+      <Text fontSize={20} fontWeight="600" mt="sm" my={'md'}>
+        Recent Searches
+      </Text>
+
+      {queries.length > 0 ? (
+        <ScrollView>
+          {queries.reverse().map((query) => (
+            <Box
+              flexDirection="row"
+              alignItems="center"
+              marginBottom="sm"
+              padding="xxs"
+              justifyContent="space-between"
+            >
+              <Box flexDirection="row">
+                <Box
+                  // @ts-ignore
+                  borderRadius={'50%'}
+                  borderColor={'transparentBackground'}
+                  borderWidth={1.5}
+                  width={36}
+                  height={36}
+                  alignItems={'center'}
+                  justifyContent={'center'}
+                >
+                  <EvilIcons name="search" size={24} color={colors.mutedText} />
+                </Box>
+                <Text
+                  key={query}
+                  paddingVertical="xs"
+                  marginLeft="md"
+                  onPress={() => onClick(query)}
+                >
+                  {query}
+                </Text>
+              </Box>
+
+              <PressableWithHaptics onPress={() => removeQuery(query)}>
+                <Ionicons name="close" size={14} color={colors.primaryBlue} />
+              </PressableWithHaptics>
+            </Box>
+          ))}
+        </ScrollView>
+      ) : (
+        <Text>No recent searches</Text>
+      )}
+    </Box>
+  )
+}
 export default ExploreScreen

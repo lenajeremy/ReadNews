@@ -45,7 +45,7 @@ function RootNavigator() {
   React.useEffect(() => {
     async function login() {
       try {
-        if (token) {
+        if (token && typeof token === 'string') {
           const res = await loginWithToken(token).unwrap()
           dispatch(
             updateDetails({

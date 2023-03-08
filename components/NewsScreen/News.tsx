@@ -193,7 +193,7 @@ const GreetingBanner: React.FC = () => {
   const { firstName } = useAppSelector((store) => store.user)
 
   return (
-    <Box paddingHorizontal="lg" paddingVertical="sm">
+    <Box paddingHorizontal="lg" paddingVertical="xs" paddingBottom='md'>
       <Text color="mutedText" marginBottom="xs" fontSize={14}>
         {getDateText()}
       </Text>

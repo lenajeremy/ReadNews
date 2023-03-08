@@ -23,6 +23,7 @@ interface TextInputProps {
   additionalStyles?: ViewStyle
   placeholder: string
   validate?: (value: string) => boolean
+  onValidate?: (value: boolean) => void
   suffix?: React.ReactNode
 }
 
@@ -46,7 +47,8 @@ const TextInput = ({
   onChangeText,
   icon,
   type,
-  validate = (val: string) => false,
+  validate,
+  onValidate,
   additionalStyles,
   placeholder,
   suffix,
@@ -54,7 +56,12 @@ const TextInput = ({
   const [secureText, setSecureText] = useState(true)
   const { colors } = useTheme<Theme>()
 
-  const [debouncedValidate, isValidated] = useDebounce(validate, 500, false)
+  const [debouncedValidate, isValidated] = useDebounce(
+    validate || ((val: string) => false),
+    500,
+    false,
+  )
+  const [firstRender, setFirstRender] = React.useState<boolean>(true)
 
   // validation state is either of 0, 1 or NaN to represent invalid, valid and null respectively
   const [validationState, setValidationState] = useState<number>(NaN)
@@ -67,9 +74,20 @@ const TextInput = ({
   }
 
   React.useEffect(() => {
-    console.log(isValidated, 'is valid')
-    setValidationState(Number(isValidated))
+    if (validate) {
+      if (firstRender) {
+        setValidationState(NaN)
+      } else {
+        setValidationState(Number(isValidated))
+      }
+    }
+
+    setFirstRender(false)
   }, [isValidated])
+
+  React.useEffect(() => {
+    onValidate && onValidate(Boolean(validationState));
+  }, [validationState])
 
   const _onChangeText = (text: string) => {
     debouncedValidate(text)
