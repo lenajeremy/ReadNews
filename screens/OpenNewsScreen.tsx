@@ -348,6 +348,7 @@ const OpenNewsScreen = ({
                 opacity: viewMode === NewsViewMode.WEBVIEW ? 1 : 0,
                 height: viewMode === NewsViewMode.WEBVIEW ? 'auto' : 0,
               }}
+              renderToHardwareTextureAndroid={true}
             >
               <WebView
                 incognito={true}
@@ -357,7 +358,7 @@ const OpenNewsScreen = ({
                     easing: Easing.cubic,
                   })
                 }}
-                cacheEnabled={false}
+                // cacheEnabled={false}
                 style={{ width: DEVICE_WIDTH, height: DEVICE_HEIGHT }}
                 source={{ uri: route.params?.url as string }}
               />

@@ -24,6 +24,7 @@ export default function App() {
     pushNotificationToken,
     updatePushNotificationToken,
     isLoadingPushNotificationtoken,
+    clearAll,
   ] = useLocalStorage<string>(PUSH_NOTIFICATION_TOKEN_KEY)
 
   const url = Linking.useURL()
@@ -109,6 +110,9 @@ export default function App() {
             <Text>An Error Occurred</Text>
             <PressableWithHaptics onPress={Updates.reloadAsync}>
               <Text>Reload app</Text>
+            </PressableWithHaptics>
+            <PressableWithHaptics onPress={clearAll}>
+              <Text>Clear Storage</Text>
             </PressableWithHaptics>
           </View>
         ) : (
