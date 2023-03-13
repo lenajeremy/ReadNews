@@ -19,6 +19,7 @@ import { useLazyLoginWithTokenQuery } from '../api/authApi'
 import { useAppDispatch } from '../hooks/reduxhooks'
 import { updateDetails } from '../redux/slices/userSlice'
 import linkingconfigurations from './LinkingConfiguration'
+import FeedbackNotifierContainer from '../components/FeedbackNotifier/FeedbackNotifierContainer'
 
 export default function Navigation() {
   return (
@@ -89,14 +90,16 @@ function RootNavigator() {
   }
 
   return (
-    // @ts-ignore
-    <Stack.Navigator initialRouteName={token ? 'Home' : 'Auth'}>
-      {/* @ts-ignore */}
-      <Stack.Group screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="Home" component={BottomTabNavigator} />
-        <Stack.Screen name="Auth" component={AuthStackScreens} />
-        <Stack.Screen name="OpenNews" component={OpenNewsScreen} />
-      </Stack.Group>
-    </Stack.Navigator>
+    <FeedbackNotifierContainer>
+       {/* @ts-ignore */}
+      <Stack.Navigator initialRouteName={token ? 'Home' : 'Auth'}>
+        {/* @ts-ignore */}
+        <Stack.Group screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="Home" component={BottomTabNavigator} />
+          <Stack.Screen name="Auth" component={AuthStackScreens} />
+          <Stack.Screen name="OpenNews" component={OpenNewsScreen} />
+        </Stack.Group>
+      </Stack.Navigator>
+    </FeedbackNotifierContainer>
   )
 }
