@@ -9,7 +9,7 @@ export type NewsType = {
   }
 }
 
-export type SavedNewsType = NewsType & {
+export type OfflineNewsType = NewsType & {
   content: string
 }
 

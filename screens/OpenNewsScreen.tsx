@@ -26,7 +26,7 @@ import {
   useGetNewsContentQuery,
   useRegisterInteractionMutation,
 } from '../api/newsApi'
-import { NewsViewMode, SavedNewsType } from '../types'
+import { NewsViewMode, OfflineNewsType } from '../types'
 import WebView from 'react-native-webview'
 import {
   Easing,
@@ -48,7 +48,7 @@ import BottomSheet, {
 } from '@gorhom/bottom-sheet'
 import Constants from 'expo-constants'
 import useLocalStorage from '../hooks/useLocalStorage'
-import { SAVED_NEWS_KEY } from '../constants'
+import { SAVED_NEWS_KEY, LIKED_NEWS_KEY } from '../constants'
 
 const AnimatedBox = Reanimated.createAnimatedComponent(Box)
 const AnimatedText = Reanimated.createAnimatedComponent(Text)
@@ -232,8 +232,13 @@ const OpenNewsScreen = ({
   const [isLiked, setLiked] = React.useState<boolean>(false)
   const [isSaved, setSaved] = React.useState<boolean>(false)
 
-  const [savedNews, updateSavedNews] = useLocalStorage<SavedNewsType[]>(
+  const [savedNews, updateSavedNews] = useLocalStorage<OfflineNewsType[]>(
     SAVED_NEWS_KEY,
+    [],
+  )
+
+  const [likedNews, updateLikedNews] = useLocalStorage<OfflineNewsType[]>(
+    LIKED_NEWS_KEY,
     [],
   )
 
@@ -285,6 +290,21 @@ const OpenNewsScreen = ({
 
   const like = React.useCallback(async () => {
     try {
+      updateLikedNews([
+        ...(likedNews || []),
+        {
+          title: data?.title || route.params.title,
+          url: data?.url || route.params.url,
+          img: data?.img || route.params.img,
+          metadata: data?.metadata || {
+            website: route.params.website,
+            favicon: route.params.favicon,
+            time_added: '',
+          },
+          content: data?.text || '',
+        },
+      ])
+      
       const res = await registerInteraction({
         url: route.params.url,
         action: 'LIKE',

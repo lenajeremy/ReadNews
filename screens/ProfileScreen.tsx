@@ -16,8 +16,8 @@ import { Theme } from '../theme'
 import * as Updates from 'expo-updates'
 import localStorage from '../utils/localStorage'
 import useLocalStorage from '../hooks/useLocalStorage'
-import { SavedNewsType } from '../types'
-import { SAVED_NEWS_KEY } from '../constants'
+import { OfflineNewsType } from '../types'
+import { SAVED_NEWS_KEY, LIKED_NEWS_KEY } from '../constants'
 import { NavigationProp, useNavigation } from '@react-navigation/native'
 import { RootStackParamList } from '../navigation/types'
 
@@ -25,8 +25,13 @@ const ProfileScreen = () => {
   const { colors } = useTheme<Theme>()
   const { firstName, lastName, email } = useAppSelector((store) => store.user)
   const [profileTabIndex, setProfileTabIndex] = React.useState<0 | 1>(1)
-  const [savedNews, updateSavedNews] = useLocalStorage<SavedNewsType[]>(
+  const [savedNews, updateSavedNews] = useLocalStorage<OfflineNewsType[]>(
     SAVED_NEWS_KEY,
+    [],
+  )
+
+  const [likedNews, updateLikedNews] = useLocalStorage<OfflineNewsType[]>(
+    LIKED_NEWS_KEY,
     [],
   )
 
@@ -251,8 +256,8 @@ const ProfileScreen = () => {
                   <Box flexDirection="row" alignItems="center">
                     <Ionicons
                       name="bookmark"
-                      size={20}
-                      color={colors.mainText}
+                      size={24}
+                      color={colors.primaryBlue}
                     />
 
                     <Text fontSize={18} fontWeight={'500'} marginLeft="sm">
@@ -277,7 +282,7 @@ const ProfileScreen = () => {
                           website: news.metadata.website,
                           img: news.img,
                           mode: 'offline',
-                          content: news.content
+                          content: news.content,
                         })
                       }
                     >
@@ -286,14 +291,80 @@ const ProfileScreen = () => {
                         width={250}
                         position="relative"
                         backgroundColor="grayBackground"
-                        p="sm"
+                        p="md"
+                        justifyContent = "flex-end"
                       >
                         <ImageBackground
                           source={{ uri: news.img }}
                           key={news.url}
                           style={StyleSheet.absoluteFillObject}
                         />
-                        <Text variant="heading2" color="mainBackground">
+                        <Text fontSize={18} lineHeight = {28} color="mainBackground">
+                          {news.title}
+                        </Text>
+                      </Box>
+                    </Pressable>
+                  ))}
+                </ScrollView>
+              </Box>
+
+              <Box
+                paddingTop="sm"
+                overflow="hidden"
+                style={{ backgroundColor: colors.bottomTabBarBackground + 80 }}
+                borderRadius={12}
+                marginBottom="xl"
+              >
+                <Box
+                  paddingVertical="md"
+                  flexDirection="row"
+                  alignItems="center"
+                  justifyContent="space-between"
+                  paddingHorizontal="md"
+                >
+                  <Box flexDirection="row" alignItems="center">
+                    <Ionicons name="heart" size={24} color={colors.error} />
+
+                    <Text fontSize={18} fontWeight={'500'} marginLeft="sm">
+                      Liked News ({likedNews?.length})
+                    </Text>
+                  </Box>
+
+                  <Ionicons
+                    name="chevron-forward"
+                    size={24}
+                    color={colors.mainText}
+                  />
+                </Box>
+                <ScrollView horizontal>
+                  {likedNews?.reverse().map((news) => (
+                    <Pressable
+                      onPress={() =>
+                        navigation.navigate('OpenNews', {
+                          url: news.url,
+                          favicon: news.metadata.favicon,
+                          title: news.title,
+                          website: news.metadata.website,
+                          img: news.img,
+                          mode: 'offline',
+                          content: news.content,
+                        })
+                      }
+                    >
+                      <Box
+                        height={180}
+                        width={250}
+                        position="relative"
+                        backgroundColor='grayBackground'
+                        p="md"
+                        justifyContent='flex-end'
+                      >
+                        <ImageBackground
+                          source={{ uri: news.img }}
+                          key={news.url}
+                          style={StyleSheet.absoluteFillObject}
+                        />
+                        <Text fontSize={18} lineHeight = {28} color="mainBackground">
                           {news.title}
                         </Text>
                       </Box>
