@@ -12,7 +12,7 @@ type LocalStorageHooksValue<T> =
 
 function useLocalStorage<T>(key: string, defaultValue?: T): LocalStorageHooksValue<T> {
 
-    const [value, setValue] = React.useState<T | undefined>(localStorage.getItem(key) || defaultValue);
+    const [value, setValue] = React.useState<T | undefined>(defaultValue);
     const [loading, setLoading] = React.useState<boolean>(true)
 
     React.useEffect(() => {
@@ -21,7 +21,7 @@ function useLocalStorage<T>(key: string, defaultValue?: T): LocalStorageHooksVal
             if (val) {
                 setValue(JSON.parse(val))
             } else {
-                setValue(undefined)
+                setValue(defaultValue)
             }
 
             setLoading(false)

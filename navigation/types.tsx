@@ -26,6 +26,8 @@ export type RootStackParamList = {
     favicon: string
     title: string
     img: string
+    mode?: 'offline' | 'online',
+    content?: string
   }
 }
 

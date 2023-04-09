@@ -128,9 +128,8 @@ const NewsComponent = ({
                   style={{
                     width: 20,
                     height: 20,
-                    borderRadius: 10,
+                    borderRadius: 4,
                     marginRight: 10,
-                    backgroundColor: 'gray',
                   }}
                 />
                 <Text color="mutedText" fontSize={13}>

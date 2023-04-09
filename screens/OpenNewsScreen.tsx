@@ -6,6 +6,7 @@ import {
   ActivityIndicator,
   Share,
   SafeAreaView,
+  Linking,
 } from 'react-native'
 import {
   Box,
@@ -13,7 +14,6 @@ import {
   BackButton,
   ErrorBoundary,
   PressableWithHaptics,
-  Button,
   BottomSheetItem,
 } from '../components'
 import { StackScreenProps } from '@react-navigation/stack'
@@ -26,7 +26,7 @@ import {
   useGetNewsContentQuery,
   useRegisterInteractionMutation,
 } from '../api/newsApi'
-import { NewsViewMode } from '../types'
+import { NewsViewMode, SavedNewsType } from '../types'
 import WebView from 'react-native-webview'
 import {
   Easing,
@@ -47,7 +47,8 @@ import BottomSheet, {
   BottomSheetBackdropProps,
 } from '@gorhom/bottom-sheet'
 import Constants from 'expo-constants'
-import * as Linking from 'expo-linking'
+import useLocalStorage from '../hooks/useLocalStorage'
+import { SAVED_NEWS_KEY } from '../constants'
 
 const AnimatedBox = Reanimated.createAnimatedComponent(Box)
 const AnimatedText = Reanimated.createAnimatedComponent(Text)
@@ -61,6 +62,77 @@ const OpenNewsScreen = ({
     'window',
   )
 
+  const MdxComponentsStyles = {
+    root: {
+      backgroundColor: colors.mainBackground,
+    },
+    img: {
+      width: DEVICE_WIDTH - spacing.lg * 2,
+      height: 250,
+      backgroundColor: 'lightgray',
+    },
+    listUnorderedItemText: {
+      fontSize: 17,
+      lineHeight: 32,
+    },
+    inline: {
+      fontSize: 17,
+      lineHeight: 32,
+    },
+    blockquote: {
+      borderLeftColor: colors.mutedText,
+      paddingLeft: 16,
+      borderLeftWidth: 4,
+      backgroundColor: colors.transparentBackground,
+    },
+    codeBlock: {
+      fontFamily: 'Courier',
+      padding: 8,
+      fontSize: 14,
+    },
+    heading: {
+      fontFamily: 'Blatant',
+    },
+    // @ts-ignore
+    codeBlockContainer: {
+      padding: 4,
+      backgroundColor: colors.transparentBackground,
+      width: '100%',
+      minHeight: 50,
+    },
+    paragraphText: {
+      fontSize: 17,
+      lineHeight: 32,
+    },
+    text: {
+      fontSize: 17,
+      lineHeight: 32,
+      color: colors.mainText,
+    },
+    link: { marginTop: -3 },
+    linkLabel: {
+      fontSize: 17,
+      lineHeight: 32,
+      textDecorationColor: colors.mainText,
+      textDecorationLine: 'underline',
+      textDecorationStyle: 'solid',
+      // color: colors.,
+    },
+    listOrderedItemIcon: {
+      marginRight: 10,
+      height: '100%',
+      justifyContent: 'center',
+    },
+    // listOrderItemIconText: {
+    //   fontSize: 16,
+    //   lineHeight: 30,
+    // },
+    listOrderedItem: {
+      flexDirection: 'row',
+      alignItems: 'flex-start',
+    },
+  }
+
   const bottomSheetRef = React.useRef<BottomSheet>(null)
 
   const isDarkMode = useColorScheme() === 'dark'
@@ -71,7 +143,7 @@ const OpenNewsScreen = ({
 
   const [renderMdxError, setRenderMdxError] = React.useState<boolean>(false)
   const [viewMode, setViewMode] = React.useState<NewsViewMode>(
-    NewsViewMode.WEBVIEW,
+    route.params.mode === 'offline' ? NewsViewMode.MDX : NewsViewMode.WEBVIEW,
   )
 
   const TOP_SCREEN_HEIGHT =
@@ -160,6 +232,11 @@ const OpenNewsScreen = ({
   const [isLiked, setLiked] = React.useState<boolean>(false)
   const [isSaved, setSaved] = React.useState<boolean>(false)
 
+  const [savedNews, updateSavedNews] = useLocalStorage<SavedNewsType[]>(
+    SAVED_NEWS_KEY,
+    [],
+  )
+
   React.useEffect(() => {
     if (data) {
       setLiked(data.isLiked || false)
@@ -222,6 +299,20 @@ const OpenNewsScreen = ({
 
   const save = React.useCallback(async () => {
     try {
+      updateSavedNews([
+        ...(savedNews || []),
+        {
+          title: data?.title || route.params.title,
+          url: data?.url || route.params.url,
+          img: data?.img || route.params.img,
+          metadata: data?.metadata || {
+            website: route.params.website,
+            favicon: route.params.favicon,
+            time_added: '',
+          },
+          content: data?.text || '',
+        },
+      ])
       const res = await registerInteraction({
         url: route.params.url,
         action: 'SAVE',
@@ -232,7 +323,7 @@ const OpenNewsScreen = ({
         setSaved(!isSaved)
       }
     } catch (error) {}
-  }, [isSaved])
+  }, [isSaved, savedNews, data])
 
   const snapPoints = React.useMemo(() => ['50%'], [])
 
@@ -308,7 +399,6 @@ const OpenNewsScreen = ({
       )}
 
       <Reanimated.ScrollView
-        showsVerticalScrollIndicator={false}
         onScroll={(e) => {
           scrollPosition.value = e.nativeEvent.contentOffset.y
         }}
@@ -331,7 +421,7 @@ const OpenNewsScreen = ({
               {route.params?.title}
             </Text>
           )}
-          {isLoading && (
+          {isLoading && route.params.mode === 'online' && (
             <Box
               flex={1}
               height={DEVICE_HEIGHT}
@@ -376,74 +466,33 @@ const OpenNewsScreen = ({
                 height={viewMode === NewsViewMode.MDX ? 'auto' : 0}
               >
                 <RenderMdx
-                  componentStyle={{
-                    root: {
-                      backgroundColor: colors.mainBackground,
-                    },
-                    img: {
-                      width: DEVICE_WIDTH - spacing.lg * 2,
-                      height: 250,
-                      backgroundColor: 'lightgray',
-                    },
-                    listUnorderedItemText: {
-                      fontSize: 17,
-                      lineHeight: 32,
-                    },
-                    inline: {
-                      fontSize: 17,
-                      lineHeight: 32,
-                    },
-                    blockquote: {
-                      borderLeftColor: colors.mutedText,
-                      paddingLeft: 16,
-                      borderLeftWidth: 4,
-                      backgroundColor: colors.transparentBackground,
-                    },
-                    codeBlock: {
-                      fontFamily: 'Courier',
-                      padding: 8,
-                      fontSize: 14,
-                    },
-                    heading: {
-                      fontFamily: 'Blatant',
-                    },
+                  // @ts-ignore
+                  componentStyle={MdxComponentsStyles}
+                  components={{
                     // @ts-ignore
-                    codeBlockContainer: {
-                      padding: 4,
-                      backgroundColor: colors.transparentBackground,
-                      width: '100%',
-                      minHeight: 50,
-                    },
-                    paragraphText: {
-                      fontSize: 17,
-                      lineHeight: 32,
-                    },
-                    text: {
-                      fontSize: 17,
-                      lineHeight: 32,
-                      color: colors.mainText,
-                    },
-                    link: { marginTop: -3 },
-                    linkLabel: {
-                      fontSize: 17,
-                      lineHeight: 32,
-                      textDecorationColor: colors.mainText,
-                      textDecorationLine: 'underline',
-                      textDecorationStyle: 'solid',
-                      // color: colors.,
-                    },
-                    listOrderedItemIcon: {
-                      marginRight: 10,
-                      height: '100%',
-                      justifyContent: 'center',
-                    },
-                    // listOrderItemIconText: {
-                    //   fontSize: 16,
-                    //   lineHeight: 30,
-                    // },
-                    listOrderedItem: {
-                      flexDirection: 'row',
-                      alignItems: 'flex-start',
+                    a: ({
+                      href,
+                      children,
+                    }: {
+                      href: string
+                      children: React.ReactNode
+                    }) => {
+                      return (
+                        <Text
+                          style={[MdxComponentsStyles.link]}
+                          onPress={() => Linking.openURL(href)}
+                        >
+                          <Text
+                            style={[
+                              MdxComponentsStyles.text,
+                              // @ts-ignore
+                              MdxComponentsStyles.linkLabel,
+                            ]}
+                          >
+                            {children}
+                          </Text>
+                        </Text>
+                      )
                     },
                   }}
                 >
@@ -454,6 +503,7 @@ const OpenNewsScreen = ({
           </Box>
         </Box>
       </Reanimated.ScrollView>
+
       <AnimatedBox style={loadIndicatorStyle} />
       <SafeAreaView>
         <AnimatedBox

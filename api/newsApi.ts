@@ -20,13 +20,21 @@ const newsApi = createApi({
     }),
     tagTypes: ['NEWS_DETAILS'],
     endpoints: (builder) => ({
-        getNewsContent: builder.query<{ text: string, isLiked: boolean, isSaved: boolean }, string>({
+        getNewsContent: builder.query<{ title: string, img: string, url: string, metadata: { website: string, favicon: string, time_added: string }, text: string, isLiked: boolean, isSaved: boolean }, string>({
             query: (url) => ({
                 url: '/news/get-details/',
                 params: { url }
             }),
             transformResponse: (res: any) => {
-                return { text: res.text_content, isLiked: res.is_liked, isSaved: res.is_saved };
+                return {
+                    title: res.title,
+                    img: res.img,
+                    url: res.url,
+                    metadata: res.metadata,
+                    text: res.text_content,
+                    isLiked: res.is_liked,
+                    isSaved: res.is_saved
+                };
             },
             providesTags: (res, err, url) => ([{ type: 'NEWS_DETAILS', id: url }])
         }),

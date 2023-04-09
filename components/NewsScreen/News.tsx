@@ -2,7 +2,7 @@ import React from 'react'
 import { FlatList, Pressable, ActivityIndicator, Alert } from 'react-native'
 import { Box, Button, PressableWithHaptics, Text } from '../shared'
 import NewsComponent from './NewsComponent'
-import Categories from './Categories'
+import Tab from './Tab'
 import FeaturedNews from './FeaturedNews'
 import { getDateText, getTimeOfDay } from '../../utils'
 import {
@@ -14,7 +14,6 @@ import type { NewsType } from '../../types'
 import { useAppSelector } from '../../hooks/reduxhooks'
 import { NavigationProp, useNavigation } from '@react-navigation/native'
 import { RootTabParamList } from '../../navigation/types'
-
 
 const isNews = (res: any): res is NewsType => {
   return Boolean(res?.url)
@@ -46,7 +45,14 @@ const News = () => {
 
   const map: Record<HeaderElementKeys, React.ReactNode> = {
     greetingbanner: <GreetingBanner key={'greetingbanner'} />,
-    categories: <Categories key={'categories'} />,
+    categories: (
+      <Tab
+        key={'categories'}
+        tabValues={['Feeds', 'Popular', 'Following']}
+        initialIndex={0}
+        onChange = {(e) => console.log(e)}
+      />
+    ),
     featurednews: <FeaturedNews key={'featurednews'} />,
     titleheader: (
       <Box
@@ -193,7 +199,7 @@ const GreetingBanner: React.FC = () => {
   const { firstName } = useAppSelector((store) => store.user)
 
   return (
-    <Box paddingHorizontal="lg" paddingVertical="xs" paddingBottom='md'>
+    <Box paddingHorizontal="lg" paddingVertical="xs" paddingBottom="md">
       <Text color="mutedText" marginBottom="xs" fontSize={14}>
         {getDateText()}
       </Text>

@@ -9,6 +9,10 @@ export type NewsType = {
   }
 }
 
+export type SavedNewsType = NewsType & {
+  content: string
+}
+
 
 export enum NewsViewMode {
   WEBVIEW = 'WEBVIEW',

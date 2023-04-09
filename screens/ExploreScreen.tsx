@@ -15,7 +15,12 @@ import {
 } from '../components'
 import { useTheme } from '@shopify/restyle'
 import { Theme } from '../theme'
-import { AntDesign, EvilIcons, Ionicons, MaterialIcons } from '@expo/vector-icons'
+import {
+  AntDesign,
+  EvilIcons,
+  Ionicons,
+  MaterialIcons,
+} from '@expo/vector-icons'
 import { useDebounce } from '../utils'
 import {
   useLazySearchNewsQuery,
@@ -75,6 +80,12 @@ const ExploreScreen = () => {
     })()
   }, [searchText])
 
+  const removeQuery = React.useCallback((queryText: string) => {
+    const set = new Set(recentQueries)
+    set.delete(queryText)
+    updateRecentQueries(Array.from(set))
+  }, [recentQueries])
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.mainBackground }}>
       <Box backgroundColor="mainBackground" flex={1} marginBottom="xl">
@@ -120,11 +131,7 @@ const ExploreScreen = () => {
           <RecentQueries
             queries={recentQueries}
             onClick={(queryText: string) => setSearchText(queryText)}
-            removeQuery={(queryText: string) => {
-              const set = new Set(recentQueries)
-              set.delete(queryText)
-              updateRecentQueries(Array.from(set))
-            }}
+            removeQuery={removeQuery}
           />
         ) : (
           <FlatList
@@ -187,7 +194,7 @@ const RecentQueries = ({
 
       {queries.length > 0 ? (
         <ScrollView>
-          {queries.reverse().map((query) => (
+          {queries.map((query) => (
             <Box
               flexDirection="row"
               alignItems="center"
@@ -206,7 +213,11 @@ const RecentQueries = ({
                   alignItems={'center'}
                   justifyContent={'center'}
                 >
-                  <AntDesign name="search1" size={16} color={colors.mutedText} />
+                  <AntDesign
+                    name="search1"
+                    size={16}
+                    color={colors.mutedText}
+                  />
                 </Box>
                 <Text
                   key={query}

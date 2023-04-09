@@ -38,7 +38,7 @@ export default function BottomTabNavigator() {
           elevation: 0,
           borderTopWidth: 0,
           flexDirection: 'column',
-          backgroundColor: isDark ? '#222' : 'white',
+          backgroundColor: colors.bottomTabBarBackground,
         },
         tabBarShowLabel: false,
         tabBarActiveTintColor: colors.primaryBlue,

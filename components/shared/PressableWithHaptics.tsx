@@ -1,5 +1,10 @@
 import * as React from 'react'
-import { GestureResponderEvent, Pressable, PressableProps } from 'react-native'
+import {
+  GestureResponderEvent,
+  Pressable,
+  PressableProps,
+  Platform,
+} from 'react-native'
 import * as Haptics from 'expo-haptics'
 
 const PressableWithHaptics = ({
@@ -7,10 +12,9 @@ const PressableWithHaptics = ({
   onPress,
   ...otherPressableProps
 }: PressableProps) => {
-    
   const _onPress = React.useCallback(
     (e: GestureResponderEvent) => {
-      Haptics.selectionAsync()
+      Platform.OS === 'ios' && Haptics.selectionAsync()
       onPress && onPress(e)
     },
     [onPress],

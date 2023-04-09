@@ -20,7 +20,7 @@ const palette = {
 const theme = createTheme({
     colors: {
         mainBackground: palette.whiteShade,
-        bottomNavBarBackground: palette.white,
+        bottomTabBarBackground: '#FFFFFF',
         mainText: palette.black,
         mutedText: '#4d4d4d',
         lightGrayBackground: palette.gray200,
@@ -35,7 +35,7 @@ const theme = createTheme({
         blue200: palette.blue200,
         blue400: palette.blue400,
         primaryBlue: palette.blue700,
-        error: '#f91980',
+        error: '#DF1414',
         success: '#26B97A',
     },
     spacing: {
@@ -43,9 +43,9 @@ const theme = createTheme({
         xxs: 3,
         xs: 6,
         sm: 8,
-        md: 14,
+        md: 12,
         lg: 24,
-        xl: 36
+        xl: 32
     },
     textVariants: {
         heading1: {
@@ -78,6 +78,7 @@ export const darkTheme = {
         transparentBackground: '#ffffff10',
         bottomSheetBackground: '#242526',
         mutedText: palette.gray700,
+        bottomTabBarBackground: '#222222'
     }
 }
 
