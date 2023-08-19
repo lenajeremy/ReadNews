@@ -66,6 +66,7 @@ function RootNavigator() {
     }
 
     login()
+    // clear()
   }, [token])
 
   if (isError) {

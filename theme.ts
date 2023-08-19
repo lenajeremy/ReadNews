@@ -40,7 +40,7 @@ const theme = createTheme({
     },
     spacing: {
         none: 0,
-        xxs: 3,
+        xxs: 2,
         xs: 6,
         sm: 8,
         md: 12,

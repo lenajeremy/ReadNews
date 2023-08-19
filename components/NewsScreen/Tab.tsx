@@ -53,7 +53,6 @@ const Tab = function <T>({
       <AnimatedBox
         marginBottom="sm"
         borderRadius={20}
-        marginHorizontal={'lg'}
         backgroundColor="transparentBackground"
         padding={'xxs'}
         flexDirection="row"

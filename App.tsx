@@ -13,6 +13,7 @@ import * as Notifications from 'expo-notifications'
 import useLocalStorage from './hooks/useLocalStorage'
 import { PUSH_NOTIFICATION_TOKEN_KEY } from './constants'
 import * as Linking from 'expo-linking'
+import BottomSheetProvider from './contexts/BottomSheetContext'
 
 
 SplashScreen.preventAutoHideAsync().catch((error) => console.error(error))
@@ -28,13 +29,8 @@ export default function App() {
 
   const url = Linking.useURL()
 
-  const parsed = Linking.parse(String(url))
-  
-
   const [appLoaded, setAppLoaded] = React.useState(false)
   const isDarkMode = useColorScheme() === 'dark'
-
-  const [hasError, setError] = React.useState(false)
 
   React.useEffect(() => {
     async function scheduleNotifications() {
@@ -101,30 +97,16 @@ export default function App() {
     return null
   } else {
     return (
-      // <ErrorBoundary onError={() => setError(true)}>
-      //   {hasError ? (
-      //     <View
-      //       style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
-      //     >
-      //       <Text>An Error Occurred</Text>
-      //       <PressableWithHaptics onPress={Updates.reloadAsync}>
-      //         <Text>Reload app</Text>
-      //       </PressableWithHaptics>
-      //       <PressableWithHaptics onPress={clearAll}>
-      //         <Text>Clear Storage</Text>
-      //       </PressableWithHaptics>
-      //     </View>
-      //   ) : (
       <Provider {...{ store }}>
         <ThemeProvider theme={isDarkMode ? darkTheme : theme}>
           <SafeAreaProvider>
-            <Navigation />
-            <StatusBar />
+            <BottomSheetProvider>
+              <Navigation />
+              <StatusBar />
+            </BottomSheetProvider>
           </SafeAreaProvider>
         </ThemeProvider>
       </Provider>
-      // )}
-      // </ErrorBoundary>
     )
   }
 }

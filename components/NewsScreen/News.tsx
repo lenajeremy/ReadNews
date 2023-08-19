@@ -46,12 +46,14 @@ const News = () => {
   const map: Record<HeaderElementKeys, React.ReactNode> = {
     greetingbanner: <GreetingBanner key={'greetingbanner'} />,
     categories: (
-      <Tab
-        key={'categories'}
-        tabValues={['Feeds', 'Popular', 'Following']}
-        initialIndex={0}
-        onChange = {(e) => console.log(e)}
-      />
+      <Box marginHorizontal='lg'>
+        <Tab
+          key={'categories'}
+          tabValues={['Feeds', 'Popular', 'Following']}
+          initialIndex={0}
+          onChange={(e) => console.log(e)}
+        />
+      </Box>
     ),
     featurednews: <FeaturedNews key={'featurednews'} />,
     titleheader: (

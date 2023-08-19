@@ -42,13 +42,10 @@ import { useColorScheme } from 'react-native'
 import { generateNewLinkToShare, getPageRouteName } from '../utils'
 import { Ionicons } from '@expo/vector-icons'
 import * as Haptics from 'expo-haptics'
-import BottomSheet, {
-  BottomSheetBackdrop,
-  BottomSheetBackdropProps,
-} from '@gorhom/bottom-sheet'
 import Constants from 'expo-constants'
 import useLocalStorage from '../hooks/useLocalStorage'
 import { SAVED_NEWS_KEY, LIKED_NEWS_KEY } from '../constants'
+import { BottomSheet, useBottomSheet } from '../contexts/BottomSheetContext'
 
 const AnimatedBox = Reanimated.createAnimatedComponent(Box)
 const AnimatedText = Reanimated.createAnimatedComponent(Text)
@@ -57,6 +54,7 @@ const OpenNewsScreen = ({
   navigation,
   route,
 }: StackScreenProps<RootStackParamList, 'OpenNews'>) => {
+
   const { colors, spacing } = useTheme<Theme>()
   const { width: DEVICE_WIDTH, height: DEVICE_HEIGHT } = Dimensions.get(
     'window',
@@ -133,9 +131,9 @@ const OpenNewsScreen = ({
     },
   }
 
-  const bottomSheetRef = React.useRef<BottomSheet>(null)
-
   const isDarkMode = useColorScheme() === 'dark'
+
+  const { bottomSheetRef } = useBottomSheet()
 
   const { data, isFetching, isLoading, isError } = useGetNewsContentQuery(
     route.params?.url || '',
@@ -156,11 +154,11 @@ const OpenNewsScreen = ({
   const opacityValue = useDerivedValue(() =>
     scrollPosition.value < 0
       ? interpolate(
-          scrollPosition.value,
-          [-400, 0],
-          [0.8, 0],
-          Extrapolate.CLAMP,
-        )
+        scrollPosition.value,
+        [-400, 0],
+        [0.8, 0],
+        Extrapolate.CLAMP,
+      )
       : interpolate(scrollPosition.value, [0, 100], [0, 1], Extrapolate.CLAMP),
   )
 
@@ -168,11 +166,11 @@ const OpenNewsScreen = ({
     scrollPosition.value < 0
       ? TOP_SCREEN_HEIGHT - scrollPosition.value
       : interpolate(
-          scrollPosition.value,
-          [0, STATUS_BAR_HEIGHT + 60],
-          [TOP_SCREEN_HEIGHT, STATUS_BAR_HEIGHT + 40],
-          Extrapolate.CLAMP,
-        ),
+        scrollPosition.value,
+        [0, STATUS_BAR_HEIGHT + 60],
+        [TOP_SCREEN_HEIGHT, STATUS_BAR_HEIGHT + 40],
+        Extrapolate.CLAMP,
+      ),
   )
 
   const scrollViewMargin = useDerivedValue(() =>
@@ -209,11 +207,11 @@ const OpenNewsScreen = ({
         heightValue.value > TOP_SCREEN_HEIGHT
           ? 0
           : interpolate(
-              heightValue.value,
-              [STATUS_BAR_HEIGHT + 40, STATUS_BAR_HEIGHT + 50],
-              [1, 0],
-              Extrapolate.CLAMP,
-            ),
+            heightValue.value,
+            [STATUS_BAR_HEIGHT + 40, STATUS_BAR_HEIGHT + 50],
+            [1, 0],
+            Extrapolate.CLAMP,
+          ),
       translateY: interpolated,
     }
   })
@@ -304,7 +302,7 @@ const OpenNewsScreen = ({
           content: data?.text || '',
         },
       ])
-      
+
       const res = await registerInteraction({
         url: route.params.url,
         action: 'LIKE',
@@ -314,7 +312,7 @@ const OpenNewsScreen = ({
       if (res) {
         setLiked(!isLiked)
       }
-    } catch (error) {}
+    } catch (error) { }
   }, [isLiked])
 
   const save = React.useCallback(async () => {
@@ -342,23 +340,9 @@ const OpenNewsScreen = ({
       if (res) {
         setSaved(!isSaved)
       }
-    } catch (error) {}
+    } catch (error) { }
   }, [isSaved, savedNews, data])
 
-  const snapPoints = React.useMemo(() => ['50%'], [])
-
-  const renderBottomSheetBackdrop = React.useCallback(
-    (props: BottomSheetBackdropProps) => (
-      <BottomSheetBackdrop
-        {...props}
-        appearsOnIndex={0}
-        disappearsOnIndex={-1}
-        enableTouchThrough={false}
-        opacity={0.7}
-      />
-    ),
-    [],
-  )
 
   const loadProgress = useSharedValue<number>(0)
 
@@ -514,9 +498,46 @@ const OpenNewsScreen = ({
                         </Text>
                       )
                     },
+                    // @ts-ignore
+                    h1: () => ''
                   }}
-                >
-                  {data?.text}
+                >{`
+
+                  # Roblox faces a new class action lawsuit alleging it facilitates child gambling
+
+                  *Published on August 18, 2023 by Taylor Hatmaker*
+
+                  In a new class action lawsuit filed in the Northern District of California this week, two parents accuse Roblox of illegally facilitating child gambling.
+
+                  While gambling is not allowed on the platform, which hosts millions of virtual games that cater to children and teens, the lawsuit points to third-party gambling sites that invite users to play blackjack, slots, roulette, and other games of chance using Roblox’s in-game currency.
+
+                  The lawsuit, first reported by Bloomberg Law, was filed on behalf of plaintiffs Rachel Colvin and Danielle Sass, two mothers with children who have gambled on third-party sites that tie into Roblox’s virtual currency, Robux. Both parents claim that their children, named as minor plaintiffs in the suit, have lost thousands of Robux gambling on those sites without their knowledge (Robux currently sells 800 Robux on its website for $9.99 with deeper discounts for larger amounts of the digital currency).
+
+                  The lawsuit specifically names RBXFlip, Bloxflip, and RBLXWild as participants in “an illegal gambling operation that is preying on children nationwide.” The owners of those sites are named as defendants along with Roblox itself. RBXFlip, which entices players with “fun and fair games,” has been on the radar of the Roblox community since at least 2019 and continues to operate today.
+
+                  Roblox itself is a vast collection of virtual experiences and not a game in a traditional sense. Those experiences, crafted by amateur and professional developers alike, can lightly depict gambling by showing casinos or non-player card dealers, for example, but “experiences that include simulated gambling, including playing with virtual chips, simulated betting, or exchanging real money, Robux, or in-experience items of value are not allowed.”
+
+                  The plaintiffs call those rules misleading, given Roblox’s apparent tolerance for third-party betting sites. “In its Terms of Service, Roblox misleadingly represents to parents and other users that its platform and digital currency are safe,” the lawsuit states. “… This representation is false, or misleading at best.”
+
+                  The lawsuit alleges that Roblox maintains control over the flow of Robux and therefore has full knowledge of shady, third-party gambling sites that entice kids to play with the in-game currency.
+
+                  “Roblox could, of course, prohibit and/or stop the Gambling Website Defendants from utilizing the Roblox ecosystem and digital currency to facilitate illegal gambling but it does not,” the lawsuit states, accusing the company of profiting from the scheme in the millions by drawing a 30 percent fee on transactions, those included.
+
+                  In an email to TechCrunch, Roblox declined to answer specific questions, but emphasized that the gambling sites are in no way affiliated with Roblox.
+
+                  “Bad actors make illegal use of Roblox’s intellectual property and branding to operate such sites in violation of our standards,” the company wrote in a statement.
+
+                  “… Ensuring a safe and compliant online experience for users of Roblox is a core tenant of the company. Roblox will continue to be vigilant in combating entities who engage in practices that are in violation of our policies or endanger the safety of our community.”
+
+                  Roblox also pointed out that it has dedicated teams that investigate websites like those named in the lawsuit and in some instances may pursue having those sites removed. But given the company’s wording here, it’s not clear that Roblox views these established third-party gambling sites as violating its terms of service by using Robux for underage gambling off-platform. Roblox has certainly had plenty of time to pursue legal action against these sites or otherwise close up the loopholes that make them possible.
+
+                  While Roblox disallows in-game gambling, it does encourage a few other notorious forms of virtual commerce. Many Roblox experiences entice young players with lootboxes — randomized virtual goods paid with real money via in-game currency. Lootboxes are still legal in the U.S. but they have been outlawed in countries like the Netherlands. The practice may be due for an EU-wide crackdown that will have broad ripple effects for game developers who choose to juice revenues with the lucrative, predatory practice.
+
+                  Roblox also added support for limited edition virtual items in recent years, allowing developers to offer special virtual goods sold in numbered quantities. Limiteds offer developers another source of revenue, but their NFT-like appeal — and Roblox’s decision to foster a full Robux-based trading economy — does raise eyebrows given that the platform centers children and teens, at least for now.
+
+                  [Link to the original article](https://techcrunch.com/2023/08/18/roblox-children-gambling-class-action-lawsuit-robux/)
+                  `}
+                  {/* {data?.text} */}
                 </RenderMdx>
               </Box>
             </ErrorBoundary>
@@ -556,9 +577,7 @@ const OpenNewsScreen = ({
           </PressableWithHaptics>
           <PressableWithHaptics
             style={{ padding: 16 }}
-            onPress={() => {
-              bottomSheetRef.current?.expand()
-            }}
+            onPress={() => bottomSheetRef.current?.expand()}
           >
             <Ionicons
               name="ellipsis-horizontal-circle"
@@ -569,19 +588,7 @@ const OpenNewsScreen = ({
         </AnimatedBox>
       </SafeAreaView>
 
-      <BottomSheet
-        ref={bottomSheetRef}
-        enablePanDownToClose={true}
-        snapPoints={snapPoints}
-        index={-1}
-        backgroundStyle={{ backgroundColor: colors.bottomSheetBackground }}
-        backdropComponent={renderBottomSheetBackdrop}
-        handleIndicatorStyle={{
-          backgroundColor: colors.mutedText,
-          height: 6,
-          width: 40,
-        }}
-      >
+      <BottomSheet>
         <Box padding="md" paddingHorizontal="lg">
           <BottomSheetItem
             icon={
@@ -607,9 +614,8 @@ const OpenNewsScreen = ({
           <BottomSheetItem
             disabled={renderMdxError || data?.text === ''}
             icon={<Ionicons name="reader" color={colors.mainText} size={24} />}
-            title={`${
-              viewMode === NewsViewMode.MDX ? 'Close' : 'Open'
-            } Reader Mode`}
+            title={`${viewMode === NewsViewMode.MDX ? 'Close' : 'Open'
+              } Reader Mode`}
             onPress={() => {
               setViewMode(
                 viewMode === NewsViewMode.MDX
