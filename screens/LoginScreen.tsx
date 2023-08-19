@@ -35,9 +35,6 @@ export default function LoginScreen(
   const navigation = useNavigation<
     NavigationProp<ReactNavigation.RootParamList>
   >()
-  const authNavigation = useNavigation<
-    NavigationProp<ReactNavigation.AuthParamList>
-  >()
 
   const [login, { isLoading, data, isSuccess, error }] = useLoginMutation()
 
@@ -68,12 +65,11 @@ export default function LoginScreen(
 
       if (user.token) updateToken(user.token)
 
-      props.navigation.popToTop()
-
       if (!data?.data.hasSetInterests) {
-        authNavigation.navigate('SetInterest')
+        props.navigation.replace('SetInterest')
       } else {
-        navigation.navigate('Home')
+        // @ts-ignore
+        props.navigation.replace('Home')
       }
     }
   }, [isSuccess])
@@ -126,7 +122,7 @@ export default function LoginScreen(
         />
 
         <Pressable
-          onPress={() => authNavigation.navigate('RequestPasswordReset')}
+          onPress={() => props.navigation.navigate('RequestPasswordReset')}
           style={{
             justifyContent: 'center',
             paddingTop: spacing.lg,
@@ -172,7 +168,7 @@ export default function LoginScreen(
           <Text color="chocolate" fontWeight="500">
             New to ReadNews?
           </Text>
-          <Pressable onPress={() => authNavigation.navigate('Register')}>
+          <Pressable onPress={() => props.navigation.navigate('Register')}>
             <Text color="chocolate" fontWeight="500">
               {' '}
               Register

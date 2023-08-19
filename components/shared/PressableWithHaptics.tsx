@@ -4,6 +4,7 @@ import {
   Pressable,
   PressableProps,
   Platform,
+  Text,
 } from 'react-native'
 import * as Haptics from 'expo-haptics'
 

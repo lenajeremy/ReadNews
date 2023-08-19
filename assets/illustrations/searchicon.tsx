@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Svg, Path, Circle } from 'react-native-svg'
 import { useTheme } from '@shopify/restyle'
-import theme, { Theme } from '../../theme'
+import { Theme } from '../../theme'
 
 const SearchIcon = ({ variant }: { variant: 'outlined' | 'filled' }) => {
   const { colors } = useTheme<Theme>()

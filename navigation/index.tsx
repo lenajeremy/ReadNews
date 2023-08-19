@@ -13,7 +13,7 @@ import AuthStackScreens from './AuthStackNavigator'
 import { OpenNewsScreen } from '../screens'
 import useLocalStorage from '../hooks/useLocalStorage'
 import { USER_TOKEN_KEY } from '../constants'
-import { ActivityIndicator } from 'react-native'
+import { ActivityIndicator, useWindowDimensions } from 'react-native'
 import { Box, PressableWithHaptics, Text } from '../components'
 import { useLazyLoginWithTokenQuery } from '../api/authApi'
 import { useAppDispatch } from '../hooks/reduxhooks'
@@ -36,7 +36,10 @@ export default function Navigation() {
 const Stack = createStackNavigator<RootStackParamList>()
 
 function RootNavigator() {
-  const [token, updateToken, isLoadingToken] = useLocalStorage<string>(
+
+  const { height } = useWindowDimensions()
+
+  const [token, updateToken, isLoadingToken, clear] = useLocalStorage<string>(
     USER_TOKEN_KEY,
   )
   const [loginWithToken, { isFetching, isError }] = useLazyLoginWithTokenQuery()
@@ -67,10 +70,12 @@ function RootNavigator() {
 
   if (isError) {
     return (
-      <Box>
-        <Text>{'An error occured'}</Text>
+      <Box backgroundColor='mainBackground' alignItems='center' height={height} justifyContent='center'>
+        <Text>{'Awww... An error occured'}</Text>
         <PressableWithHaptics onPress={() => loginWithToken(token as string)}>
-          Retry
+          <Text>
+            Retry
+          </Text>
         </PressableWithHaptics>
       </Box>
     )
@@ -91,7 +96,7 @@ function RootNavigator() {
 
   return (
     <FeedbackNotifierContainer>
-       {/* @ts-ignore */}
+      {/* @ts-ignore */}
       <Stack.Navigator initialRouteName={token ? 'Home' : 'Auth'}>
         {/* @ts-ignore */}
         <Stack.Group screenOptions={{ headerShown: false }}>

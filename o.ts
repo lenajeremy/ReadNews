@@ -77,4 +77,20 @@ function calculate(s: string): number {
 };
 
 
-console.log(calculate("1-11"))
+// console.log(calculate("1-11"))
+
+function ArrayChallenge(arr: string[]): number {
+    const str1 = arr[0];
+    const str2 = arr[1];
+    let count = 0;
+
+    for (let i = 0; i < str1.length; i++) {
+        if (str1[i] !== str2[i]) {
+            count++
+        }
+    }
+
+    return count;
+}
+
+console.log(ArrayChallenge(['10011', '10100']))

@@ -258,7 +258,7 @@ const OnboardingScreen = ({ navigation }: { navigation: any }) => {
 
         <Box style={styles.buttonContainer}>
           <Button
-            onPress={() => navigation.navigate('Login')}
+            onPress={() => navigation.replace('Login')}
             additionalStyles={{
               width: DEVICE_WIDTH * 0.8,
               height: 70,

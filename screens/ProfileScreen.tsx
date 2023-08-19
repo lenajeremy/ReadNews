@@ -57,7 +57,7 @@ const ProfileScreen = () => {
             <Box flexDirection="row" alignItems="center">
               <Image
                 source={require('../assets/images/profile.png')}
-                style={{ width: 50, height: 50 }}
+                style={{ width: 40, height: 40 }}
               />
               <Box paddingLeft="md">
                 <Text fontFamily="Blatant" fontSize={24} lineHeight={28}>
@@ -292,14 +292,18 @@ const ProfileScreen = () => {
                         position="relative"
                         backgroundColor="grayBackground"
                         p="md"
-                        justifyContent = "flex-end"
+                        justifyContent="flex-end"
                       >
                         <ImageBackground
                           source={{ uri: news.img }}
                           key={news.url}
                           style={StyleSheet.absoluteFillObject}
                         />
-                        <Text fontSize={18} lineHeight = {28} color="mainBackground">
+                        <Text
+                          fontSize={18}
+                          lineHeight={28}
+                          color="mainBackground"
+                        >
                           {news.title}
                         </Text>
                       </Box>
@@ -355,16 +359,20 @@ const ProfileScreen = () => {
                         height={180}
                         width={250}
                         position="relative"
-                        backgroundColor='grayBackground'
+                        backgroundColor="grayBackground"
                         p="md"
-                        justifyContent='flex-end'
+                        justifyContent="flex-end"
                       >
                         <ImageBackground
                           source={{ uri: news.img }}
                           key={news.url}
                           style={StyleSheet.absoluteFillObject}
                         />
-                        <Text fontSize={18} lineHeight = {28} color="mainBackground">
+                        <Text
+                          fontSize={18}
+                          lineHeight={28}
+                          color="mainBackground"
+                        >
                           {news.title}
                         </Text>
                       </Box>
