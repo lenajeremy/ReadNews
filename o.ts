@@ -77,8 +77,6 @@ function calculate(s: string): number {
 };
 
 
-// console.log(calculate("1-11"))
-
 function ArrayChallenge(arr: string[]): number {
     const str1 = arr[0];
     const str2 = arr[1];

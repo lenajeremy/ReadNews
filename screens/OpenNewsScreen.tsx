@@ -133,7 +133,7 @@ const OpenNewsScreen = ({
 
   const isDarkMode = useColorScheme() === 'dark'
 
-  const { bottomSheetRef } = useBottomSheet()
+  const bottomSheet = useBottomSheet()
 
   const { data, isFetching, isLoading, isError } = useGetNewsContentQuery(
     route.params?.url || '',
@@ -577,7 +577,7 @@ const OpenNewsScreen = ({
           </PressableWithHaptics>
           <PressableWithHaptics
             style={{ padding: 16 }}
-            onPress={() => bottomSheetRef.current?.expand()}
+            onPress={() => bottomSheet.openSheet(<BottomSheetContent {...{ isLiked, like, viewMode, isSaved, share, setViewMode, renderMdxError, data }} />)}
           >
             <Ionicons
               name="ellipsis-horizontal-circle"
@@ -587,70 +587,77 @@ const OpenNewsScreen = ({
           </PressableWithHaptics>
         </AnimatedBox>
       </SafeAreaView>
-
-      <BottomSheet>
-        <Box padding="md" paddingHorizontal="lg">
-          <BottomSheetItem
-            icon={
-              <Ionicons
-                name="heart"
-                color={isLiked ? colors.error : colors.mainText}
-                size={24}
-              />
-            }
-            title={'I like this news'}
-            onPress={like}
-          />
-          <BottomSheetItem
-            icon={
-              <Ionicons
-                name="heart-dislike"
-                color={colors.mainText}
-                size={24}
-              />
-            }
-            title={"I don't like this news"}
-          />
-          <BottomSheetItem
-            disabled={renderMdxError || data?.text === ''}
-            icon={<Ionicons name="reader" color={colors.mainText} size={24} />}
-            title={`${viewMode === NewsViewMode.MDX ? 'Close' : 'Open'
-              } Reader Mode`}
-            onPress={() => {
-              setViewMode(
-                viewMode === NewsViewMode.MDX
-                  ? NewsViewMode.WEBVIEW
-                  : NewsViewMode.MDX,
-              )
-
-              if (viewMode === NewsViewMode.MDX) {
-                // @ts-ignore
-                scrollViewMargin.value = STATUS_BAR_HEIGHT
-              }
-            }}
-          />
-          <BottomSheetItem
-            icon={
-              <Ionicons
-                name="bookmark"
-                color={isSaved ? colors.primaryBlue : colors.mainText}
-                size={24}
-              />
-            }
-            title={isSaved ? 'Remove from save for later' : 'Save for later'}
-            loading
-          />
-          <BottomSheetItem
-            icon={
-              <Ionicons name="share-social" color={colors.mainText} size={24} />
-            }
-            title={'Share with your friends'}
-            onPress={share}
-          />
-        </Box>
-      </BottomSheet>
     </Box>
   )
+}
+
+const BottomSheetContent = ({ isLiked, like, viewMode, isSaved, share, setViewMode, renderMdxError, data }: {
+  isLiked: boolean, like: () => void,
+  viewMode: NewsViewMode, isSaved: boolean,
+  share: () => void, setViewMode: React.Dispatch<React.SetStateAction<NewsViewMode>>,
+  renderMdxError: boolean, data: any
+}) => {
+  const { colors } = useTheme<Theme>()
+  return (
+    <Box padding="md" paddingHorizontal="lg">
+      <BottomSheetItem
+        icon={
+          <Ionicons
+            name="heart"
+            color={isLiked ? colors.error : colors.mainText}
+            size={24}
+          />
+        }
+        title={'I like this news'}
+        onPress={like}
+      />
+      <BottomSheetItem
+        icon={
+          <Ionicons
+            name="heart-dislike"
+            color={colors.mainText}
+            size={24}
+          />
+        }
+        title={"I don't like this news"}
+      />
+      <BottomSheetItem
+        disabled={renderMdxError || data?.text === ''}
+        icon={<Ionicons name="reader" color={colors.mainText} size={24} />}
+        title={`${viewMode === NewsViewMode.MDX ? 'Close' : 'Open'
+          } Reader Mode`}
+        onPress={() => {
+          setViewMode(
+            viewMode === NewsViewMode.MDX
+              ? NewsViewMode.WEBVIEW
+              : NewsViewMode.MDX,
+          )
+
+          if (viewMode === NewsViewMode.MDX) {
+            // @ts-ignore
+            scrollViewMargin.value = STATUS_BAR_HEIGHT
+          }
+        }}
+      />
+      <BottomSheetItem
+        icon={
+          <Ionicons
+            name="bookmark"
+            color={isSaved ? colors.primaryBlue : colors.mainText}
+            size={24}
+          />
+        }
+        title={isSaved ? 'Remove from save for later' : 'Save for later'}
+        loading
+      />
+      <BottomSheetItem
+        icon={
+          <Ionicons name="share-social" color={colors.mainText} size={24} />
+        }
+        title={'Share with your friends'}
+        onPress={share}
+      />
+    </Box>)
 }
 
 const styles = StyleSheet.create({

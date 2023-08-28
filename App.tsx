@@ -14,6 +14,7 @@ import useLocalStorage from './hooks/useLocalStorage'
 import { PUSH_NOTIFICATION_TOKEN_KEY } from './constants'
 import * as Linking from 'expo-linking'
 import BottomSheetProvider from './contexts/BottomSheetContext'
+import useCurrentTheme from './hooks/useCurrentTheme'
 
 
 SplashScreen.preventAutoHideAsync().catch((error) => console.error(error))
@@ -27,10 +28,9 @@ export default function App() {
     clearAll,
   ] = useLocalStorage<string>(PUSH_NOTIFICATION_TOKEN_KEY)
 
-  const url = Linking.useURL()
-
   const [appLoaded, setAppLoaded] = React.useState(false)
-  const isDarkMode = useColorScheme() === 'dark'
+
+  const currentTheme = useCurrentTheme()
 
   React.useEffect(() => {
     async function scheduleNotifications() {
@@ -98,7 +98,7 @@ export default function App() {
   } else {
     return (
       <Provider {...{ store }}>
-        <ThemeProvider theme={isDarkMode ? darkTheme : theme}>
+        <ThemeProvider theme={currentTheme.theme}>
           <SafeAreaProvider>
             <BottomSheetProvider>
               <Navigation />

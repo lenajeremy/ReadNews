@@ -1,10 +1,11 @@
+import * as React from 'react'
 import {
-  useColorScheme,
   StatusBar as RNStatusBar,
   StatusBarStyle,
 } from 'react-native'
 import { useTheme } from '@shopify/restyle'
 import { Theme } from '../../theme'
+import useCurrentTheme from '../../hooks/useCurrentTheme'
 
 interface StatusBarPrpos {
   backgroundColor?: string
@@ -12,7 +13,7 @@ interface StatusBarPrpos {
 }
 
 const StatusBar = ({ backgroundColor, barStyle }: StatusBarPrpos) => {
-  const isDarkMode = useColorScheme() === 'dark'
+  const isDarkMode = useCurrentTheme().asString === 'dark'
   const { colors } = useTheme<Theme>()
 
   return (
