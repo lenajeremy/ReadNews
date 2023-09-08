@@ -32,8 +32,6 @@ const useCurrentTheme = (): { theme: typeof theme, asString: DeviceTheme, setThe
         }
     }
 
-    console.log({ asString: deviceTheme, setTheme: updateDeviceTheme, localTheme, colorSheme })
-
     return { theme: getTheme(), asString: deviceTheme, setTheme: updateDeviceTheme }
 }
 

@@ -1,9 +1,10 @@
 import * as React from 'react'
 import { useNavigation } from '@react-navigation/native'
-import { Image, useWindowDimensions, View } from 'react-native'
+import { Image, Pressable, useWindowDimensions, View } from 'react-native'
 import { Box, PressableWithHaptics, Text } from '../shared/index'
 import { NewsType } from '../../types'
 import { GestureDetector, Gesture } from 'react-native-gesture-handler'
+import AnimatedLottieView from 'lottie-react-native'
 import Reanimated, {
   useAnimatedStyle,
   useSharedValue,
@@ -16,6 +17,8 @@ import Reanimated, {
 } from 'react-native-reanimated'
 import { AntDesign, Ionicons } from '@expo/vector-icons'
 import * as Haptics from 'expo-haptics'
+import { useTheme } from '@shopify/restyle'
+import { Theme } from '../../theme'
 
 // @ts-ignore
 // import Image from 'expo-cached-image'
@@ -86,6 +89,12 @@ const NewsComponent = ({
 
   const navigation = useNavigation()
 
+  const { colors } = useTheme<Theme>()
+  const animation = React.useRef<AnimatedLottieView>(null)
+
+  const [isLiked, setIsLiked] = React.useState<boolean>(false)
+
+
   return (
     <GestureDetector gesture={gesture}>
       <PressableWithHaptics
@@ -99,13 +108,14 @@ const NewsComponent = ({
             title: item.title,
           })
         }}
+        
       >
         <AnimatedBox position="relative" ref={containerRef}>
           <AnimatedBox
             zIndex={2}
             flexDirection="row"
             paddingVertical={'lg'}
-            alignItems="center"
+            // alignItems="center"
             paddingHorizontal="lg"
             backgroundColor={'mainBackground'}
             style={[translationStyle]}
@@ -148,6 +158,11 @@ const NewsComponent = ({
                   {dateString}
                 </Text>
               </Box>
+
+              {/* <Box flexDirection='row' alignItems='center'>
+                <HeartButton active={isLiked} onPress={() => setIsLiked(!isLiked)} />
+                <BookmarkButton active={isLiked} onPress={() => setIsLiked(!isLiked)} />
+              </Box> */}
             </Box>
             <Box width={100} height={100} borderRadius={12} overflow="hidden">
               <Image
@@ -177,6 +192,57 @@ const NewsComponent = ({
         </AnimatedBox>
       </PressableWithHaptics>
     </GestureDetector>
+  )
+}
+
+const HeartButton = ({ active, onPress }: { active: boolean, onPress: () => void }) => {
+  const animation = React.useRef<AnimatedLottieView>(null);
+
+  React.useEffect(() => {
+    if (active) {
+      animation.current?.play()
+    } else {
+      animation.current?.play(25, 0)
+    }
+  }, [active])
+
+  return (
+    <Pressable
+      onPress={onPress}
+      style={{ height: 32, width: 32, overflow: 'hidden', alignItems: 'center', justifyContent: 'center', borderRadius: 16 }}>
+      <AnimatedLottieView
+        ref={animation}
+        loop={false}
+        source={require('../../assets/lotties/heart.json')}
+        style={{ height: 52, width: 52 }}
+      />
+      <Box />
+    </Pressable>
+  )
+}
+
+const BookmarkButton = ({ active, onPress }: { active: boolean, onPress: () => void }) => {
+  const animation = React.useRef<AnimatedLottieView>(null);
+
+  React.useEffect(() => {
+    if (active) {
+      animation.current?.play(0, 100)
+    } else {
+      animation.current?.play(100, 0)
+    }
+  }, [active])
+
+  return (
+    <Pressable 
+      onPress={onPress} 
+      style={{ height: 32, width: 32, overflow: 'hidden', alignItems: 'center', justifyContent: 'center' }}>
+      <AnimatedLottieView
+        ref={animation}
+        loop={false}
+        source={require('../../assets/lotties/bookmark.json')}
+        style={{ height: 24, width: 24 }}
+      />
+    </Pressable>
   )
 }
 
