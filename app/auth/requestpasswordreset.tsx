@@ -49,7 +49,7 @@ const RequestPasswordResetScreen = () => {
           onPress={() =>
             requestPasswordReset({
               email,
-              route: 'Auth/ResetPassword',
+              route: 'auth/resetpassword',
               host: APP_LINKING_BASE_URL,
             })
           }

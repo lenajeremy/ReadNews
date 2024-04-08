@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { router } from 'expo-router'
+import { router, useLocalSearchParams } from 'expo-router'
 import { StackScreenProps } from '@react-navigation/stack'
 import { useTheme } from '@shopify/restyle'
 import { ActivityIndicator, Dimensions, SafeAreaView, Alert } from 'react-native'
@@ -7,14 +7,14 @@ import { useResetPasswordMutation } from '../../api/authApi'
 import { Box, Text, TextInput, Button } from '../../components'
 import { Theme } from '../../theme'
 
-const ResetPasswordScreen = ({
-    route,
-}: StackScreenProps<ReactNavigation.AuthParamList>) => {
+const ResetPasswordScreen = () => {
     const { spacing, colors } = useTheme<Theme>()
     const [newPassword, setNewPassword] = React.useState<string>('')
     const [confirmNewPassword, setConfirmNewPassword] = React.useState<string>('')
     const [isValid, setIsValid] = React.useState<boolean>(false)
     const DEVICE_WIDTH = Dimensions.get('window').width
+
+    const { passwordResetToken, userId } = useLocalSearchParams() as { passwordResetToken: string, userId: string }
 
     const [
         resetPassword,
@@ -26,8 +26,8 @@ const ResetPasswordScreen = ({
             const res = await resetPassword({
                 newPassword,
                 confirmNewPassword,
-                userId: route.params?.userId as string,
-                resetPasswordToken: route.params?.passwordResetToken as string,
+                userId: userId,
+                resetPasswordToken: passwordResetToken,
             }).unwrap()
 
             if (Boolean(res)) {
@@ -39,7 +39,7 @@ const ResetPasswordScreen = ({
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: colors.mainBackground }}>
-            <Text>{JSON.stringify(route.params)}</Text>
+            <Text>{JSON.stringify({passwordResetToken, userId})}</Text>
             <Box
                 backgroundColor="mainBackground"
                 flex={1}
