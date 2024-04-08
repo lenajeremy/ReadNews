@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
+import { Text } from 'react-native'
 import useCachedResources from './hooks/useCachedResources'
 import Navigation from './navigation'
 import { StatusBar } from './components'
@@ -15,6 +16,8 @@ import { PUSH_NOTIFICATION_TOKEN_KEY } from './constants'
 import * as Linking from 'expo-linking'
 import BottomSheetProvider from './contexts/BottomSheetContext'
 import useCurrentTheme from './hooks/useCurrentTheme'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import * as Constants from 'expo-constants'
 
 
 SplashScreen.preventAutoHideAsync().catch((error) => console.error(error))
@@ -32,59 +35,60 @@ export default function App() {
 
   const currentTheme = useCurrentTheme()
 
-  React.useEffect(() => {
-    async function scheduleNotifications() {
-      const res = await Notifications.scheduleNotificationAsync({
-        content: {
-          title: 'Jello',
-          subtitle: 'Hoe are you?',
-          data: { person: 'this is the data fro the notification' },
-          badge: 10,
-          sound: true,
-          vibrate: [4],
-        },
-        trigger: {
-          seconds: 60,
-          repeats: true,
-        },
-      })
+  // React.useEffect(() => {
+    // async function scheduleNotifications() {
+    //   const res = await Notifications.scheduleNotificationAsync({
+    //     content: {
+    //       title: 'Jello',
+    //       subtitle: 'Hoe are you?',
+    //       data: { person: 'this is the data fro the notification' },
+    //       badge: 10,
+    //       sound: true,
+    //       vibrate: [4],
+    //     },
+    //     trigger: {
+    //       seconds: 60,
+    //       repeats: true,
+    //     },
+    //   })
 
-      console.log(res)
-    }
+    //   console.log(res)
+    // }
 
-    async function getPushToken(): Promise<string | null> {
-      const { granted } = await Notifications.getPermissionsAsync()
+    // async function getPushToken(): Promise<string | null> {
+    //   const { granted } = await Notifications.getPermissionsAsync()
 
-      if (granted) {
-        const token = await Notifications.getExpoPushTokenAsync()
-        return token.data
-      } else {
-        const { granted } = await Notifications.requestPermissionsAsync()
+    //   console.log('permission:', granted)
+    //   console.log('project id:', Constants.default.easConfig?.projectId)
 
-        if (!granted) {
-          Alert.alert(
-            'Permission Not Granted',
-            'Permission is required to be able to send you updates on articles you might be interested in.\n\nPlease go to setting to allow notifications',
-          )
+    //   if (granted) {
+    //     const token = await Notifications.getExpoPushTokenAsync({ projectId: Constants.default.easConfig?.projectId })
+    //     return token.data
+    //   } else {
+    //     const { granted } = await Notifications.requestPermissionsAsync()
 
-          return null
-        } else return getPushToken()
-      }
-    }
+    //     if (!granted) {
+    //       Alert.alert(
+    //         'Permission Not Granted',
+    //         'Permission is required to be able to send you updates on articles you might be interested in.\n\nPlease go to setting to allow notifications',
+    //       )
 
-    if (!isLoadingPushNotificationtoken && !pushNotificationToken) {
-      console.log('the token does not exist')
-      getPushToken().then((token) => {
-        if (token) {
-          updatePushNotificationToken(token)
-        }
-      })
-    } else {
-      console.log('the token already exists')
-    }
+    //       return null
+    //     } else return getPushToken()
+    //   }
+    // }
 
-    console.log(pushNotificationToken)
-  }, [isLoadingPushNotificationtoken])
+    // if (!isLoadingPushNotificationtoken && !pushNotificationToken) {
+    //   getPushToken().then((token) => {
+    //     if (token) {
+    //       updatePushNotificationToken(token)
+    //     }
+    //   })
+    // } else {
+    //   console.log('the token already exists')
+    // }
+
+  // }, [isLoadingPushNotificationtoken])
 
   React.useEffect(() => {
     if (isLoadingResourcesComplete) {
@@ -94,18 +98,20 @@ export default function App() {
   }, [isLoadingResourcesComplete])
 
   if (!appLoaded) {
-    return null
+    return <Text style = {{ fontSize: 50, color: 'black' }}>Loading resources</Text>
   } else {
     return (
       <Provider {...{ store }}>
-        <ThemeProvider theme={currentTheme.theme}>
-          <SafeAreaProvider>
-            <BottomSheetProvider>
-              <Navigation />
-              <StatusBar />
-            </BottomSheetProvider>
-          </SafeAreaProvider>
-        </ThemeProvider>
+        <GestureHandlerRootView>
+          <ThemeProvider theme={currentTheme.theme}>
+            <SafeAreaProvider>
+              {/* <BottomSheetProvider> */}
+                <Navigation />
+                <StatusBar />
+              {/* </BottomSheetProvider> */}
+            </SafeAreaProvider>
+          </ThemeProvider>
+        </GestureHandlerRootView>
       </Provider>
     )
   }

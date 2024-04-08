@@ -64,6 +64,7 @@ const theme = createTheme({
         body: {
             fontSize: 16,
             lineHeight: 24,
+            fontFamily: 'Gilroy'
         }
     },
     breakpoints: {}

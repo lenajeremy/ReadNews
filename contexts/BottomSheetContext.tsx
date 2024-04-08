@@ -59,7 +59,6 @@ const BottomSheetProvider = ({ children }: { children: React.ReactNode }) => {
                     width: 40,
                 }}
             >
-                { console.log('rendering new sheet content') as React.ReactNode }
                 {bottomSheetContent}
             </GBottomSheet>
         </BottomSheetContext.Provider>

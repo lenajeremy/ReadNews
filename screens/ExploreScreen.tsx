@@ -17,9 +17,7 @@ import { useTheme } from '@shopify/restyle'
 import { Theme } from '../theme'
 import {
   AntDesign,
-  EvilIcons,
   Ionicons,
-  MaterialIcons,
 } from '@expo/vector-icons'
 import { useDebounce } from '../utils'
 import {
@@ -30,9 +28,10 @@ import { FlatList } from 'react-native-gesture-handler'
 import useLocalStorage from '../hooks/useLocalStorage'
 import { RECENT_SEARCH_QUERIES_TOKEN_KEY } from '../constants'
 
+
+
 const ExploreScreen = () => {
   const { colors } = useTheme<Theme>()
-
   const [searchText, setSearchText] = React.useState<string>('')
   const [searchNews, { isFetching, data }] = useLazySearchNewsQuery()
   const [registerInteraction] = useRegisterInteractionMutation()
@@ -71,7 +70,7 @@ const ExploreScreen = () => {
   )
 
   React.useEffect(() => {
-    ;(async function () {
+    ; (async function () {
       try {
         await searchNewsAndUpdateQueriesDebounced(searchText)
       } catch (error) {

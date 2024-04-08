@@ -19,6 +19,7 @@ import { AntDesign, Ionicons } from '@expo/vector-icons'
 import * as Haptics from 'expo-haptics'
 import { useTheme } from '@shopify/restyle'
 import { Theme } from '../../theme'
+import { router } from 'expo-router'
 
 // @ts-ignore
 // import Image from 'expo-cached-image'
@@ -100,15 +101,14 @@ const NewsComponent = ({
       <PressableWithHaptics
         onPress={() => {
           registerInteraction(item.url)
-          navigation.navigate('OpenNews', {
-            url: item.url,
-            img: item.img,
-            favicon: item.metadata.favicon,
-            website: item.metadata.website,
-            title: item.title,
+          router.push({
+            pathname: 'opennews/[url]',
+            params: {
+              url: item.url
+            }
           })
         }}
-        
+
       >
         <AnimatedBox position="relative" ref={containerRef}>
           <AnimatedBox
@@ -233,8 +233,8 @@ const BookmarkButton = ({ active, onPress }: { active: boolean, onPress: () => v
   }, [active])
 
   return (
-    <Pressable 
-      onPress={onPress} 
+    <Pressable
+      onPress={onPress}
       style={{ height: 32, width: 32, overflow: 'hidden', alignItems: 'center', justifyContent: 'center' }}>
       <AnimatedLottieView
         ref={animation}

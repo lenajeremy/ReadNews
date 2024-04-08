@@ -152,7 +152,7 @@ const TextInput = ({
 
 const styles = StyleSheet.create({
   inputContainer: {
-    height: 65,
+    height: 48,
     width: '100%',
     color: 'white',
     borderRadius: 8,
@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
   },
   input: {
     fontSize: 18,
-    fontFamily: 'Blatant',
+    fontFamily: 'Gilroy',
     height: '100%',
     // width: '100%',
     flex: 1,

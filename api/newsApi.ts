@@ -20,7 +20,19 @@ const newsApi = createApi({
     }),
     tagTypes: ['NEWS_DETAILS'],
     endpoints: (builder) => ({
-        getNewsContent: builder.query<{ title: string, img: string, url: string, metadata: { website: string, favicon: string, time_added: string }, text: string, isLiked: boolean, isSaved: boolean }, string>({
+        getNewsContent: builder.query<{
+            title: string,
+            img: string,
+            url: string,
+            metadata: {
+                website: string,
+                favicon: string,
+                time_added: string
+            },
+            text: string,
+            isLiked: boolean,
+            isSaved: boolean
+        }, string>({
             query: (url) => ({
                 url: '/news/get-details/',
                 params: { url }

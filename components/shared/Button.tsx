@@ -91,7 +91,7 @@ export default Button
 const styles = StyleSheet.create({
   buttonContainer: {
     minWidth: 120,
-    height: 60,
+    height: 48,
     borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',

@@ -18,9 +18,9 @@ declare global {
 }
 
 export type RootStackParamList = {
-  Home: NavigatorScreenParams<RootTabParamList> | undefined
-  Auth: NavigatorScreenParams<AuthStackParamList> | undefined
-  OpenNews: {
+  home: NavigatorScreenParams<RootTabParamList> | undefined
+  auth: NavigatorScreenParams<AuthStackParamList> | undefined
+  opennews: {
     url: string
     website: string
     favicon: string
@@ -36,12 +36,12 @@ export type RootStackScreenProps<
 > = StackScreenProps<RootStackParamList, Screen>
 
 export type AuthStackParamList = {
-  Onboarding: undefined
-  Login: undefined
-  Register: undefined
-  SetInterest: undefined
-  RequestPasswordReset: undefined
-  ResetPassword: {
+  onboarding: undefined
+  login: undefined
+  register: undefined
+  setinterest: undefined
+  requestpasswordreset: undefined
+  resetpassword: {
     passwordResetToken: string
     userId: string
   }

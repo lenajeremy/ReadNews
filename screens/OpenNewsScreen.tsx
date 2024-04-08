@@ -60,7 +60,7 @@ const OpenNewsScreen = ({
     'window',
   )
 
-  const MdxComponentsStyles = {
+  const MdxComponentsStyles = React.useCallback(() => ({
     root: {
       backgroundColor: colors.mainBackground,
     },
@@ -129,7 +129,7 @@ const OpenNewsScreen = ({
       flexDirection: 'row',
       alignItems: 'flex-start',
     },
-  }
+  }), [])
 
   const isDarkMode = useColorScheme() === 'dark'
 

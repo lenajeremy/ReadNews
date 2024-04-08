@@ -4,7 +4,6 @@
  */
 
 import * as React from 'react'
-import { Feather, Ionicons } from '@expo/vector-icons'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { ExploreScreen, NewsScreen, ProfileScreen } from '../screens'
 import { useTheme } from '@shopify/restyle'
@@ -20,7 +19,6 @@ const BottomTab = createBottomTabNavigator<RootTabParamList>()
 
 export default function BottomTabNavigator() {
   const { colors, spacing } = useTheme<Theme>()
-  const isDark = useColorScheme() === 'dark'
 
   return (
     // @ts-ignore

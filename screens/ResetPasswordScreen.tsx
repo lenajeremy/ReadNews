@@ -1,11 +1,12 @@
+import * as React from 'react'
 import { NavigationProp, useNavigation } from '@react-navigation/native'
 import { StackScreenProps } from '@react-navigation/stack'
 import { useTheme } from '@shopify/restyle'
-import * as React from 'react'
 import { ActivityIndicator, Dimensions, SafeAreaView, Alert } from 'react-native'
 import { useResetPasswordMutation } from '../api/authApi'
 import { Box, Text, TextInput, Button } from '../components'
 import { Theme } from '../theme'
+import { router } from 'expo-router'
 
 const ResetPasswordScreen = ({
   route,
@@ -38,14 +39,14 @@ const ResetPasswordScreen = ({
 
       if (Boolean(res)) {
         Alert.alert('Message', JSON.stringify(res))
-        navigation.navigate('Login')
+        router.push('auth/login')
       }
-    } catch (error) {}
+    } catch (error) { }
   }, [confirmNewPassword, newPassword])
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.mainBackground }}>
-        <Text>{JSON.stringify(route.params)}</Text>
+      <Text>{JSON.stringify(route.params)}</Text>
       <Box
         backgroundColor="mainBackground"
         flex={1}
@@ -93,7 +94,6 @@ const ResetPasswordScreen = ({
           onPress={_resetPassword}
           additionalStyles={{
             width: DEVICE_WIDTH - spacing.md * 2,
-            height: 60,
             marginTop: 10,
           }}
           variant={true ? 'contained' : 'disabled'}
