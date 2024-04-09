@@ -17,6 +17,8 @@ import { OfflineNewsType } from '../../types'
 import { SAVED_NEWS_KEY, LIKED_NEWS_KEY } from '../../constants'
 import { NavigationProp, useNavigation } from '@react-navigation/native'
 import { RootStackParamList } from '../../navigation/types'
+import { router } from 'expo-router'
+import Settings from '../../screens/Settings'
 // import Settings from './Settings'
 
 const ProfileScreen = () => {
@@ -85,8 +87,7 @@ const ProfileScreen = () => {
                     </Box>
 
                     {profileTabIndex === 1 ? (
-                        <Text>Setting Should show up here</Text>
-                        // <Settings />
+                        <Settings />
                     ) : (
                         <Box>
                             <Box
@@ -124,16 +125,12 @@ const ProfileScreen = () => {
                                 <ScrollView horizontal>
                                     {savedNews?.map((news) => (
                                         <Pressable
-                                            onPress={() =>
-                                                navigation.navigate('OpenNews', {
-                                                    url: news.url,
-                                                    favicon: news.metadata.favicon,
-                                                    title: news.title,
-                                                    website: news.metadata.website,
-                                                    img: news.img,
-                                                    mode: 'offline',
-                                                    content: news.content,
-                                                })
+                                            onPress={() => router.push({
+                                                pathname: 'opennews/[url]', 
+                                                params: {
+                                                    url: news.url
+                                                }
+                                            })
                                             }
                                         >
                                             <Box

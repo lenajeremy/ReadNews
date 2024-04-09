@@ -75,7 +75,6 @@ export default function Index() {
             justifyContent: 'center'
         }}>
             <ActivityIndicator />
-            <Text>Hello World</Text>
         </SafeAreaView>
     )
 }

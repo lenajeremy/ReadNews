@@ -19,7 +19,6 @@ import useCurrentTheme from './hooks/useCurrentTheme'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import * as Constants from 'expo-constants'
 
-
 SplashScreen.preventAutoHideAsync().catch((error) => console.error(error))
 
 export default function App() {

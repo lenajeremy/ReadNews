@@ -9,7 +9,6 @@ import {
   useLazyGetNewsQuery,
   useRegisterInteractionMutation,
 } from '../../api/newsApi'
-
 import type { NewsType } from '../../types'
 import { useAppSelector } from '../../hooks/reduxhooks'
 import { NavigationProp, useNavigation } from '@react-navigation/native'
