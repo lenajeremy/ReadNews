@@ -106,7 +106,7 @@ export default function OpenNews(props: any) {
 
     const bottomSheet = useBottomSheet()
 
-    const { data, isFetching, isLoading, isError } = useGetNewsContentQuery(url || '')
+    const { data, isFetching, isLoading, isError, error } = useGetNewsContentQuery(url || '')
 
     const [renderMdxError, setRenderMdxError] = React.useState<boolean>(false)
     const [viewMode, setViewMode] = React.useState<NewsViewMode>(NewsViewMode.WEBVIEW)
@@ -453,11 +453,13 @@ export default function OpenNews(props: any) {
                                         }) => {
                                             return (
                                                 <Text
+                                                // @ts-ignore
                                                     style={[MdxComponentsStyles.link]}
                                                     onPress={() => Linking.openURL(href)}
                                                 >
                                                     <Text
                                                         style={[
+                                                            // @ts-ignore
                                                             MdxComponentsStyles.text,
                                                             // @ts-ignore
                                                             MdxComponentsStyles.linkLabel,
@@ -569,7 +571,7 @@ const BottomSheetContent = ({ isLiked, like, viewMode, isSaved, share, setViewMo
                     )
 
                     if (viewMode === NewsViewMode.MDX) {
-                        scrollViewMargin.value = STATUS_BAR_HEIGHT
+                        // scrollViewMargin.value = STATUS_BAR_HEIGHT
                     }
                 }}
             />
@@ -593,6 +595,7 @@ const BottomSheetContent = ({ isLiked, like, viewMode, isSaved, share, setViewMo
             />
         </Box>)
 }
+
 
 const styles = StyleSheet.create({
     imageBackground: {
