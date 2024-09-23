@@ -7,8 +7,10 @@ import { Theme } from '../theme'
 import useLocalStorage from '../hooks/useLocalStorage'
 import { USER_TOKEN_KEY } from '../constants'
 import { useLazyLoginWithTokenQuery } from '../api/authApi'
-import { useAppDispatch } from '../hooks/reduxhooks'
+import { useAppDispatch, useAppSelector } from '../hooks/reduxhooks'
 import { updateDetails } from '../redux/slices/userSlice'
+import { Ionicons } from '@expo/vector-icons'
+
 
 export default function Index() {
     const { colors } = useTheme<Theme>()
@@ -16,10 +18,12 @@ export default function Index() {
     const [token, updateToken, isLoadingToken, clear] = useLocalStorage<string>(
         USER_TOKEN_KEY,
     )
+
     const [hasRendered, setHasRendered] = React.useState(false)
     const [loginWithToken, { isFetching, isError }] = useLazyLoginWithTokenQuery()
 
     const dispatch = useAppDispatch()
+    const state = useAppSelector(store => store.user)
 
     React.useEffect(() => {
         async function login() {
@@ -47,12 +51,13 @@ export default function Index() {
     }, [])
 
     React.useEffect(() => {
+        console.log(state, token)
         if (hasRendered) {
             console.log('has rendered and should replace auth')
             router.replace('auth')
             console.log('replace auth')
         }
-    }, [hasRendered])
+    }, [hasRendered, state, token])
 
     if (isError) {
         return (

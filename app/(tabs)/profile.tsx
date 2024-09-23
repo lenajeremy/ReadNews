@@ -56,10 +56,10 @@ const ProfileScreen = () => {
                                 style={{ width: 34, height: 34 }}
                             />
                             <Box paddingLeft="md">
-                                <Text fontFamily="Gilroy" fontSize={18} lineHeight={28}>
+                                <Text fontSize={18} lineHeight={28}>
                                     {firstName} {lastName}
                                 </Text>
-                                <Text fontFamily="Gilroy" color="mutedText" lineHeight={16} fontSize={16}>
+                                <Text color="mutedText" lineHeight={16} fontSize={16}>
                                     {email}
                                 </Text>
                             </Box>
@@ -191,15 +191,7 @@ const ProfileScreen = () => {
                                     {likedNews?.reverse().map((news) => (
                                         <Pressable
                                             onPress={() =>
-                                                navigation.navigate('OpenNews', {
-                                                    url: news.url,
-                                                    favicon: news.metadata.favicon,
-                                                    title: news.title,
-                                                    website: news.metadata.website,
-                                                    img: news.img,
-                                                    mode: 'offline',
-                                                    content: news.content,
-                                                })
+                                                navigation.navigate("opennews")
                                             }
                                         >
                                             <Box

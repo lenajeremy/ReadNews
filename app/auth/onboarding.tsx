@@ -7,7 +7,6 @@ import {
     Platform,
 } from 'react-native'
 import { Box, Button, Text } from '../../components'
-import { Ionicons } from '@expo/vector-icons'
 import Animated, {
     Easing,
     Extrapolation,
@@ -26,8 +25,9 @@ import {
     PanGestureHandler,
     PanGestureHandlerGestureEvent,
 } from 'react-native-gesture-handler'
-import { clamp, opacity } from 'react-native-redash'
+import { clamp } from 'react-native-redash'
 import { Link } from 'expo-router'
+
 
 const AnimatedBox = Animated.createAnimatedComponent(Box)
 const AnimatedText = Animated.createAnimatedComponent(Text)
@@ -282,7 +282,7 @@ const OnboardingScreen = () => {
                         }}
                         variant={'text'}
                     >
-                        <Link href='auth/login' replace style={{ width: '100%' }}>
+                        <Link href='auth/login' style={{ width: '100%' }}>
                             <Text fontFamily="Blatant" textAlign='center' fontSize={20} letterSpacing={3} style={{ color: 'white' }}>
                                 GET STARTED
                             </Text>

@@ -25,9 +25,6 @@ export function useDebounce<T>(fn: T extends (...args: any) => any ? T : never, 
     return values;
 }
 
-function returnboolean(): boolean {
-    return false;
-}
 
 export const getTimeOfDay = () => {
     const date = new Date();

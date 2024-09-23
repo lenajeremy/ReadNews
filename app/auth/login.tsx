@@ -24,7 +24,7 @@ import useLocalStorage from '../../hooks/useLocalStorage'
 export default function LoginScreen() {
     const [loginFormValues, setLoginFormValues] = React.useState({
         email: { value: 'jeremiahlena13@gmail.com', valid: true },
-        password: { value: 'somethinginteresting', valid: true },
+        password: { value: 'areyoukiddingme', valid: true },
     })
 
     const [login, { isLoading, data, isSuccess, error }] = useLoginMutation()

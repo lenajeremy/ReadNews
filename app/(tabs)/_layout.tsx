@@ -12,7 +12,7 @@ export default function TabLayout() {
     const { colors, spacing } = useTheme<Theme>()
     return (
         <Tabs
-            initialRouteName="NewsScreen"
+            initialRouteName="news"
             screenOptions={{
                 tabBarStyle: {
                     alignItems: 'center',
